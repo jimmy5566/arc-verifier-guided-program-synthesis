@@ -135,6 +135,9 @@ def _worker(args: argparse.Namespace, run: Path, selected: dict[str, Any], attem
                "--aug16-ids", str(run / "AUG8_IDS.json"), "--adapter-stage", str(run / "ADAPTER_STAGE"), "--device", args.device,
                "--max-expanded-nodes", "1024", "--ttt-depth", str(depth), "--augmentation-label", "aug8",
                "--admission-policy", "root_aware", "--fairness-max-wait", "3", "--experiment", experiment, "--checkpoints", "512,1024"]
+    foundation_adapter = getattr(args, "foundation_adapter", None)
+    if foundation_adapter:
+        command.extend(["--foundation-adapter", str(foundation_adapter)])
     command[-1] = checkpoints
     command.extend(["--search-order-policy", search_order_policy])
     if bool(getattr(args, "frontier_telemetry", False)):

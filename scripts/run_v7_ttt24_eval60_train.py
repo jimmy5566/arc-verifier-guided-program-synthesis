@@ -147,6 +147,25 @@ def _provider(model_path: Path, native_config: Path, adapter: Path | None = None
     return provider
 
 
+def _attach_v7_and_zero_ttt(model: Any, args: argparse.Namespace, config: dict[str, Any]) -> Any:
+    """Compose frozen V7 and a fresh zero-output task adapter in one forward."""
+    import torch
+    from peft import LoraConfig, PeftModel
+
+    model = PeftModel.from_pretrained(
+        model, str(args.v7_adapter), adapter_name="foundation",
+        is_trainable=False, autocast_adapter_dtype=False,
+    )
+    torch.manual_seed(int(config["seed"])); torch.cuda.manual_seed_all(int(config["seed"]))
+    model.add_adapter("default", LoraConfig(
+        r=int(config["rank"]), lora_alpha=int(config["alpha"]),
+        target_modules=list(config["target_modules"]), lora_dropout=0.0,
+        bias="none", task_type="CAUSAL_LM", use_rslora=True,
+    ))
+    model.base_model.set_adapter(["foundation", "default"])
+    return model
+
+
 def generate_aug8_evidence(*, model: Any, tokenizer: Any, task: Any, config: dict[str, Any]) -> tuple[list[dict[str, Any]], list[dict[str, Any]], float]:
     """Run the frozen Greedy AUG8 while retaining valid and invalid raw suffixes."""
     import torch
@@ -195,7 +214,7 @@ def generate_aug8_evidence(*, model: Any, tokenizer: Any, task: Any, config: dic
     return deduped, raw, time.perf_counter() - started
 
 
-def parity(args: argparse.Namespace, task_ids: list[str]) -> dict[str, Any]:
+def parity(args: argparse.Namespace, task_ids: list[str], config: dict[str, Any]) -> dict[str, Any]:
     import torch
     from arc.io import load_dataset
     from inference.dynamic_task_scheduler import task_seed
@@ -204,9 +223,20 @@ def parity(args: argparse.Namespace, task_ids: list[str]) -> dict[str, Any]:
     tasks = load_dataset(args.challenge)
     canaries = [(task_ids[0], 0), (task_ids[-1], 0)]
     results: dict[str, list[dict[str, Any]]] = {}
-    for label, model_path, adapter in (("unmerged", args.base_model, args.v7_adapter),
-                                       ("merged", args.merged_model, None)):
-        provider = _provider(model_path, args.native_config_dir, adapter)
+    for label in ("frozen_v7", "v7_plus_zero_ttt"):
+        if label == "frozen_v7":
+            provider = _provider(args.base_model, args.native_config_dir, args.v7_adapter)
+        else:
+            from transformers import AutoModelForCausalLM
+            from inference.nvarc_native import NVARCNativeProvider, checkpoint_native_tokenizer
+            provider = NVARCNativeProvider(model_path=args.base_model, tokenizer_config_dir=args.native_config_dir, device="cuda:0")
+            provider.tokenizer, tokenizer_meta = checkpoint_native_tokenizer(args.base_model, args.native_config_dir)
+            base = AutoModelForCausalLM.from_pretrained(
+                str(args.base_model), local_files_only=True, trust_remote_code=False,
+                torch_dtype=torch.bfloat16, low_cpu_mem_usage=True,
+            ).to("cuda:0").eval()
+            provider.model = _attach_v7_and_zero_ttt(base, args, config).to("cuda:0").eval()
+            provider.load_metadata = tokenizer_meta
         rows = []
         for task_id, test_index in canaries:
             generated = provider.generate(native_messages(tasks[task_id], test_index), max_new_tokens=931,
@@ -218,13 +248,13 @@ def parity(args: argparse.Namespace, task_ids: list[str]) -> dict[str, Any]:
         results[label] = rows
         del provider.model, provider
         gc.collect(); torch.cuda.empty_cache()
-    exact = results["unmerged"] == results["merged"]
-    payload = {"schema": "ARC2_V7_MERGE_PARITY_V1", "status": "PASS" if exact else "FAIL",
-               "criterion": "exact generated token IDs and parsed native grids on two frozen input-only canaries",
+    exact = results["frozen_v7"] == results["v7_plus_zero_ttt"]
+    payload = {"schema": "ARC2_V7_DUAL_LORA_COMPOSITION_PARITY_V1", "status": "PASS" if exact else "FAIL",
+               "criterion": "exact generated token IDs and parsed native grids for frozen V7 versus V7 plus zero-output TTT on two input-only canaries",
                "canaries": canaries, "results": results}
-    atomic_write_json(args.output / "V7_MERGE_PARITY.json", payload)
+    atomic_write_json(args.output / "V7_COMPOSITION_PARITY.json", payload)
     if not exact:
-        raise RuntimeError("V7 merged/unmerged native inference parity failed")
+        raise RuntimeError("V7 dual-LoRA zero-adapter composition parity failed")
     return payload
 
 
@@ -237,19 +267,16 @@ def train(args: argparse.Namespace, task_ids: list[str], config: dict[str, Any])
 
     tasks = load_dataset(args.challenge)
     model, checkpoint_tokenizer = FastLanguageModel.from_pretrained(
-        model_name=str(args.merged_model), full_finetuning=False, load_in_4bit=False,
+        model_name=str(args.base_model), full_finetuning=False, load_in_4bit=False,
         local_files_only=True, use_gradient_checkpointing=False,
         max_seq_length=int(config["max_sequence_length"]),
     )
-    tokenizer, tokenizer_meta = checkpoint_native_tokenizer(args.merged_model, args.native_config_dir)
+    tokenizer, tokenizer_meta = checkpoint_native_tokenizer(args.base_model, args.native_config_dir)
     if len(checkpoint_tokenizer) != 16 or checkpoint_tokenizer.get_vocab() != tokenizer.get_vocab():
         raise RuntimeError("merged V7 tokenizer differs from native tokenizer")
-    model = FastLanguageModel.get_peft_model(
-        model, r=256, target_modules=list(config["target_modules"]), lora_alpha=32,
-        lora_dropout=0.0, bias="none", use_gradient_checkpointing=False,
-        random_state=42, use_rslora=True, loftq_config=None,
-    )
-    for parameter in model.parameters():
+    model = _attach_v7_and_zero_ttt(model, args, config)
+    for name, parameter in model.named_parameters():
+        parameter.requires_grad = ".default." in name and (".lora_A." in name or ".lora_B." in name)
         if parameter.dtype == torch.float32:
             parameter.data = parameter.data.to(torch.bfloat16)
     default_state = {key: value.detach().clone() for key, value in get_peft_model_state_dict(model, adapter_name="default").items()}
@@ -272,9 +299,10 @@ def train(args: argparse.Namespace, task_ids: list[str], config: dict[str, Any])
         if task_dir.exists():
             raise RuntimeError(f"refusing to overwrite adapter directory: {task_dir}")
         started = time.perf_counter()
+        model.base_model.set_adapter(["foundation", "default"])
         fit = _fit_task(model=model, tokenizer=tokenizer, task=tasks[task_id], config=config,
                         default_state=default_state, adapter_before=adapter_before,
-                        base_fingerprints=base_before)
+                        base_fingerprints=base_before, adapter_name="default")
         if not fit["adapter_updated"] or not fit["base_model_unchanged"]:
             raise RuntimeError(f"{task_id}: task adaptation integrity failure")
         staging = task_dir.with_name(task_dir.name + f".staging.{os.getpid()}")
@@ -332,15 +360,16 @@ def main() -> None:
     os.environ.update({"CUDA_VISIBLE_DEVICES": "0", "HF_HUB_OFFLINE": "1", "TRANSFORMERS_OFFLINE": "1",
                        "TOKENIZERS_PARALLELISM": "false", "TRITON_PTXAS_PATH": str(read(args.reference_config)["ptxas_path"])})
     task_ids, config = validate_inputs(args)
-    merged = merge_v7(args)
     atomic_write_json(args.output / "PREFLIGHT.json", {
         "status": "PASS", "task_count": 60, "output_count": 89,
         "challenge_sha256": CHALLENGE_SHA256, "task_ids_sha256": TASK_IDS_SHA256,
-        "v7_adapter_sha256": V7_ADAPTER_SHA256, "merged_manifest_sha256": sha_json(merged),
+        "v7_adapter_sha256": V7_ADAPTER_SHA256,
+        "composition": "live frozen V7 plus task-local TTT LoRA residuals",
+        "bf16_merge_parity": "FAILED_AND_NOT_USED",
         "solutions_opened": False,
     })
     if not args.skip_merge_parity:
-        parity(args, task_ids)
+        parity(args, task_ids, config)
     train(args, task_ids, config)
 
 

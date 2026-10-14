@@ -29,6 +29,15 @@ from scripts.run_ttt24_aug8_r1024_core_v1 import (
 
 EXPERIMENT = "V7_TTT24_AUG8_DFS_R1024_EVAL60_V1"
 TASK_IDS_SHA256 = "8da66911f3cafb2652da1e5731dfeafd9100670e68de68d22d93d596c2c3abd9"
+V7_ADAPTER_SHA256 = "1639bf6665ccfbb99cf547f59fcd581663c95b6bad770ae7846fee90f66be1c3"
+
+
+def sha256(path: Path) -> str:
+    digest = __import__("hashlib").sha256()
+    with path.open("rb") as handle:
+        for block in iter(lambda: handle.read(8 * 1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
 
 
 def output_identity(template: dict[str, Any], adapter_root: Path) -> list[dict[str, Any]]:
@@ -63,7 +72,7 @@ def snapshots(run: Path, output_id: str) -> dict[str, Any]:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    for name in ("output", "model_path", "challenge", "native_config_dir", "candidate_pool",
+    for name in ("output", "model_path", "foundation_adapter", "challenge", "native_config_dir", "candidate_pool",
                  "adapter_root", "historical_run_cohort", "coarse_policy", "worker_python"):
         parser.add_argument("--" + name.replace("_", "-"), type=Path, required=True)
     args = parser.parse_args()
@@ -94,10 +103,15 @@ def main() -> None:
         "augmentation_ids": list(AUG8),
         "cache": "ChunkedDynamicCache / valid_length rollback",
         "generation_scope": "V7_TTT24_D24_ONLY",
+        "foundation_adapter": str(args.foundation_adapter),
+        "foundation_adapter_sha256": sha256(args.foundation_adapter / "adapter_model.safetensors"),
+        "adapter_composition": "simultaneous frozen V7 plus task-local TTT LoRA residuals",
         "search_order": "historical recursive DFS; diagnostic_trace append-only",
         "admission": "root-aware exact READY compatibility; fairness_max_wait=3",
         "worker_python": str(args.worker_python), "solutions_argument_available": False,
     }
+    if contract["foundation_adapter_sha256"] != V7_ADAPTER_SHA256:
+        raise RuntimeError("frozen V7 adapter identity mismatch")
     _atomic_json(args.output / "PRE_GOLD_CONTRACT.json", contract)
 
     # Deterministically choose one shortest and one longest output.  The

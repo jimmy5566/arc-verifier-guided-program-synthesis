@@ -398,8 +398,11 @@ def _worker(args: argparse.Namespace) -> int:
         if actual_identity["adapter_sha256"] != expected_identity["adapter_sha256"] or actual_identity["adapter_config_sha256"] != expected_identity["adapter_config_sha256"]:
             raise RuntimeError("worker adapter does not match frozen cohort identity")
         stage = "MODEL_LOAD"
-        model, tokenizer, runtime_identity = load_hf_peft_inference(model_path=args.model_path, adapter_path=staged,
-                                                                      device=args.device, native_config_dir=args.native_config_dir)
+        model, tokenizer, runtime_identity = load_hf_peft_inference(
+            model_path=args.model_path, adapter_path=staged, device=args.device,
+            native_config_dir=args.native_config_dir,
+            foundation_adapter_path=args.foundation_adapter,
+        )
         if runtime_identity.get("dtype") != "torch.bfloat16":
             raise RuntimeError("Pilot18 requires BF16 Clean-HF")
         tasks = load_dataset(args.challenge)
@@ -1101,6 +1104,7 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--native-config-dir", type=Path, required=True); parser.add_argument("--candidate-pool", type=Path, required=True)
     parser.add_argument("--aug16-ids", type=Path, required=True); parser.add_argument("--profile-audit", type=Path)
     parser.add_argument("--adapter-root", type=Path); parser.add_argument("--adapter-stage", type=Path, required=True)
+    parser.add_argument("--foundation-adapter", type=Path)
     parser.add_argument("--coarse-policy", type=Path); parser.add_argument("--solutions", type=Path)
     parser.add_argument("--output-id"); parser.add_argument("--attempt", type=int); parser.add_argument("--resident", type=int); parser.add_argument("--ceiling", type=int)
     # Worker-only execution parameters preserve the historical Pilot18

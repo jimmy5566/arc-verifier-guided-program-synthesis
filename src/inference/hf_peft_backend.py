@@ -36,6 +36,7 @@ def load_hf_peft_inference(
     native_config_dir: Path | None = None,
     frozen_adapter_identity: dict[str, str] | None = None,
     load_observer: Callable[[str], None] | None = None,
+    foundation_adapter_path: Path | None = None,
 ) -> tuple[Any, Any, dict[str, Any]]:
     """Load a frozen adapter with stock Transformers and PEFT only."""
     import torch
@@ -81,13 +82,38 @@ def load_hf_peft_inference(
     # FP16/BF16 LoRA tensors to FP32.  That is fine for generic inference but
     # invalid for this frozen-adapter parity boundary: the decoder must consume
     # the exact persisted BF16 adapter bytes.
-    model = PeftModel.from_pretrained(
-        base,
-        str(adapter_path),
-        config=peft_config,
-        is_trainable=False,
-        autocast_adapter_dtype=False,
-    ).to(device).eval()
+    if foundation_adapter_path is None:
+        model = PeftModel.from_pretrained(
+            base, str(adapter_path), config=peft_config, is_trainable=False,
+            autocast_adapter_dtype=False,
+        )
+        foundation_identity = None
+    else:
+        foundation_adapter_path = Path(foundation_adapter_path)
+        foundation_required = (
+            foundation_adapter_path / "adapter_model.safetensors",
+            foundation_adapter_path / "adapter_config.json",
+        )
+        if any(not item.is_file() for item in foundation_required):
+            raise FileNotFoundError(f"missing frozen foundation adapter: {foundation_adapter_path}")
+        # Preserve V7 as a live residual and compose the task TTT residual in
+        # the same forward.  BF16 merge-and-unload changed a frozen canary.
+        model = PeftModel.from_pretrained(
+            base, str(foundation_adapter_path), adapter_name="foundation",
+            is_trainable=False, autocast_adapter_dtype=False,
+        )
+        model.load_adapter(
+            str(adapter_path), adapter_name="task", is_trainable=False,
+            autocast_adapter_dtype=False,
+        )
+        model.base_model.set_adapter(["foundation", "task"])
+        foundation_identity = {
+            "adapter_path": str(foundation_adapter_path),
+            "adapter_sha256": _sha256_file(foundation_required[0]),
+            "adapter_config_sha256": _sha256_file(foundation_required[1]),
+            "composition": "simultaneous_lora_residuals",
+        }
+    model = model.to(device).eval()
     if load_observer is not None:
         load_observer("adapter_loaded")
     if frozen_adapter_identity is None:
@@ -119,6 +145,7 @@ def load_hf_peft_inference(
         "adapter_config_sha256": adapter_config_sha256, "adapter_identity_verification": adapter_identity_verification,
         "tokenizer_vocab_size": len(tokenizer),
         "tokenizer_identity": tokenizer_identity,
+        "foundation_adapter": foundation_identity,
         "adapter_config": {**{key: adapter_config.get(key) for key in ("r", "lora_alpha", "use_rslora", "modules_to_save")},
                            "target_modules": parsed_targets, "target_modules_schema_translated": isinstance(adapter_config.get("target_modules"), str)},
     }

@@ -133,7 +133,7 @@ def _cuda_snapshot() -> dict[str, int]:
 
 
 def _fit_task(
-    *, model: Any, tokenizer: Any, task: Any, config: dict[str, Any], default_state: dict[str, Any], adapter_before: dict[str, str], base_fingerprints: dict[str, str]
+    *, model: Any, tokenizer: Any, task: Any, config: dict[str, Any], default_state: dict[str, Any], adapter_before: dict[str, str], base_fingerprints: dict[str, str], adapter_name: str = "default"
 ) -> dict[str, Any]:
     """Run exactly the frozen partial 24-step reference objective for one task."""
     import gc
@@ -144,7 +144,7 @@ def _fit_task(
 
     from unsloth import FastLanguageModel
 
-    set_peft_model_state_dict(model, {key: value.clone() for key, value in default_state.items()}, adapter_name="default")
+    set_peft_model_state_dict(model, {key: value.clone() for key, value in default_state.items()}, adapter_name=adapter_name)
     variants = _reference_variants(task)
     token_ids = [
         tokenizer(_full_dialogue(item, ARCNativeInputAdapter.serialize_trusted_grid), add_special_tokens=False, return_tensors="pt")["input_ids"][0]
