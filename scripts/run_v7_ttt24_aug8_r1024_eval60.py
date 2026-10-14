@@ -22,9 +22,12 @@ from scripts.run_ttt24_aug8_r1024_core_v1 import (
     AUG8,
     _atomic_json,
     _freeze_generation,
+    _ledger,
     _read,
     _run_surface,
     _safe,
+    _sha_value,
+    _verify,
 )
 
 EXPERIMENT = "V7_TTT24_AUG8_DFS_R1024_EVAL60_V1"
@@ -113,6 +116,11 @@ def main() -> None:
     if contract["foundation_adapter_sha256"] != V7_ADAPTER_SHA256:
         raise RuntimeError("frozen V7 adapter identity mismatch")
     _atomic_json(args.output / "PRE_GOLD_CONTRACT.json", contract)
+    _atomic_json(args.output / "CONTRACT.json", contract)
+    _atomic_json(args.output / "ADAPTER_IDENTITIES.json", {
+        task: next(row["adapter_identity"] for row in outputs if row["task_id"] == task)
+        for task in sorted({row["task_id"] for row in outputs})
+    })
 
     # Deterministically choose one shortest and one longest output.  The
     # historical profile already binds their exact roots; production tokenizes
@@ -144,6 +152,15 @@ def main() -> None:
 
     _run_surface(args, args.output, outputs, depth=24, experiment=EXPERIMENT, policy=policy)
     _freeze_generation(args.output, EXPERIMENT, 89)
+    compact = _ledger(args.output, "HASHES.json", include_raw=False)
+    compact_verification = _verify(args.output, args.output / "HASHES.json")
+    _atomic_json(args.output / "HASH_VERIFICATION.json", compact_verification)
+    if compact_verification["status"] != "PASS":
+        raise RuntimeError("compact generation hash verification failed")
+    _atomic_json(args.output / "COMPACT_ARCHIVE_FREEZE.json", {
+        "experiment": EXPERIMENT, "status": "FROZEN", "target_blind": True,
+        "gold_loaded": False, "compact_ledger_sha256": _sha_value(compact),
+    })
     print(json.dumps({"event": "V7_TTT24_AUG8_R1024_EVAL60_FROZEN", "outputs": 89,
                       "target_blind": True, "gold_loaded": False}, sort_keys=True))
 
