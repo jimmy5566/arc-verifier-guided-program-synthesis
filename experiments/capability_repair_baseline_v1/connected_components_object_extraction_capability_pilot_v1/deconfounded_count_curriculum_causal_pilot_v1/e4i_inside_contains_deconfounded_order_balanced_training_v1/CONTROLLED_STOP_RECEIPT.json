@@ -1,0 +1,43 @@
+{
+  "adapter_or_checkpoint_present": false,
+  "binding_sha256": "0a420d5d534866627bbd7cc21c1cb6bb2876890ac8b9f57b5d706cb809c3a215",
+  "gpu_process_remaining": false,
+  "interpretation": "NOT_RUN_NO_SCIENTIFIC_RESULT",
+  "model_load_observed_in_log": true,
+  "nonce": "afc262590eeb4b289fcd9fbdabf5cf6e",
+  "output_root": "/workspace/arc2/active_runs/e4i_deconfounded_inside_contains/e4i_afc262590eeb4b289fcd9fbdabf5cf6e",
+  "preflight_status": "PASS_E4I_PRODUCTION_PREFLIGHT_NO_MODEL",
+  "preserved_artifacts": {
+    "PREFLIGHT_RECEIPT.json": {
+      "bytes": 289,
+      "sha256": "66c7f22d3f3d85f67d9ed9ced58bc29f9ddab07d1948e9722ece73bb378c32c9"
+    },
+    "SCIENTIFIC_BOUNDARY_RECEIPT.json": {
+      "bytes": 78,
+      "sha256": "0a0812582f226ee2b20a1e44bb71c4e2b3e8f40563078feafcbef61b46f72768"
+    },
+    "active_guard": {
+      "bytes": 148,
+      "sha256": "4430de8df1961b97fefdd2a2f2c8b423ca63a7923afd4e3a209e77e6cc28eed9"
+    },
+    "worker_log": {
+      "bytes": 335,
+      "sha256": "670397774ca038ff79042d23fe5133035af2adb5efbcbb6126b763be2811610c"
+    }
+  },
+  "process_termination": "SIGTERM_CONFIRMED_STOPPED",
+  "promotion_allowed": false,
+  "raw_freeze_present": false,
+  "reason": "OWNER_ADJUSTING_EXPERIMENT_DIRECTION",
+  "rerun_allowed_under_this_binding": false,
+  "scientific_boundary_status": "FIRST_MODEL_LOAD_NEXT",
+  "scientific_result_available": false,
+  "scoring_performed": false,
+  "source_commit": "bf2f12daae16aef3fc19a799b1498ef37650337c",
+  "status": "CONTROLLED_STOP_BY_OWNER_DIRECTION",
+  "stopped_at_utc": "2026-10-14T13:36:57Z",
+  "target_sidecar_present": false,
+  "targets_opened": false,
+  "training_receipt_present": false,
+  "verified_worker_pid": 127484
+}
