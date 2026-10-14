@@ -166,6 +166,13 @@ def _attach_v7_and_zero_ttt(model: Any, args: argparse.Namespace, config: dict[s
     return model
 
 
+def _activate_ttt_training_partition(model: Any) -> None:
+    """Activate both residuals but allow updates only to task-local TTT."""
+    model.base_model.set_adapter(["foundation", "default"])
+    for name, parameter in model.named_parameters():
+        parameter.requires_grad = ".default." in name and (".lora_A." in name or ".lora_B." in name)
+
+
 def generate_aug8_evidence(*, model: Any, tokenizer: Any, task: Any, config: dict[str, Any]) -> tuple[list[dict[str, Any]], list[dict[str, Any]], float]:
     """Run the frozen Greedy AUG8 while retaining valid and invalid raw suffixes."""
     import torch
@@ -275,8 +282,8 @@ def train(args: argparse.Namespace, task_ids: list[str], config: dict[str, Any])
     if len(checkpoint_tokenizer) != 16 or checkpoint_tokenizer.get_vocab() != tokenizer.get_vocab():
         raise RuntimeError("merged V7 tokenizer differs from native tokenizer")
     model = _attach_v7_and_zero_ttt(model, args, config)
-    for name, parameter in model.named_parameters():
-        parameter.requires_grad = ".default." in name and (".lora_A." in name or ".lora_B." in name)
+    _activate_ttt_training_partition(model)
+    for _name, parameter in model.named_parameters():
         if parameter.dtype == torch.float32:
             parameter.data = parameter.data.to(torch.bfloat16)
     default_state = {key: value.detach().clone() for key, value in get_peft_model_state_dict(model, adapter_name="default").items()}
@@ -299,7 +306,7 @@ def train(args: argparse.Namespace, task_ids: list[str], config: dict[str, Any])
         if task_dir.exists():
             raise RuntimeError(f"refusing to overwrite adapter directory: {task_dir}")
         started = time.perf_counter()
-        model.base_model.set_adapter(["foundation", "default"])
+        _activate_ttt_training_partition(model)
         fit = _fit_task(model=model, tokenizer=tokenizer, task=tasks[task_id], config=config,
                         default_state=default_state, adapter_before=adapter_before,
                         base_fingerprints=base_before, adapter_name="default",
