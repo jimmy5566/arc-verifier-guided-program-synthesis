@@ -45,6 +45,23 @@ class E4F2Tests(unittest.TestCase):
             if before["role"] != "PRIMARY_CONNECTED_COMPONENT_COUNT":
                 self.assertEqual(hashlib.sha256(canonical(before)).hexdigest(), hashlib.sha256(canonical(after)).hexdigest())
 
+    def test_exact_global_and_per_stratum_pair_contract_has_no_serialized_generator_metadata(self):
+        freeze()
+        spec=json.loads((OUT/"PAIR_AFFINITY_SPEC.json").read_text())
+        selected=spec["audit"]["selected_pairs"]
+        self.assertEqual(len(selected),32)
+        self.assertEqual({label:sum(x["label"] == label for x in selected) for label in ("SAME_COMPONENT","DIFFERENT_COMPONENT")}, {"SAME_COMPONENT":16,"DIFFERENT_COMPONENT":16})
+        for count in (2,3):
+            rows=[x for x in selected if x["count"] == count]
+            self.assertEqual({label:sum(x["label"] == label for x in rows) for label in ("SAME_COMPONENT","DIFFERENT_COMPONENT")}, {"SAME_COMPONENT":8,"DIFFERENT_COMPONENT":8})
+        features=("colour_equal","manhattan","chebyshev","relative_displacement","absolute_coordinates","component_sizes","topology","count","pair_order")
+        for feature in features:
+            same=sorted(json.dumps(x[feature],sort_keys=True) for x in selected if x["label"] == "SAME_COMPONENT")
+            different=sorted(json.dumps(x[feature],sort_keys=True) for x in selected if x["label"] == "DIFFERENT_COMPONENT")
+            self.assertEqual(same,different)
+        schedule=json.loads((OUT/"SUCCESSOR_COUNTERFACTUAL_SCHEDULE.json").read_text())["episodes"]
+        self.assertTrue(all("variant" not in row["task"] and "generator" not in row["task"] for row in schedule))
+
     def test_affinity_is_pair_order_invariant_and_gradients_are_finite(self):
         import torch
         freeze()
