@@ -1,0 +1,44 @@
+{
+  "cpu_commands": [
+    "py -3 -m unittest tests.test_e4g_inside_contains_atomic tests.test_e4g_production_source_closure",
+    "py -3 scripts/score_e4g_inside_contains_v1.py --cpu-self-test",
+    "bash -n scripts/launch_e4g_inside_contains_v1.sh"
+  ],
+  "cpu_results": {
+    "gpu_used": false,
+    "model_loaded": false,
+    "partial_outputs_scored": false,
+    "real_targets_opened": false,
+    "scorer": "PASS_E4G_SCORER_FAIL_CLOSED_TARGET_GUARD",
+    "tests": "PASS 8"
+  },
+  "created_at_utc": "2026-10-14T11:24:09.151417Z",
+  "frozen_reference_bytes_unchanged": {
+    "path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/deconfounded_count_curriculum_causal_pilot_v1/e4g_inside_contains_atomic_plasticity_v1/PROTECTION_PANEL_REFERENCES.json",
+    "sha256": "b947049b1e0edac6b633095c305818e5966ed01ef2df7a04b928dc9aa35d43a4"
+  },
+  "preserved_failed_execution": {
+    "binding_sha256": "ce0bb422c2ee76d6e563c3e91c70f60378a70cf72421b639605aa2981f779dd9",
+    "classification": "POST_BOUNDARY_ENGINEERING_FAILURE_NO_INTERPRETABLE_CAUSAL_RESULT",
+    "nonce": "47030df1b859fe80fa0f72957593ba65",
+    "terminal_receipt_sha256": "686c28a19accc06e7ae821a2de76101def346084a2aba760a58f31fd647d4a3a"
+  },
+  "resolver_contract": {
+    "accepted_fields": [
+      "retention_path",
+      "composition_path"
+    ],
+    "rejects": [
+      "absolute_paths",
+      "traversal",
+      "outside_checkout",
+      "unknown_reference_schema",
+      "uncovered_resolved_path"
+    ],
+    "target_access": false,
+    "windows_separators_normalized_on_posix": true
+  },
+  "schema_version": 1,
+  "scope": "runtime path-semantics repair only",
+  "status": "PASS_E4G_POSIX_FROZEN_REFERENCE_PATH_CPU_VALIDATION"
+}

@@ -1,7 +1,7 @@
 """Complete E4G worker: target-blind two-arm runtime with post-freeze scoring."""
 from __future__ import annotations
 import argparse, copy, hashlib, importlib, json, os, random, subprocess, sys, time
-from pathlib import Path
+from pathlib import Path, PurePosixPath, PureWindowsPath
 ROOT=Path(os.environ.get('ARC2_ROOT',Path(__file__).resolve().parents[1]))
 sys.path[:0]=[str(ROOT),str(ROOT/'src')]
 PKG=ROOT/'experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/deconfounded_count_curriculum_causal_pilot_v1/e4g_inside_contains_atomic_plasticity_v1'
@@ -34,6 +34,34 @@ def e4g_target(grid):
 
 def binding_inputs():
  return {'freeze':PKG/'CPU_FREEZE_RECEIPT.json','ood':PKG/'STRUCTURAL_OOD_INPUTS_AND_COMMITMENTS.json','preflight':PKG/'CPU_PRODUCTION_PATH_RECEIPT.json','schedule':PKG/'TRAINING_SCHEDULE.json','protection':PKG/'PROTECTION_PANEL_REFERENCES.json','trainfit':PKG/'TRAIN_FIT_INPUTS_AND_COMMITMENTS.json','scoring':PKG/'SCORING_CONTRACT.json','protocol':PKG/'PROTOCOL.json'}
+
+def resolve_frozen_repo_reference(refs, field):
+ """Resolve only a declared repository-relative frozen reference on any host.
+
+ The protection-reference file is frozen as bytes and historically contains
+ Windows separators.  Treat those separators as serialization, never as a
+ POSIX filename.  The caller may select only the two declared frozen fields;
+ absolute paths, traversal, and paths outside this exact checkout fail closed.
+ """
+ allowed_fields=('retention_path','composition_path')
+ if field not in allowed_fields or set(refs) != {'retention_path','retention_sha256','composition_path','composition_sha256','status'}: fail('REFERENCE_SCHEMA')
+ raw=refs.get(field)
+ if not isinstance(raw,str) or not raw: fail('REFERENCE_TYPE')
+ if PureWindowsPath(raw).is_absolute() or PurePosixPath(raw.replace('\\','/')).is_absolute(): fail('REFERENCE_ABSOLUTE')
+ normalized=raw.replace('\\','/')
+ parts=PurePosixPath(normalized).parts
+ if not parts or any(part in ('.','..') for part in parts): fail('REFERENCE_TRAVERSAL')
+ candidate=(ROOT.joinpath(*parts)).resolve()
+ checkout=ROOT.resolve()
+ if candidate != checkout and checkout not in candidate.parents: fail('REFERENCE_OUTSIDE_CHECKOUT')
+ # This check is deliberately against the frozen references, rather than any
+ # dynamic caller-provided path: no third reference can be resolved here.
+ covered={
+  (ROOT.joinpath(*PurePosixPath(str(refs[name]).replace('\\','/')).parts)).resolve()
+  for name in allowed_fields
+ }
+ if candidate not in covered: fail('REFERENCE_NOT_FROZEN')
+ return candidate
 
 def resolve(binding_path, *, check_output=True, verify_assets=True, require_clean_source=True):
  b=load(binding_path)
@@ -72,9 +100,9 @@ def task_records():
    task=copy.deepcopy(r['input_task'])
    if 'output' in task['test'][0]: fail('TARGET_LEAK')
    out.append({'record_id':split+':'+r['canonical_unit_id']+':'+r['demo_order'],'split':split,'canonical_unit_id':r['canonical_unit_id'],'demo_order':r['demo_order'],'task':task,'target_sha256':r['target_sha256'],'semantic_family':'E4G'})
- for r in load(ROOT/refs['retention_path']):
+ for r in load(resolve_frozen_repo_reference(refs,'retention_path')):
   task=copy.deepcopy(r['task']); out.append({'record_id':'RETENTION:'+r['prompt_id'],'split':'RETENTION','task':task,'semantic_family':r['latent_condition']['family']})
- for r in load(ROOT/refs['composition_path']):
+ for r in load(resolve_frozen_repo_reference(refs,'composition_path')):
   task=copy.deepcopy(r['task']); out.append({'record_id':'COMPOSITION:'+r['prompt_id'],'split':'COMPOSITION','task':task,'semantic_family':r['latent_condition']['family']})
  if any('output' in x['task']['test'][0] for x in out): fail('TARGET_LEAK')
  return out

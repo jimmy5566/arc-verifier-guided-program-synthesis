@@ -1,5 +1,6 @@
 from __future__ import annotations
 import hashlib, json, subprocess, sys, tempfile, unittest
+import importlib.util
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -7,6 +8,13 @@ PKG = ROOT / 'experiments/capability_repair_baseline_v1/connected_components_obj
 WORKER = ROOT / 'scripts/run_e4g_inside_contains_production_v1.py'
 SCORER = ROOT / 'scripts/score_e4g_inside_contains_v1.py'
 LAUNCHER = ROOT / 'scripts/launch_e4g_inside_contains_v1.sh'
+
+def worker_module():
+    spec = importlib.util.spec_from_file_location('e4g_worker_under_test', WORKER)
+    module = importlib.util.module_from_spec(spec)
+    assert spec.loader is not None
+    spec.loader.exec_module(module)
+    return module
 
 def sha(p):
     return hashlib.sha256(Path(p).read_bytes()).hexdigest()
@@ -45,6 +53,18 @@ def binding(path):
     }
 
 class E4GProductionClosureTests(unittest.TestCase):
+    def test_windows_serialized_frozen_references_resolve_only_inside_checkout(self):
+        worker = worker_module()
+        refs = json.loads((PKG / 'PROTECTION_PANEL_REFERENCES.json').read_text(encoding='utf-8'))
+        retention = worker.resolve_frozen_repo_reference(refs, 'retention_path')
+        composition = worker.resolve_frozen_repo_reference(refs, 'composition_path')
+        self.assertEqual(retention, ROOT / 'experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/RETENTION_INPUT_PROMPTS.json')
+        self.assertEqual(composition, ROOT / 'experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/scientific_successor_v2/COMPOSITION_SENTINEL_INPUT_PROMPTS.json')
+        for bad in ('/etc/passwd', r'C:\\Windows\\System32', r'..\\RETENTION_INPUT_PROMPTS.json'):
+            broken = dict(refs); broken['retention_path'] = bad
+            with self.assertRaisesRegex(RuntimeError, 'E4G:REFERENCE_'):
+                worker.resolve_frozen_repo_reference(broken, 'retention_path')
+
     def test_worker_preclaim_and_scorer_target_guard_without_model(self):
         with tempfile.TemporaryDirectory() as td:
             p = Path(td) / 'binding.json'
