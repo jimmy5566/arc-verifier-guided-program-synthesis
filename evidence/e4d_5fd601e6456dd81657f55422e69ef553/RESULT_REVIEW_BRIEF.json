@@ -1,0 +1,71 @@
+{
+  "binding_sha256": "29f9b1792f136912d07901973f9ac362cfbab3233e5127031f10280bfa7b3245",
+  "kind": "SCIENTIFIC_RESULT_REVIEW",
+  "nonce": "5fd601e6456dd81657f55422e69ef553",
+  "predeclared_score": {
+    "classification": "ANCHOR_REPRESENTATION_INTERVENTION_FAILED",
+    "inputs": {
+      "panel": "41a468ebe6fda3d0f09d2f6065f51eada96265b707ef600402aa304101128c55",
+      "sidecar": "83ea56b94aac6b8134e421ed20d4833983d4f1f860fbafb8e7f2662fb7823344",
+      "train": "d261ed69aff6313cfc1e70f657502a6d500d8734eceedcd68d1be80096b91a06"
+    },
+    "layers_descriptive": [
+      8,
+      16,
+      24,
+      31
+    ],
+    "native_greedy": {
+      "bootstrap_95_ci": [
+        -7,
+        0
+      ],
+      "canonical_units": 48,
+      "component_anchor_minus_equal_slot": -3
+    },
+    "primary_layer": 31,
+    "primary_probe": {
+      "bootstrap_95_ci": [
+        -3,
+        0
+      ],
+      "canonical_units": 48,
+      "component_anchor_minus_equal_slot": -1
+    },
+    "raw_freeze_before_sidecar": true,
+    "schema_version": "E4D_REPRESENTATION_VS_BINDING_DIAGNOSTIC_SCORE_V1",
+    "status": "COMPLETE_AFTER_RAW_FREEZE"
+  },
+  "preservation_manifest": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/deconfounded_count_curriculum_causal_pilot_v1/e4d_representation_vs_generation_diagnostic_v1/RESULT_MANIFEST_5fd601e6456dd81657f55422e69ef553.json",
+  "raw_freeze_before_sidecar": true,
+  "raw_record_validation": {
+    "COMPONENT_ANCHOR": {
+      "feature_width": 2560,
+      "ood": 96,
+      "records": 144,
+      "sha256": "c9ec4b49e06fb83be5c636aad6b93699bbec9d746bc82ff1e27f9ddc1bef25f4",
+      "train_probe": 48
+    },
+    "EQUAL_SLOT": {
+      "feature_width": 2560,
+      "ood": 96,
+      "records": 144,
+      "sha256": "2c8f9426449a82581293adcea9b1959a430361831417a7087fcf34b931a16964",
+      "train_probe": 48
+    },
+    "V7": {
+      "feature_width": 2560,
+      "ood": 96,
+      "records": 144,
+      "sha256": "f73dc760f26625f6cf3d0edcee8c81044403fd3b8a26ce5ca8b268dd3253f523",
+      "train_probe": 48
+    }
+  },
+  "review_question": "Interpret the completed frozen three-checkpoint diagnostic under the predeclared exhaustive decision table. No new generation, model loading, training, target generation, or checkpoint promotion is requested.",
+  "round_id": "E4D_REPRESENTATION_VS_GENERATION_DIAGNOSTIC_V1_5fd601e6456dd81657f55422e69ef553",
+  "schema_version": "E4D_REPRESENTATION_VS_GENERATION_DIAGNOSTIC_RESULT_REVIEW_BRIEF_V1",
+  "score_receipt_sha256": "6f1695596a08253847c9e3e872ad45208f67e559fa4c9c7a89e4ede93ee86e2d",
+  "source_commit": "1d88bf99b2639ce0b8fbb7b88adfff243c9190e2",
+  "status": "COMPLETE_FROZEN_RESULT_REQUIRES_INTERPRETATION",
+  "terminal_receipt_sha256": "19a26008540bc1d7bef00a0878ec96697abfe988c68ac54f6e7c8add0052f70d"
+}

@@ -1,0 +1,105 @@
+{
+  "binding": {
+    "path": "experiments/capability_repair_baseline_v1/connected_components_object_extraction_capability_pilot_v1/deconfounded_count_curriculum_causal_pilot_v1/e4d_representation_vs_generation_diagnostic_v1/EXECUTION_BINDING_V3.json",
+    "sha256": "29f9b1792f136912d07901973f9ac362cfbab3233e5127031f10280bfa7b3245"
+  },
+  "nonce": "5fd601e6456dd81657f55422e69ef553",
+  "provenance_limits": "Raw JSONL representations remain at the bound remote output root; they were not copied into Git because each is approximately 29 MB. Their bytes and SHA256 values are fixed above.",
+  "raw_freeze_before_sidecar": true,
+  "raw_freeze_receipt_sha256": "a135718d5839af8251e62607b22eb2581352d02e02bdb37bfaf4b7e98f840b3b",
+  "raw_remote_only": {
+    "COMPONENT_ANCHOR_RAW.jsonl": {
+      "bytes": 29365839,
+      "remote_path": "/workspace/arc2/active_runs/e4d_representation_binding/e4d_5fd601e6456dd81657f55422e69ef553/COMPONENT_ANCHOR_RAW.jsonl",
+      "sha256": "c9ec4b49e06fb83be5c636aad6b93699bbec9d746bc82ff1e27f9ddc1bef25f4"
+    },
+    "EQUAL_SLOT_RAW.jsonl": {
+      "bytes": 29359700,
+      "remote_path": "/workspace/arc2/active_runs/e4d_representation_binding/e4d_5fd601e6456dd81657f55422e69ef553/EQUAL_SLOT_RAW.jsonl",
+      "sha256": "2c8f9426449a82581293adcea9b1959a430361831417a7087fcf34b931a16964"
+    },
+    "V7_RAW.jsonl": {
+      "bytes": 29404516,
+      "remote_path": "/workspace/arc2/active_runs/e4d_representation_binding/e4d_5fd601e6456dd81657f55422e69ef553/V7_RAW.jsonl",
+      "sha256": "f73dc760f26625f6cf3d0edcee8c81044403fd3b8a26ce5ca8b268dd3253f523"
+    }
+  },
+  "remote_output_root": "/workspace/arc2/active_runs/e4d_representation_binding/e4d_5fd601e6456dd81657f55422e69ef553",
+  "result_interpretation": "NOT_YET_INTERPRETED_BY_DIRECTOR",
+  "result_review_brief": {
+    "path": "evidence/e4d_5fd601e6456dd81657f55422e69ef553/RESULT_REVIEW_BRIEF.json",
+    "sha256": "4089da9d31d10ecb1374e858090f7c26101c2594e10c80037cec5d506276ded6"
+  },
+  "round_id": "E4D_REPRESENTATION_VS_GENERATION_DIAGNOSTIC_V1_5fd601e6456dd81657f55422e69ef553",
+  "schema_version": "E4D_REPRESENTATION_VS_GENERATION_DIAGNOSTIC_RESULT_MANIFEST_V1",
+  "score_receipt_sha256": "6f1695596a08253847c9e3e872ad45208f67e559fa4c9c7a89e4ede93ee86e2d",
+  "score_summary": {
+    "classification": "ANCHOR_REPRESENTATION_INTERVENTION_FAILED",
+    "inputs": {
+      "panel": "41a468ebe6fda3d0f09d2f6065f51eada96265b707ef600402aa304101128c55",
+      "sidecar": "83ea56b94aac6b8134e421ed20d4833983d4f1f860fbafb8e7f2662fb7823344",
+      "train": "d261ed69aff6313cfc1e70f657502a6d500d8734eceedcd68d1be80096b91a06"
+    },
+    "layers_descriptive": [
+      8,
+      16,
+      24,
+      31
+    ],
+    "native_greedy": {
+      "bootstrap_95_ci": [
+        -7,
+        0
+      ],
+      "canonical_units": 48,
+      "component_anchor_minus_equal_slot": -3
+    },
+    "primary_layer": 31,
+    "primary_probe": {
+      "bootstrap_95_ci": [
+        -3,
+        0
+      ],
+      "canonical_units": 48,
+      "component_anchor_minus_equal_slot": -1
+    },
+    "raw_freeze_before_sidecar": true,
+    "schema_version": "E4D_REPRESENTATION_VS_BINDING_DIAGNOSTIC_SCORE_V1",
+    "status": "COMPLETE_AFTER_RAW_FREEZE"
+  },
+  "small_evidence": {
+    "files": {
+      "PREFLIGHT_RECEIPT.json": {
+        "bytes": 25204,
+        "sha256": "8549d8a1599cd1fe35c0113270dea8c5cf2590983c376790fc1d52ee2b3602e5"
+      },
+      "RAW_FREEZE_RECEIPT.json": {
+        "bytes": 798,
+        "sha256": "a135718d5839af8251e62607b22eb2581352d02e02bdb37bfaf4b7e98f840b3b"
+      },
+      "SCORE_RECEIPT.json": {
+        "bytes": 77980,
+        "sha256": "6f1695596a08253847c9e3e872ad45208f67e559fa4c9c7a89e4ede93ee86e2d"
+      },
+      "SYNTHETIC_TARGET_SIDECAR.json": {
+        "bytes": 7553,
+        "sha256": "83ea56b94aac6b8134e421ed20d4833983d4f1f860fbafb8e7f2662fb7823344"
+      },
+      "TERMINAL_RECEIPT.json": {
+        "bytes": 308,
+        "sha256": "19a26008540bc1d7bef00a0878ec96697abfe988c68ac54f6e7c8add0052f70d"
+      }
+    },
+    "local_path": "evidence/e4d_5fd601e6456dd81657f55422e69ef553",
+    "transfer_bundle": {
+      "bytes": 7467,
+      "local_sha256": "39bec2d59ec36175c400bfd05d8e0f2ca12d23e9881b88bd05b5236e137683e5",
+      "remote_sha256": "39bec2d59ec36175c400bfd05d8e0f2ca12d23e9881b88bd05b5236e137683e5"
+    }
+  },
+  "source_commit": "1d88bf99b2639ce0b8fbb7b88adfff243c9190e2",
+  "status": "COMPLETE_FROZEN_AWAITING_DIRECTOR_INTERPRETATION",
+  "target_sidecar_sha256": "83ea56b94aac6b8134e421ed20d4833983d4f1f860fbafb8e7f2662fb7823344",
+  "terminal_receipt_sha256": "19a26008540bc1d7bef00a0878ec96697abfe988c68ac54f6e7c8add0052f70d",
+  "terminal_status": "COMPLETE"
+}
