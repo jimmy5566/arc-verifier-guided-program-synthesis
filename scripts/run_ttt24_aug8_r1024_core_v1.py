@@ -139,6 +139,12 @@ def _worker(args: argparse.Namespace, run: Path, selected: dict[str, Any], attem
     command.extend(["--search-order-policy", search_order_policy])
     if bool(getattr(args, "frontier_telemetry", False)):
         command.append("--frontier-telemetry")
+    if bool(getattr(args, "diagnostic_trace", False)):
+        # This is append-only instrumentation in the historical recursive
+        # ReadyCell path.  It records successor retention/insertion/pop and
+        # full native-token log probabilities without changing logits,
+        # retention, traversal order, or the scientific node budget.
+        command.append("--diagnostic-trace")
     hidden_layers = getattr(args, "hidden_state_layers", None)
     if hidden_layers:
         if isinstance(hidden_layers, (tuple, list)):
