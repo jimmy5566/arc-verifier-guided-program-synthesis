@@ -10,7 +10,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import shutil
 import sys
 from pathlib import Path
 from typing import Any
@@ -220,55 +219,6 @@ def snapshots(run: Path, output_id: str) -> dict[str, Any]:
     return result
 
 
-def _archive_prefreeze_output(run: Path, output_id: str) -> dict[str, Any]:
-    if (run / "GENERATION_FREEZE.json").exists():
-        raise RuntimeError("cannot archive an output from frozen generation")
-    matches = []
-    for path in sorted((run / "OUTPUT_RECEIPTS").glob("*.json")):
-        receipt = _read(path)
-        if receipt.get("output_id") == output_id:
-            matches.append((path, receipt))
-    if len(matches) != 1:
-        raise RuntimeError(f"expected one pre-freeze receipt for {output_id}")
-    receipt_path, receipt = matches[0]
-    if (receipt.get("status") != "COMPLETE" or receipt.get("target_blind") is not True
-            or receipt.get("gold_loaded") is not False):
-        raise RuntimeError(f"refusing to archive invalid pre-freeze output: {output_id}")
-    relatives = [
-        Path(str(receipt[key]))
-        for key in ("raw_output", "checkpoint_output", "eos_events")
-    ] + [receipt_path.relative_to(run)]
-    if any(path.is_absolute() or ".." in path.parts for path in relatives):
-        raise RuntimeError(f"unsafe pre-freeze artifact binding: {output_id}")
-    archive = run.parent / "PREFREEZE_PARITY_REJECTED" / _safe(output_id)
-    if archive.exists():
-        raise RuntimeError(f"pre-freeze parity archive already exists: {archive}")
-    rows = []
-    for relative in relatives:
-        source = run / relative
-        if not source.is_file():
-            raise RuntimeError(f"pre-freeze artifact missing: {source}")
-        destination = archive / relative
-        destination.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(source, destination)
-        before, after = sha256(source), sha256(destination)
-        if before != after:
-            raise RuntimeError(f"pre-freeze archive verification failed: {source}")
-        rows.append({"path": str(relative), "sha256": before, "size": source.stat().st_size})
-    for relative in relatives:
-        (run / relative).unlink()
-    payload = {
-        "status": "ARCHIVED_BEFORE_GENERATION_FREEZE",
-        "output_id": output_id,
-        "target_blind": True,
-        "gold_loaded": False,
-        "reason": "material Batch1 candidate-pool parity failure",
-        "artifacts": rows,
-    }
-    _atomic_json(archive / "ARCHIVE_MANIFEST.json", payload)
-    return {**payload, "archive": str(archive)}
-
-
 def b1_policy(rows: list[dict[str, Any]]) -> dict[str, Any]:
     """Build the exact Batch1 policy for the selected parity rows.
 
@@ -440,6 +390,8 @@ def main() -> None:
         "adapter_composition": "simultaneous frozen V7 plus task-local TTT LoRA residuals",
         "search_order": "historical recursive DFS; diagnostic_trace append-only",
         "admission": "root-aware exact READY compatibility; fairness_max_wait=3",
+        "batch_policy_estimand": "HISTORICAL_ROOT_AWARE_PRODUCTION_POLICY",
+        "b1_role": "NONBLOCKING_RUNTIME_SENSITIVITY_DIAGNOSTIC",
         "worker_python": str(args.worker_python), "solutions_argument_available": False,
     }
     if contract["foundation_adapter_sha256"] != V7_ADAPTER_SHA256:
@@ -490,36 +442,21 @@ def main() -> None:
         return rows
 
     parity_rows = compare_parity()
-    fallback = None
-    if not all(row["exact"] for row in parity_rows):
-        failed_ids = {row["output_id"] for row in parity_rows if not row["exact"]}
-        failed_smoke = [row for row in smoke if row["output_id"] in failed_ids]
-        failed_profiles = sorted({str(row["profile"]) for row in failed_smoke})
-        archives = [_archive_prefreeze_output(args.output, row["output_id"]) for row in failed_smoke]
-        for profile in failed_profiles:
-            policy["profiles"][profile] = {
-                "primary": {"resident_capacity": 1, "physical_batch_ceiling": 1},
-                "fallbacks": [],
-            }
-        fallback = {
-            "status": "APPLIED",
-            "reason": "material parsed candidate-pool difference versus Batch1",
-            "failed_outputs": sorted(failed_ids),
-            "profiles_forced_to_batch1": failed_profiles,
-            "initial_rows": parity_rows,
-            "archives": archives,
-            "target_blind": True,
-            "gold_loaded": False,
-        }
-        _atomic_json(args.output / "B1_ADAPTIVE_FALLBACK.json", fallback)
-        _run_surface(args, args.output, failed_smoke, depth=24, experiment=EXPERIMENT, policy=policy)
-        parity_rows = compare_parity()
-    gate = {"status": "PASS" if all(row["exact"] for row in parity_rows) else "FAIL",
+    exact_parity = all(row["exact"] for row in parity_rows)
+    gate = {"status": "PASS" if exact_parity else "CONTINUE_WITH_RUNTIME_SENSITIVITY",
             "criterion": "exact R1024 parsed/canonical candidate-pool agreement on fixed short and long outputs",
-            "rows": parity_rows, "adaptive_fallback": fallback}
+            "rows": parity_rows,
+            "blocking": False,
+            "formal_execution_policy": "HISTORICAL_ROOT_AWARE_PRODUCTION_POLICY",
+            "interpretation": (
+                "EXACT_PARITY"
+                if exact_parity
+                else "BATCH1_DIFFERS_FROM_DEPLOYMENT_ALIGNED_BATCHED_CANDIDATE_POOL"
+            ),
+            "owner_direction": "Batch1 is diagnostic; Kaggle-aligned Batch7/8 remains primary",
+            "target_blind": True,
+            "gold_loaded": False}
     _atomic_json(args.output / "B1_PARITY_GATE.json", gate)
-    if gate["status"] != "PASS":
-        raise RuntimeError("B1 parity gate failed; remaining Eval60 outputs were not started")
 
     _run_surface(args, args.output, outputs, depth=24, experiment=EXPERIMENT, policy=policy)
     _freeze_generation(args.output, EXPERIMENT, 89)
