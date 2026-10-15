@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "profile_id": "FASTEST_CURRENT_READY_V1",
+  "status": "FROZEN_CONFIGURATION_REFERENCE",
+  "owner_aliases": ["最快配置", "历史最快配置", "当前最快配置"],
+  "alias_meaning": "Owner-selected current READY throughput reference, not proof of a global throughput optimum.",
+  "execution_source_commit": "cde188b600600c17cf5c9419db1cfd8cd4898f74",
+  "entrypoint": "scripts/run_eval60_ready_restore_v1.py",
+  "mode": "HISTORICAL_ROOT_AWARE_READY_RESTORED_ACTIVE_TIME_V2",
+  "source_sha256": {
+    "scripts/run_eval60_ready_restore_v1.py": "82fd49f337f75b76852826789ad218495cabd2cb0c4ddf1332f22cfe6a386de7",
+    "src/inference/rolling_resident_pool.py": "cb152cd9b71835e2e238862adc36fd223f538e3c4def4c921b97bb7e6edd4103",
+    "src/inference/nvarc_turbodfs_dynamic_ready.py": "ce3c3c10898bddcff075c47781646def3c4c63bba2455e9cd81a21d537221ee3",
+    "src/inference/chunked_kv_cache.py": "7f5a0da5fb4f4fc1f8221ceb90f8475b17baea18f6e72712861896bfa3f2c0c8"
+  },
+  "scheduling": {
+    "adapter_scope": "Same exact task adapter; multiple test outputs may share the resident pool; never mix different task adapters.",
+    "root_grouping": "Exact tokenizer root length; dynamically re-evaluate READY position and cache compatibility before every physical forward.",
+    "dynamic_lane_refill": true,
+    "fairness_max_wait": 3,
+    "compatible_integer_batch_widths": true,
+    "cache": "ChunkedDynamicCache with independent ownership and valid-length rollback",
+    "persistent_model": true,
+    "adapter_mode": "Unmerged foundation plus fresh task adapter; do not silently replace with merged weights.",
+    "root_max_profiles": [
+      {"maximum_tokens": 2048, "resident_capacity": 16, "physical_ceiling": 16},
+      {"maximum_tokens": 2653, "resident_capacity": 8, "physical_ceiling": 8},
+      {"maximum_tokens": 6493, "resident_capacity": 4, "physical_ceiling": 4},
+      {"maximum_tokens": 17245, "resident_capacity": 2, "physical_ceiling": 2}
+    ],
+    "lane_count_cap": "Both resident capacity and physical ceiling are capped by the available same-adapter cells.",
+    "live_kv_protection": "Position >2048 caps B8; >2653 caps B4; >6493 caps B2. For a starting ceiling above eight, position >2048 or allocated memory >=20 GiB permanently soft-disables B16 for that task attempt.",
+    "oom_recovery": "Preserve completed outputs and failure receipt; discard only uncommitted task work; retry widths 8,4,2,1 after the initial profile. This registration grants no additional execution authorization."
+  },
+  "scientific_contract_unchanged": {
+    "augmentation": "CANONICAL_GEOMETRY_AUG8",
+    "regret": 4.0,
+    "maximum_expanded_nodes_per_cell": 1024,
+    "checkpoints": [128, 256, 512, 1024],
+    "max_new_tokens": 931,
+    "candidate_cap": 32,
+    "eos_token_id": 15,
+    "time_budget_seconds_per_cell": 540,
+    "time_accounting": "Existing V2 active-time amendment: charge each participating cell the full synchronized forward duration, not batch-divided time; exclude queue waiting.",
+    "targets": "Remain inaccessible until required raw candidate and trace freezes."
+  },
+  "verification_snapshot": {
+    "audit_utc": "2026-10-15T15:04:38.659409+00:00",
+    "hardware_scope": "Current RTX 3090 24 GB RunPod runtime; not a universal GPU capacity policy.",
+    "root_audit": {
+      "method": "CPU-only actual native tokenizer and production prompt constructor on all 89 outputs and eight views; no model loading or target access.",
+      "outputs": 89,
+      "equal_length_groups": {"4+4": 53, "8": 36, "7+1": 0},
+      "cohort_min_max_length_mismatches": 0,
+      "example_4_plus_4": {"output_id": "5dbc8537:o0", "1637": ["identity", "flip_ud", "rot180", "flip_lr"], "1640": ["transpose", "anti_transpose", "rot90", "rot270"]},
+      "current_output_example": {"output_id": "8e5c0c38:o0", "all_eight_root_tokens": 2548}
+    },
+    "canary_gate": "PASS",
+    "canary_scope": "Isolated R128: two short outputs sharing B16 and one long output at B2; not adopted as formal R1024 results.",
+    "formal_completed_outputs": 59,
+    "formal_total_outputs": 89,
+    "restored_worker_attempt": 0,
+    "restored_ready_oom_failure_receipts": 0,
+    "active_generation_log_error_counts": {"CUDA out of memory": 0, "OutOfMemoryError": 0, "Traceback": 0},
+    "oom_claim": "NO_OOM_OBSERVED_IN_AUDITED_RESTORED_RUN_TO_DATE; zero OOM for the entire unfinished run is not yet established.",
+    "full_r1024_throughput_optimality": "NOT_ESTABLISHED",
+    "runtime_changes_performed_by_registration": false,
+    "gpu_rerun_performed_by_registration": false
+  },
+  "binding_sha256": {
+    "RUN_COHORT.json": "a27fa10da924d77bf80b5433525a63f5ba0c3b16127aac2419031d485b25c8c2f",
+    "CONTRACT.json": "d5905b22005500d03e289f4ee959cc9a8118c5015ca50cef3f5461dd11abb668",
+    "PRE_GOLD_CONTRACT.json": "d5905b22005500d03e289f4ee959cc9a8118c5015ca50cef3f5461dd11abb668",
+    "EXECUTION_POLICY_AMENDMENT_READY_ACTIVE_TIME_V2.json": "7adae82b5021cfe429717efea83445874579f8930b89a461f5b0908b21c58804f",
+    "RESTORED_READY_CANARY_GATE.json": "e95f9fdd04cc457b83c2c53b60e988792f5b5ff4ac11bc0e7cf26549427902a4"
+  },
+  "reuse_rule": "Reuse this exact implementation/config reference, not a copied engine. Runtime task identity always derives from the actual mounted challenge. Future hardware or policy changes require a separately identified profile; never overwrite this reference."
+}

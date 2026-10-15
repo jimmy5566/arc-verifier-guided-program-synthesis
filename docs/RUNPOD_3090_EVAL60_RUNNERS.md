@@ -1,5 +1,13 @@
 # RTX 3090 Eval60 runners
 
+## Current frozen throughput reference
+
+For the current V7 + TTT24 AUG8 READY run, the owner's "fastest configuration"
+alias resolves to [FASTEST_CURRENT_READY_V1](FASTEST_CURRENT_READY.md), with
+exact source hashes in [the frozen profile](../configs/runtime/FASTEST_CURRENT_READY_V1.json).
+Use dynamic root-compatible lanes and live-KV capacity limits, not a forced
+fixed 4+4 or B8 policy. The older D1 runners below remain historical alternatives.
+
 `scripts/run_eval60_d1_ampere.py` is a research-only runner for the frozen
 TTT24/TTT48 fixed-4+4 per-output D1 evidence path. It accepts a full mounted
 challenge plus the pre-existing, target-blind Eval60 cohort manifest. It never
