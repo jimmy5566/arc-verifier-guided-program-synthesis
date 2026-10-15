@@ -74,6 +74,8 @@ def main() -> None:
     parser.add_argument("--training-source-commit", required=True)
     parser.add_argument("--generation-output", type=Path)
     parser.add_argument("--poll-seconds", type=int, default=60)
+    parser.add_argument('--restore-ready', action='store_true')
+    parser.add_argument('--preservation-manifest', type=Path)
     args = parser.parse_args()
     output = args.output; output.mkdir(parents=True, exist_ok=True)
     state: dict[str, Any] = {
@@ -113,7 +115,7 @@ def main() -> None:
     state["generation_output"] = str(generation)
     state["generation_output_reused"] = args.generation_output is not None
     atomic_json(output / "PIPELINE_STATE.json", state)
-    run("generation", [
+    generation_command = [
         str(args.python), "scripts/run_v7_ttt24_aug8_r1024_eval60.py",
         "--output", str(generation), "--model-path", str(args.model_path),
         "--foundation-adapter", str(args.foundation_adapter), "--challenge", str(args.challenge),
@@ -121,7 +123,12 @@ def main() -> None:
         "--adapter-root", str(args.adapter_root), "--training-manifest", str(manifest_path),
         "--historical-run-cohort", str(args.cohort),
         "--coarse-policy", str(args.coarse_policy), "--worker-python", str(args.python),
-    ], cwd=args.source, output=output, environment=environment, state=state)
+    ]
+    if args.restore_ready:
+        if args.preservation_manifest is None:
+            raise RuntimeError('READY restoration requires a preservation manifest')
+        generation_command.extend(['--restore-ready', '--preservation-manifest', str(args.preservation_manifest)])
+    run('generation', generation_command, cwd=args.source, output=output, environment=environment, state=state)
 
     archive = output / "archive" / "v7_ttt24_aug8_r1024_eval60_v1"
     archive.parent.mkdir(parents=True, exist_ok=True)

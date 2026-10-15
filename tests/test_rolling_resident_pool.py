@@ -55,7 +55,7 @@ def test_runtime_callbacks_keep_full_cell_keys_and_not_augmentation_suffixes() -
             pending_ids=["task:o0:d24:aug16:a", "task:o0:d24:aug16:b", "task:o0:d24:aug16:c"],
             resident_capacity=2,
             physical_batch_ceiling=2,
-            create_cell=lambda key: SimpleNamespace(cell_key=key, request=Request(), cache_owner=object()),
+            create_cell=lambda key: SimpleNamespace(cell_key=key, request=Request(), cache_owner=object(), state={}),
             consume_result=lambda key, _cell: seen.append(key),
             release_cell=lambda _key, _cell: None,
         )

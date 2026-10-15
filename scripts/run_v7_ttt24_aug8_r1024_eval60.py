@@ -246,8 +246,13 @@ def write_throughput_report(run: Path) -> None:
             continue
         raw_path = run / str(receipt["raw_output"])
         raw = _read(raw_path)
-        timings = dict(raw.get("timings") or receipt.get("timings") or {})
+        timings = dict(receipt.get("timings") or raw.get("timings") or {})
         scheduler = dict(raw.get("scheduler") or {})
+        group_count = int(raw.get('scheduler_group_output_count', 1))
+        physical = int(scheduler.get('physical_forwards', 0))
+        effective = (float(scheduler['mean_effective_batch']) if 'mean_effective_batch' in scheduler
+                     else sum(int(c.get('tokens_advanced', 0)) for c in raw.get('cells', {}).values()) / physical
+                     if physical else 0.0)
         rows.append({
             "output_id": str(receipt["output_id"]),
             "execution_mode": str(raw.get("execution_mode") or "ROLLING_READY_CELL"),
@@ -256,8 +261,8 @@ def write_throughput_report(run: Path) -> None:
             "adapter_swap_seconds": float(timings.get("adapter_swap_seconds", 0.0)),
             "search_seconds": float(timings.get("search_seconds", raw.get("wall_seconds", 0.0))),
             "artifact_write_seconds": float(timings.get("artifact_write_seconds", 0.0)),
-            "physical_forwards": int(scheduler.get("physical_forwards", 0)),
-            "mean_active_lanes": float(scheduler.get("mean_active_lanes", 0.0)),
+            "physical_forwards": physical / group_count,
+            "mean_active_lanes": effective,
         })
     fixed = [row for row in rows if row["execution_mode"] == "FIXED4_D1_INDEPENDENT_LANES"]
     def total(field: str) -> float:
@@ -428,7 +433,13 @@ def main() -> None:
     for name in ("output", "model_path", "foundation_adapter", "challenge", "native_config_dir", "candidate_pool",
                  "adapter_root", "training_manifest", "historical_run_cohort", "coarse_policy", "worker_python"):
         parser.add_argument("--" + name.replace("_", "-"), type=Path, required=True)
+    parser.add_argument('--restore-ready', action='store_true')
+    parser.add_argument('--preservation-manifest', type=Path)
     args = parser.parse_args()
+    if (args.output / 'GENERATION_FREEZE.json').exists():
+        if frozen_generation_ready(args.output, experiment=EXPERIMENT, expected=89):
+            return
+        raise RuntimeError('existing generation freeze is invalid')
     if args.output.exists() and any(args.output.iterdir()):
         if not (args.output / "PRE_GOLD_CONTRACT.json").is_file():
             raise RuntimeError("refusing unbound nonempty output directory")
@@ -502,6 +513,48 @@ def main() -> None:
         "adapter_stat_snapshot": stat_snapshot,
         "full_rehash_required_if": "manifest, file set, size, mtime, inode, or device changes",
     })
+
+    if args.restore_ready:
+        import subprocess
+        from scripts.run_eval60_ready_restore_v1 import MODE
+        if args.preservation_manifest is None:
+            raise RuntimeError('READY restoration requires the partial preservation manifest')
+        preserved = _read(args.preservation_manifest)
+        _atomic_json(args.output / 'EXECUTION_POLICY_AMENDMENT_READY_RESTORE_V1.json', {
+            'source_commit': contract['source_commit'], 'mode': MODE, 'target_blind': True, 'gold_loaded': False,
+            'preservation_manifest': str(args.preservation_manifest),
+            'preservation_manifest_sha256': sha256(args.preservation_manifest),
+            'completed_before_restoration': preserved['completed_outputs'],
+            'historical_modules': ['inference.nvarc_turbodfs_dynamic_ready', 'inference.rolling_resident_pool',
+                                   'inference.root_adaptive_batch_policy', 'inference.chunked_kv_cache'],
+            'resident_capacity_by_root': {'S': 16, 'M': 8, 'L': 4, 'XL': 2},
+            'physical_ceiling_by_root': {'S': 16, 'M': 8, 'L': 4, 'XL': 2},
+            'soft_B16_to_B8': '20 GiB live allocated or current cache position above 2048',
+            'fairness_max_wait': 3, 'same_adapter_multioutput_pool': True,
+            'frozen_scientific_conditions': 'V7+task TTT24; canonical AUG8; regret4; R1024; cap32; EOS15; max931',
+        })
+        command = [str(args.worker_python), str(ROOT / 'scripts/run_eval60_ready_restore_v1.py'),
+                   '--output', str(args.output), '--cohort', str(args.output / 'RUN_COHORT.json'),
+                   '--model-path', str(args.model_path), '--foundation-adapter', str(args.foundation_adapter),
+                   '--challenge', str(args.challenge), '--native-config-dir', str(args.native_config_dir),
+                   '--candidate-pool', str(args.candidate_pool), '--aug8-ids', str(args.output / 'AUG8_IDS.json'),
+                   '--preservation-manifest', str(args.preservation_manifest),
+                   '--canary-output', str(args.output.parent / 'generation_READY_RESTORE_CANARY_V1')]
+        subprocess.run(command, cwd=ROOT, check=True)
+        if (args.output / 'READY_CONTROLLED_STOP.json').exists():
+            raise RuntimeError('controlled task-boundary stop; generation incomplete')
+        write_throughput_report(args.output)
+        _freeze_generation(args.output, EXPERIMENT, 89)
+        _ledger(args.output, 'HASHES.json', include_raw=False)
+        verification = _verify(args.output, args.output / 'HASHES.json')
+        _atomic_json(args.output / 'HASH_VERIFICATION.json', verification)
+        if verification['status'] != 'PASS':
+            raise RuntimeError('restored READY compact hash verification failed')
+        _atomic_json(args.output / 'COMPACT_ARCHIVE_FREEZE.json', {
+            'experiment': EXPERIMENT, 'status': 'FROZEN', 'target_blind': True, 'gold_loaded': False,
+            'compact_ledger_sha256': sha256(args.output / 'HASHES.json'),
+        })
+        return
 
     # Deterministically choose one shortest and one longest output.  The
     # historical profile already binds their exact roots; production tokenizes
