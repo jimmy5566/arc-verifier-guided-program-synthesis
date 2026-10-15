@@ -1,0 +1,74 @@
+﻿{
+    "schema_version":  "ARC2_V7_TTT24_EVAL60_READY_RESTORE_V2_INFRA_FAILURE_INGESTION_V1",
+    "round_id":  "V7_TTT24_EVAL60_READY_RESTORE_V2_cde188b6",
+    "classification":  "INFRA_FAILED_NO_SCIENTIFIC_SCORE",
+    "execution_source_commit":  "cde188b600600c17cf5c9419db1cfd8cd4898f74",
+    "terminal_receipt":  {
+                             "path":  "C:/Users/asus/Desktop/py/kaggle/ARC2/.arc2-local/orchestration/remote_receipts/remote_jobs/V7_TTT24_EVAL60_READY_RESTORE_V2_cde188b6/TERMINAL_RECEIPT.json",
+                             "sha256":  "b1986ae85c98c1f9e6b0e79f26c7fe49a79c0567b798c7d3396e39071ba5fa24",
+                             "status":  "INFRA_FAILED",
+                             "reason":  "PIPELINE_PUBLISHED_FAILED"
+                         },
+    "remote_pipeline":  {
+                            "root":  "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/pipeline_ready_restore_v2",
+                            "pipeline_state_sha256":  "5417d1a01bf87c7e678f31c0ff78e96d426b0b6cc836f92f90db782798d5d2bb",
+                            "archive_log_sha256":  "4004c24a89f0ad1cbeb1a12c04eb4b93788bb37571d8997e39d7cd2489bee8fd",
+                            "failed_stage":  "archive",
+                            "failure":  "freeze_phase3_archive.py rejected source ledger HASHES.json",
+                            "last_completed_stage":  "generation"
+                        },
+    "phase_completeness":  {
+                               "source_tests":  {
+                                                    "status":  "COMPLETE",
+                                                    "passed":  13
+                                                },
+                               "generation":  {
+                                                  "status":  "COMPLETE_TARGET_BLIND",
+                                                  "tasks":  60,
+                                                  "outputs":  89,
+                                                  "raw_count":  89,
+                                                  "generation_freeze_sha256":  "3e4c8e0d952c782334e33eb08be66209e4093ad77eaf43ab75f78ec954aab1d8",
+                                                  "ledger_sha256":  "2aa4374eeecf549e10550bcecedf00c73d4aea1b6284086bc7677d6339a11976",
+                                                  "hash_verification":  {
+                                                                            "checked":  139,
+                                                                            "mismatches":  0
+                                                                        },
+                                                  "generation_hash_verification":  {
+                                                                                       "checked":  411,
+                                                                                       "mismatches":  0
+                                                                                   },
+                                                  "gold_loaded":  false
+                                              },
+                               "archive":  {
+                                               "status":  "FAILED",
+                                               "source_hashes_sha256":  "51cc4216797f4bb476c1c8b62291f614cb3a97863fe75a16e011be8149f3db3b"
+                                           },
+                               "b_freeze":  "NOT_RUN",
+                               "scoring":  "NOT_RUN",
+                               "gold_path":  "NOT_RUN"
+                           },
+    "operational_observations":  {
+                                     "measured_pipeline_seconds":  26951.400343045592,
+                                     "generation_search_seconds":  24296.992113199085,
+                                     "batch1_parity":  "CONTINUE_WITH_RUNTIME_SENSITIVITY",
+                                     "b1_freeze_reuse":  "REUSED_FROZEN_SCIENTIFIC_ARTIFACTS_WITH_TELEMETRY_ONLY_LEDGER_DRIFT"
+                                 },
+    "scientific_results":  "NOT_AVAILABLE: neither B-freeze nor post-freeze scoring/Gold-path completed.",
+    "limitations":  [
+                        "No candidate Oracle, Top1, Top2, Pass@2, FIX/HARM, or Gold-path numerical result is valid.",
+                        "No inference about scientific acceptance is made from completed target-blind generation.",
+                        "No rerun, relaunch, remote rearm, target opening, execution-policy change, remote checkout switch, or scoring of exposed outputs occurred."
+                    ],
+    "owner_request":  {
+                          "path":  "C:/w/arc2-governor-thin/orchestration/owner_requests/SCORE_OPTIMIZATION_8H_AFTER_EVAL60_V1.json",
+                          "sha256":  "9364ce4550172e67ae2b9232d9eb3293f16908dbc0072d0c6c457fb6ddb1899d",
+                          "status":  "ARMED_NOT_STARTED",
+                          "activation":  "NOT_STARTED"
+                      },
+    "preservation":  {
+                         "remote_generation_root":  "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/pipeline_v4/generation",
+                         "remote_artifacts_preserved":  true,
+                         "no_partial_artifact_scoring":  true,
+                         "automatic_rerun_authorized":  false
+                     }
+}
