@@ -43,6 +43,7 @@ from scripts.run_real_project_aug16_dynamic_b16_pilot_v1 import _canonical_candi
 
 
 EOS_TOKEN = 15
+_PERSISTENT: dict[str, Any] = {}
 
 
 def fixed_four_groups(candidate_ids: list[str], root_lengths: dict[str, int]) -> list[list[str]]:
@@ -65,6 +66,14 @@ def fixed_four_groups(candidate_ids: list[str], root_lengths: dict[str, int]) ->
     if len(groups) != 2 or any(len(group) != 4 for group in groups):
         raise RuntimeError(f"AUG8 did not resolve to two fixed B4 groups: {groups}")
     return groups
+
+
+def ordered_batch_outputs(outputs: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Minimize adapter swaps without changing output identity or membership."""
+    return sorted(
+        outputs,
+        key=lambda row: (str(row["task_id"]), int(row["output_index"]), str(row["output_id"])),
+    )
 
 
 def _candidate_rows(result: Any, lane: int, candidate: dict[str, Any]) -> list[dict[str, Any]]:
@@ -247,35 +256,90 @@ def worker(args: argparse.Namespace) -> int:
     started_unix = time.time()
     stage = "BEFORE_MODEL_LOAD"
     model: Any | None = None
+    persistent = args.mode == "batch-worker"
     timings: dict[str, float] = {}
     try:
         _assert_challenge_only(args.challenge)
-        stage = "ADAPTER_STAGE"
-        began = time.perf_counter()
-        staged = _stage_adapter(Path(selected["adapter_path"]), args.adapter_stage / "current")
-        actual = _adapter_identity(staged)
         expected = selected["adapter_identity"]
-        if (actual["adapter_sha256"] != expected["adapter_sha256"]
-                or actual["adapter_config_sha256"] != expected["adapter_config_sha256"]):
-            raise RuntimeError("worker adapter does not match frozen cohort identity")
-        timings["adapter_stage_seconds"] = time.perf_counter() - began
+        cached_task = str(_PERSISTENT.get("task_id", ""))
+        if persistent and _PERSISTENT.get("model") is not None and cached_task == str(selected["task_id"]):
+            model = _PERSISTENT["model"]
+            tokenizer = _PERSISTENT["tokenizer"]
+            runtime_identity = dict(_PERSISTENT["runtime_identity"])
+            timings["adapter_stage_seconds"] = 0.0
+            timings["model_load_seconds"] = 0.0
+            timings["adapter_swap_seconds"] = 0.0
+            timings["persistent_reuse"] = True
+        else:
+            stage = "ADAPTER_STAGE"
+            began = time.perf_counter()
+            staged = _stage_adapter(Path(selected["adapter_path"]), args.adapter_stage / "current")
+            actual = _adapter_identity(staged)
+            if (actual["adapter_sha256"] != expected["adapter_sha256"]
+                    or actual["adapter_config_sha256"] != expected["adapter_config_sha256"]):
+                raise RuntimeError("worker adapter does not match frozen cohort identity")
+            timings["adapter_stage_seconds"] = time.perf_counter() - began
 
-        stage = "MODEL_LOAD"
-        began = time.perf_counter()
-        model, tokenizer, runtime_identity = load_hf_peft_inference(
-            model_path=args.model_path,
-            adapter_path=staged,
-            device=args.device,
-            native_config_dir=args.native_config_dir,
-            foundation_adapter_path=args.foundation_adapter,
-        )
-        timings["model_load_seconds"] = time.perf_counter() - began
+            if persistent and _PERSISTENT.get("model") is not None:
+                stage = "ADAPTER_SWAP"
+                began = time.perf_counter()
+                model = _PERSISTENT["model"]
+                tokenizer = _PERSISTENT["tokenizer"]
+                model.delete_adapter("task")
+                model.load_adapter(
+                    str(staged), adapter_name="task", is_trainable=False,
+                    autocast_adapter_dtype=False,
+                )
+                model.base_model.set_adapter(["foundation", "task"])
+                for parameter in model.parameters():
+                    parameter.requires_grad = False
+                model = model.to(args.device).eval()
+                runtime_identity = dict(_PERSISTENT["runtime_identity"])
+                runtime_identity.update({
+                    "adapter_sha256": actual["adapter_sha256"],
+                    "adapter_config_sha256": actual["adapter_config_sha256"],
+                    "adapter_identity_verification": "frozen_cohort_sha256_before_persistent_swap",
+                })
+                timings["model_load_seconds"] = 0.0
+                timings["adapter_swap_seconds"] = time.perf_counter() - began
+                timings["persistent_reuse"] = True
+            else:
+                stage = "MODEL_LOAD"
+                began = time.perf_counter()
+                model, tokenizer, runtime_identity = load_hf_peft_inference(
+                    model_path=args.model_path,
+                    adapter_path=staged,
+                    device=args.device,
+                    native_config_dir=args.native_config_dir,
+                    foundation_adapter_path=args.foundation_adapter,
+                )
+                timings["model_load_seconds"] = time.perf_counter() - began
+                timings["adapter_swap_seconds"] = 0.0
+                timings["persistent_reuse"] = False
+            if persistent:
+                _PERSISTENT.update({
+                    "model": model,
+                    "tokenizer": tokenizer,
+                    "runtime_identity": dict(runtime_identity),
+                    "task_id": str(selected["task_id"]),
+                })
         if runtime_identity.get("dtype") != "torch.bfloat16":
             raise RuntimeError("fixed-four worker requires BF16 Clean-HF")
         FastLanguageModel.for_inference(model)
 
-        task = load_dataset(args.challenge)[selected["task_id"]]
-        candidate_list = _load_aug16(args.candidate_pool, args.aug16_ids)
+        if persistent and "tasks" in _PERSISTENT:
+            tasks = _PERSISTENT["tasks"]
+        else:
+            tasks = load_dataset(args.challenge)
+            if persistent:
+                _PERSISTENT["tasks"] = tasks
+        task = tasks[selected["task_id"]]
+        if persistent and "candidate_list" in _PERSISTENT:
+            candidate_list = _PERSISTENT["candidate_list"]
+        else:
+            candidate_list = _load_aug16(args.candidate_pool, args.aug16_ids)
+            if persistent:
+                _PERSISTENT["candidate_list"] = candidate_list
         candidates = {str(row["candidate_id"]): row for row in candidate_list}
         identifiers = [str(row["candidate_id"]) for row in candidate_list]
         prepared: dict[str, Any] = {}
@@ -449,7 +513,7 @@ def worker(args: argparse.Namespace) -> int:
         })
         return 2
     finally:
-        if model is not None:
+        if model is not None and not persistent:
             del model
         __import__("gc").collect()
         try:
@@ -460,10 +524,10 @@ def worker(args: argparse.Namespace) -> int:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--mode", choices=("worker",), required=True)
+    parser.add_argument("--mode", choices=("worker", "batch-worker"), required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--cohort-file", required=True)
-    parser.add_argument("--output-id", required=True)
+    parser.add_argument("--output-id")
     parser.add_argument("--attempt", type=int, required=True)
     parser.add_argument("--resident", type=int, required=True)
     parser.add_argument("--ceiling", type=int, required=True)
@@ -498,4 +562,28 @@ if __name__ == "__main__":
     checkpoints = _checkpoint_values(parsed.checkpoints)
     if checkpoints != (128, 256, 512, 1024):
         raise SystemExit("fixed-four worker requires checkpoints 128,256,512,1024")
-    raise SystemExit(worker(parsed))
+    if parsed.mode == "worker":
+        if not parsed.output_id:
+            raise SystemExit("worker mode requires --output-id")
+        raise SystemExit(worker(parsed))
+    cohort_outputs = _read(parsed.output / parsed.cohort_file)["outputs"]
+    # Stable task grouping minimizes task-adapter swaps while retaining the
+    # frozen within-task output order.  Completed outputs are checked and
+    # reused by worker() before any model or adapter work.
+    ordered = ordered_batch_outputs(cohort_outputs)
+    try:
+        for selected in ordered:
+            parsed.output_id = str(selected["output_id"])
+            code = worker(parsed)
+            if code != 0:
+                raise SystemExit(code)
+    finally:
+        cached_model = _PERSISTENT.pop("model", None)
+        if cached_model is not None:
+            del cached_model
+        __import__("gc").collect()
+        try:
+            __import__("torch").cuda.empty_cache()
+        except Exception:
+            pass
+    raise SystemExit(0)

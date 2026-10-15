@@ -189,6 +189,52 @@ def _run_surface(args: argparse.Namespace, run: Path, outputs: list[dict[str, An
     return receipts
 
 
+def _run_persistent_surface(args: argparse.Namespace, run: Path, outputs: list[dict[str, Any]], *, depth: int,
+                            experiment: str) -> dict[str, Any]:
+    """Run a resumable multi-output worker with one persistent model instance."""
+    _write_cohort(run, outputs, experiment); _subset_file(run)
+    base = Path(getattr(args, "worker_entrypoint", None) or "")
+    if not base.is_file():
+        raise RuntimeError(f"persistent worker entrypoint is missing: {base}")
+    worker_python = str(getattr(args, "worker_python", None) or sys.executable)
+    command = [
+        worker_python, str(base), "--mode", "batch-worker",
+        "--output", str(run), "--cohort-file", "RUN_COHORT.json",
+        "--attempt", "0", "--resident", "8", "--ceiling", "4",
+        "--model-path", str(args.model_path), "--challenge", str(args.challenge),
+        "--native-config-dir", str(args.native_config_dir),
+        "--candidate-pool", str(args.candidate_pool),
+        "--aug16-ids", str(run / "AUG8_IDS.json"),
+        "--adapter-stage", str(run / "ADAPTER_STAGE"),
+        "--device", str(args.device), "--max-expanded-nodes", "1024",
+        "--ttt-depth", str(depth), "--augmentation-label", "aug8",
+        "--admission-policy", "exact_root_fixed4", "--fairness-max-wait", "0",
+        "--experiment", experiment, "--checkpoints", str(getattr(args, "checkpoints", "128,256,512,1024")),
+        "--search-order-policy", "legacy",
+    ]
+    if getattr(args, "foundation_adapter", None):
+        command.extend(["--foundation-adapter", str(args.foundation_adapter)])
+    if bool(getattr(args, "diagnostic_trace", False)):
+        command.append("--diagnostic-trace")
+    started = time.time()
+    process = subprocess.run(command, cwd=ROOT, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    log = run / "WORKER_LOGS" / "fixed4_persistent_batch.log"
+    log.parent.mkdir(parents=True, exist_ok=True)
+    log.write_text(process.stdout + "\n--- STDERR ---\n" + process.stderr, encoding="utf-8")
+    receipt = {
+        "experiment": experiment,
+        "execution_mode": "FIXED4_D1_PERSISTENT_MODEL",
+        "returncode": process.returncode,
+        "started_unix": started,
+        "ended_unix": time.time(),
+        "log": str(log.relative_to(run)),
+    }
+    _atomic_json(run / "PERSISTENT_WORKER_RECEIPT.json", receipt)
+    if process.returncode != 0:
+        raise RuntimeError(f"persistent fixed4 worker failed: {log}")
+    return receipt
+
+
 def _ledger(run: Path, name: str, *, include_raw: bool) -> dict[str, Any]:
     files = []
     for path in run.rglob("*"):

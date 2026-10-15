@@ -24,6 +24,7 @@ from scripts.run_ttt24_aug8_r1024_core_v1 import (
     _freeze_generation,
     _ledger,
     _read,
+    _run_persistent_surface,
     _run_surface,
     _safe,
     _sha_value,
@@ -252,6 +253,7 @@ def write_throughput_report(run: Path) -> None:
             "execution_mode": str(raw.get("execution_mode") or "ROLLING_READY_CELL"),
             "adapter_stage_seconds": float(timings.get("adapter_stage_seconds", 0.0)),
             "model_load_seconds": float(timings.get("model_load_seconds", 0.0)),
+            "adapter_swap_seconds": float(timings.get("adapter_swap_seconds", 0.0)),
             "search_seconds": float(timings.get("search_seconds", raw.get("wall_seconds", 0.0))),
             "artifact_write_seconds": float(timings.get("artifact_write_seconds", 0.0)),
             "physical_forwards": int(scheduler.get("physical_forwards", 0)),
@@ -260,7 +262,11 @@ def write_throughput_report(run: Path) -> None:
     fixed = [row for row in rows if row["execution_mode"] == "FIXED4_D1_INDEPENDENT_LANES"]
     def total(field: str) -> float:
         return sum(float(row[field]) for row in fixed)
-    measured = total("adapter_stage_seconds") + total("model_load_seconds") + total("search_seconds") + total("artifact_write_seconds")
+    measured = (
+        total("adapter_stage_seconds") + total("model_load_seconds")
+        + total("adapter_swap_seconds") + total("search_seconds")
+        + total("artifact_write_seconds")
+    )
     report = {
         "status": "COMPLETE" if len(rows) == 89 else "PARTIAL",
         "target_blind": True,
@@ -273,7 +279,8 @@ def write_throughput_report(run: Path) -> None:
         "fixed4_outputs": len(fixed),
         "fixed4_totals_seconds": {
             field: total(field) for field in (
-                "adapter_stage_seconds", "model_load_seconds", "search_seconds", "artifact_write_seconds"
+                "adapter_stage_seconds", "model_load_seconds", "adapter_swap_seconds",
+                "search_seconds", "artifact_write_seconds"
             )
         },
         "fixed4_mean_active_lanes": (
@@ -595,6 +602,38 @@ def main() -> None:
     _atomic_json(args.output / "FIXED4_CANARY_GATE.json", fixed_gate)
     if not fixed_mechanical_pass:
         raise RuntimeError("fixed4 short/long mechanical canary failed")
+    persistent_canary = args.output.parent / f"{args.output.name}_FIXED4_PERSISTENT_CANARY_V1"
+    persistent_canary.mkdir(parents=True, exist_ok=True)
+    persistent_canary_experiment = EXPERIMENT + "_FIXED4_PERSISTENT_CANARY"
+    if not frozen_generation_ready(
+        persistent_canary, experiment=persistent_canary_experiment, expected=len(smoke)
+    ):
+        _run_persistent_surface(
+            args, persistent_canary, smoke, depth=24,
+            experiment=persistent_canary_experiment,
+        )
+        _freeze_generation(persistent_canary, persistent_canary_experiment, len(smoke))
+    persistent_rows = []
+    for row in smoke:
+        standalone = snapshots(fixed_canary, row["output_id"])
+        persistent_result = snapshots(persistent_canary, row["output_id"])
+        persistent_rows.append({
+            "output_id": row["output_id"],
+            "profile": row["profile"],
+            "exact_candidate_pool_parity": standalone == persistent_result,
+            "standalone_sha256": _sha_json(standalone),
+            "persistent_sha256": _sha_json(persistent_result),
+        })
+    persistent_pass = all(row["exact_candidate_pool_parity"] for row in persistent_rows)
+    _atomic_json(args.output / "PERSISTENT_MODEL_CANARY_GATE.json", {
+        "status": "PASS" if persistent_pass else "FAIL",
+        "criterion": "exact R1024 candidate-pool parity for fixed short and long outputs",
+        "rows": persistent_rows,
+        "target_blind": True,
+        "gold_loaded": False,
+    })
+    if not persistent_pass:
+        raise RuntimeError("persistent model/task-adapter swap canary failed exact parity")
     _atomic_json(args.output / "EXECUTION_POLICY_AMENDMENT_FIXED4_V1.json", {
         "status": "ACTIVE",
         "source_commit": contract["source_commit"],
@@ -610,11 +649,12 @@ def main() -> None:
         "scientific_settings_changed": False,
         "candidate_generation_route_changed": True,
         "fixed4_canary_gate": str(args.output / "FIXED4_CANARY_GATE.json"),
+        "persistent_model_canary_gate": str(args.output / "PERSISTENT_MODEL_CANARY_GATE.json"),
         "target_blind": True,
         "gold_loaded": False,
     })
 
-    _run_surface(args, args.output, outputs, depth=24, experiment=EXPERIMENT, policy=policy)
+    _run_persistent_surface(args, args.output, outputs, depth=24, experiment=EXPERIMENT)
     write_throughput_report(args.output)
     _freeze_generation(args.output, EXPERIMENT, 89)
     compact = _ledger(args.output, "HASHES.json", include_raw=False)
