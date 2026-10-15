@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "job_id": "V7_EVAL60_ARCHIVE_RECOVERY_V1_cbf1c1f3",
+  "stage": "V7_EVAL60_CPU_ARCHIVE_RECOVERY_V1",
+  "ssh_target": "g9620ys5vilaxx-64412079@ssh.runpod.io",
+  "output_root": "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/archive_recovery_v1_cbf1c1f3",
+  "pipeline_status_path": "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/archive_recovery_v1_cbf1c1f3/PIPELINE_STATE.json",
+  "terminal_receipt": "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/archive_recovery_v1_cbf1c1f3/TERMINAL_RECEIPT.json",
+  "source_commit": "cbf1c1f35628a6d2d5eaa1c20ba66c96d17a63ce",
+  "generation_source_commit": "cde188b600600c17cf5c9419db1cfd8cd4898f74",
+  "primary_process": {
+    "pid": 149336,
+    "role": "archive_recovery_pipeline",
+    "start_ticks": "1502241250",
+    "boot_id": "1218e1c6-b7a5-4f6b-9215-a30c4165e147",
+    "cmdline_sha256": "861b4803a9f50954c2c98eb7b9275748909b76c3acc24a176e96f19f14edd8f15"
+  },
+  "completion_recipient": "director",
+  "deadline_utc": "2026-10-16T04:07:04Z",
+  "maximum_job_wall_seconds": 3600,
+  "closing_reserve_seconds": 600,
+  "remote_cpu_preflight": "5 passed using actual RunPod Python; clean tracked source and exact Git SHA verified",
+  "generation_rerun": false,
+  "gpu_used_by_this_job": false,
+  "gold_loaded_by_this_job": false,
+  "partial_evidence_preserved_on_failure": true,
+  "completion_context": {
+    "owner_request": "C:/w/arc2-governor-thin/orchestration/owner_requests/SCORE_OPTIMIZATION_DIRECTOR_GOAL_V2.json",
+    "owner_request_sha256": "94cc6c61685f60767d02317e487f5a5f45043495fc51d769dd5c787d984dad11",
+    "window_receipt": "C:/Users/asus/Desktop/py/kaggle/ARC2/.arc2-local/orchestration/owner_windows/SCORE_OPTIMIZATION_8H_AFTER_EVAL60_V1.json",
+    "deadline_utc": "2026-10-16T04:07:04Z",
+    "research_checkout": "C:/w/v7ttt24",
+    "research_branch": "codex/v7-ttt24-aug8-r1024-eval60-v1",
+    "generation_root": "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/pipeline_v4/generation",
+    "archive_root": "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/archive_recovery_v1_cbf1c1f3/archive",
+    "next_action": "Director claims this terminal continuation on success OR failure. Ingest status and archive verification without rerunning generation. If archive COMPLETE, reuse the archived 89 outputs and fresh V7 TTT24 adapters for bounded target-blind B-selector freeze, followed only then by post-freeze scores and Gold-path diagnostics. If failed or UNKNOWN, preserve all partial evidence and repair unchanged infrastructure within remaining original 8-hour budget; do not silently close the queue. Do not reset deadline. Long follow-up jobs must register completion_recipient=director and yield WAIT_REMOTE without polling. Preserve source cde188b6 for raw generation versus cbf1c1f3 for archival repair. No official submission/release or budget overrun."
+  }
+}
