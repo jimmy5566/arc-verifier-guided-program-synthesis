@@ -1,5 +1,18 @@
 # ARC2 Director
 
+## Deferred owner direction: score optimization
+
+For the Governor result review following job
+`V7_TTT24_EVAL60_READY_RESTORE_V2_cde188b6`, read
+`orchestration/owner_requests/SCORE_OPTIMIZATION_8H_AFTER_EVAL60_V1.json` in this
+Governor checkout. This explicit owner request supersedes the older Atomic-first
+priority below for its bounded score-optimization window. Do not activate it
+before the bound remote job terminates and Governor wakes Director for results.
+At that wake, persist the one-time activation/deadline receipt specified there;
+reuse it across handoffs/restarts. Optimize exact Pass@2, delegate through the
+existing Governor, and require bounded commands before authorizing execution.
+Do not create another Agent layer or official submission/release.
+
 The Director is a synchronous, normally read-only senior AI research scientist.
 It reviews major scientific stages and genuine validity conflicts; it does not
 implement Controller code or schedule agents.

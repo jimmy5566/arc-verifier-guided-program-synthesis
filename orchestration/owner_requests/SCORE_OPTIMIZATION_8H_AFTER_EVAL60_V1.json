@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "request_id": "SCORE_OPTIMIZATION_8H_AFTER_EVAL60_V1",
+  "status": "ARMED_NOT_STARTED",
+  "primary_objective": "Maximize ARC2 exact Pass@2; scientific research is secondary.",
+  "trigger": {
+    "after_remote_job": "V7_TTT24_EVAL60_READY_RESTORE_V2_cde188b6",
+    "condition": "The bound pipeline terminates, Controller ingests existing evidence, and Governor dispatches the corresponding Director result review.",
+    "start_now": false,
+    "interrupt_current_experiment": false,
+    "window_start": "Director activates this request once on that Governor result-review wake, before beginning score-optimization work."
+  },
+  "budget": {
+    "hard_wall_seconds": 28800,
+    "deadline_rule": "Persist activated_at_utc and deadline_utc=activated_at_utc+28800 once in the local window receipt. Never reset on retries, Agent handoffs, Governor restart or successor experiments.",
+    "activation_receipt": ".arc2-local/orchestration/owner_windows/SCORE_OPTIMIZATION_8H_AFTER_EVAL60_V1.json",
+    "closing_reserve_seconds": 600,
+    "launch_rule": "Before each new scientific command, verify positive remaining time and existing resource budget. Bound command wall time by remaining time minus closing reserve. Require checkpoint/partial preservation and a bounded termination path. Never start an unbounded detached GPU command.",
+    "expiry_rule": "Stop new optimization executions, preserve all complete and partial artifacts, and report honestly. No deadline extension without owner approval.",
+    "gpu_scope": "Routine GPU experiments and engineering retries are authorized inside this single 8-hour window and existing resource budgets, not unlimited additional compute."
+  },
+  "branches": {
+    "requested_research_integration_branch": "codex/connected-components-e1",
+    "active_eval60_branch": "codex/v7-ttt24-aug8-r1024-eval60-v1",
+    "active_eval60_source": "cde188b600600c17cf5c9419db1cfd8cd4898f74",
+    "rule": "Refresh relevant HEADs after the trigger. Preserve active experiment provenance; never switch the running remote checkout or overwrite dirty work to conform to the requested integration branch."
+  },
+  "queue": [
+    {
+      "stage": "P0_COMPLETE_AND_AUDIT_V7_EVAL60",
+      "action": "Use existing V7+fresh TTT24+canonical AUG8+r4 DFS R1024/R512 evidence on exact 60 tasks / 89 outputs. Do not repeat completed generation or reuse Base TTT weights on V7. Verify raw candidate/node/frontier/probability/cache/adapter identities were frozen before scoring; finish only missing authorized stages under remaining budget.",
+      "comparisons": ["Historical Base+TTT24 oracle 31/89", "Historical Base D24 union D48 oracle 35/89"],
+      "metrics": ["V7-only/Base-only/shared exact-hit identities", "FIX/HARM/net", "candidate Oracle", "Top1/Top2", "output-level versus task-level Pass@2", "GPU runtime and cost"]
+    },
+    {
+      "stage": "P1_CAPABILITY_AND_SEARCH_BOTTLENECK_MAP",
+      "action": "Use post-freeze outputs and traces to separate model preference, regret pruning, retained-but-unexpanded paths, completion timing, candidate ranking and runtime censoring. Compare matched Base/V7 Gold-token rank/NLL only as nonblind diagnostic. Do not infer task solvability from synthetic scores."
+    },
+    {
+      "stage": "P2_RANKED_SCORE_OPTIMIZATION_LOOP",
+      "priority_order": ["Base/V7 complementary candidate portfolio", "Selector improvement on already frozen candidates", "DFS frontier ordering and budget allocation", "Selective TTT/augmentation"],
+      "selection_rule": "Rank by estimated additional exact solves per GPU-hour; label estimates as hypotheses, not measured gains. Start with CPU-answerable frozen-pool experiments. Avoid already answered or duplicate experiments.",
+      "cycle": "Hypothesis -> CPU gate -> bounded GPU test only if needed -> raw freeze -> score -> paired FIX/HARM -> KEEP/REJECT -> next highest-return experiment.",
+      "validation": "Eval60 is exposed development evidence. Never tune on its Gold and claim independent validation. Any promotion requires fresh independent validation; no automatic model promotion."
+    }
+  ],
+  "delegation": {
+    "Director": "Interpret results, select score experiments and allocate the bounded window. Return one stage-scoped decision through Governor.",
+    "Controller": "Implement, test, execute bounded commands, preserve artifacts, score only after freeze, and commit/push evidence.",
+    "Governor": "Route idempotent handoffs and expose durable task/window references; no scientific interpretation or additional approval layers.",
+    "Supervisor": "Monitor registered detached jobs and route mechanical terminal events; no independent experimental relaunch.",
+    "agents": "Reuse the existing Director/Controller panes. No new Researcher/Codex Agent layer; direct Herdr messages must not duplicate Governor dispatch or interrupt an actively claimed event."
+  },
+  "prohibited": [
+    "Official competition submission or creation of a new official submission version without owner approval",
+    "Public release of restricted research, model weights, secrets or sealed artifacts",
+    "Material resource-budget overrun or extending the 8-hour deadline",
+    "Gold influencing adaptation, generation, scheduling, ranking freeze or a claimed independent validation",
+    "Standalone synthetic LoRA repair, paper-writing or speculative mechanisms unrelated to score",
+    "Discarding historical or partial evidence, silent source/checkpoint substitution, duplicate GPU launches"
+  ],
+  "final_report": [
+    "Completed experiments and numerical results",
+    "Best verified Pass@2 and candidate Oracle, with precise cohort scope",
+    "Updated capability/bottleneck map",
+    "Positive and negative findings",
+    "Ranked next queue and expected costs",
+    "Remaining blockers, verified pushed Git SHA and evidence paths"
+  ]
+}

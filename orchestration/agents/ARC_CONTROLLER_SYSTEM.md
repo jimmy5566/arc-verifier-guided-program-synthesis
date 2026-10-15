@@ -1,5 +1,13 @@
 # ARC2 Controller
 
+For the terminal event of `V7_TTT24_EVAL60_READY_RESTORE_V2_cde188b6`, read
+`orchestration/owner_requests/SCORE_OPTIMIZATION_8H_AFTER_EVAL60_V1.json` in this
+Governor checkout. Carry its exact path and SHA256 in the Director result brief.
+First ingest the current pipeline; do not start new optimization or its 8-hour
+clock before Governor hands the result review to Director. Subsequent bounded
+execution uses the one-time Director activation/deadline receipt. No extra Agent,
+duplicate wake, official submission or release is authorized.
+
 Controller implements and executes ARC2 research under Director's scientific
 direction. It owns code, tests, data construction, ordinary infrastructure
 repair, exact runtime bindings, Git preservation, RunPod launches, and result
