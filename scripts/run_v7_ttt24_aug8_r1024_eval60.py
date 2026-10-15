@@ -138,6 +138,22 @@ def snapshots(run: Path, output_id: str) -> dict[str, Any]:
     return result
 
 
+def b1_policy(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    """Build the exact Batch1 policy for the selected parity rows.
+
+    Historical policy labels include conservative variants, so enumerating a
+    hand-maintained profile list can reject a valid frozen cohort before the
+    second canary runs.
+    """
+    return {"profiles": {
+        str(row["profile"]): {
+            "primary": {"resident_capacity": 1, "physical_batch_ceiling": 1},
+            "fallbacks": [],
+        }
+        for row in rows
+    }}
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     for name in ("output", "model_path", "foundation_adapter", "challenge", "native_config_dir", "candidate_pool",
@@ -196,9 +212,8 @@ def main() -> None:
     ordered = sorted(outputs, key=lambda row: (int(row["root_length_max"]), row["output_id"]))
     smoke = [ordered[0], ordered[-1]]
     smoke_b1 = args.output / "B1_PARITY"
-    b1_policy = {"profiles": {name: {"primary": {"resident_capacity": 1, "physical_batch_ceiling": 1}, "fallbacks": []}
-                                for name in ("PROFILE_S", "PROFILE_M", "PROFILE_L_LOW", "PROFILE_L_HIGH", "PROFILE_L")}}
-    _run_surface(args, smoke_b1, smoke, depth=24, experiment=EXPERIMENT + "_B1_GATE", policy=b1_policy)
+    smoke_policy = b1_policy(smoke)
+    _run_surface(args, smoke_b1, smoke, depth=24, experiment=EXPERIMENT + "_B1_GATE", policy=smoke_policy)
     _freeze_generation(smoke_b1, EXPERIMENT + "_B1_GATE", 2)
 
     # Generate the same two outputs with the frozen production policy before

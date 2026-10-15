@@ -72,6 +72,7 @@ def main() -> None:
                  "cohort", "coarse_policy", "historical_d24", "historical_d48", "base_adapter_root", "solutions"):
         parser.add_argument("--" + name.replace("_", "-"), required=True, type=Path if name not in {"branch"} else str)
     parser.add_argument("--training-source-commit", required=True)
+    parser.add_argument("--generation-output", type=Path)
     parser.add_argument("--poll-seconds", type=int, default=60)
     args = parser.parse_args()
     output = args.output; output.mkdir(parents=True, exist_ok=True)
@@ -108,7 +109,10 @@ def main() -> None:
     run("source_tests", [str(args.python), "-m", "pytest", "tests/test_v7_ttt24_aug8_r1024_eval60.py", "-q"],
         cwd=args.source, output=output, environment=environment, state=state)
 
-    generation = output / "generation"
+    generation = args.generation_output or (output / "generation")
+    state["generation_output"] = str(generation)
+    state["generation_output_reused"] = args.generation_output is not None
+    atomic_json(output / "PIPELINE_STATE.json", state)
     run("generation", [
         str(args.python), "scripts/run_v7_ttt24_aug8_r1024_eval60.py",
         "--output", str(generation), "--model-path", str(args.model_path),

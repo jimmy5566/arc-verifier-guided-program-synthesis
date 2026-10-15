@@ -76,6 +76,16 @@ def test_full_cohort_rejects_adapter_byte_drift(tmp_path: Path) -> None:
         raise AssertionError("adapter byte drift must fail closed")
 
 
+def test_b1_policy_accepts_actual_frozen_profile_labels() -> None:
+    policy = full.b1_policy([
+        {"profile": "PROFILE_S"},
+        {"profile": "PROFILE_XL_CONSERVATIVE"},
+    ])
+    assert set(policy["profiles"]) == {"PROFILE_S", "PROFILE_XL_CONSERVATIVE"}
+    assert all(row["primary"] == {"resident_capacity": 1, "physical_batch_ceiling": 1}
+               for row in policy["profiles"].values())
+
+
 def test_worker_diagnostic_trace_is_explicit_and_passive_flag(tmp_path: Path) -> None:
     args = argparse.Namespace(
         worker_python="python", model_path=tmp_path / "model", challenge=tmp_path / "challenge.json",
