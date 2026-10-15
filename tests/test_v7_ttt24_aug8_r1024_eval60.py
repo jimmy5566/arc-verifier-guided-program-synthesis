@@ -86,6 +86,39 @@ def test_b1_policy_accepts_actual_frozen_profile_labels() -> None:
                for row in policy["profiles"].values())
 
 
+def test_parity_snapshots_follow_worker_receipt_artifact_binding(tmp_path: Path) -> None:
+    """Parity must not reconstruct worker filenames with another safe-id rule."""
+    receipts = tmp_path / "OUTPUT_RECEIPTS"
+    raw_outputs = tmp_path / "RAW_OUTPUTS"
+    receipts.mkdir()
+    raw_outputs.mkdir()
+    raw_name = "abc_o1.json"  # production worker uses one underscore for ':'
+    (raw_outputs / raw_name).write_text(json.dumps({
+        "output": {"output_id": "abc:o1"},
+        "gold_loaded": False,
+        "cells": {
+            "identity": {
+                "augmentation_id": "identity",
+                "checkpoints": [{
+                    "checkpoint_requested": 1024,
+                    "candidate_pool_snapshot": [{"canonical_grid": [[1]]}],
+                }],
+            },
+        },
+    }), encoding="utf-8")
+    (receipts / raw_name).write_text(json.dumps({
+        "status": "COMPLETE",
+        "output_id": "abc:o1",
+        "target_blind": True,
+        "gold_loaded": False,
+        "raw_output": f"RAW_OUTPUTS/{raw_name}",
+    }), encoding="utf-8")
+
+    assert full.snapshots(tmp_path, "abc:o1") == {
+        "identity": [{"canonical_grid": [[1]]}],
+    }
+
+
 def test_worker_diagnostic_trace_is_explicit_and_passive_flag(tmp_path: Path) -> None:
     args = argparse.Namespace(
         worker_python="python", model_path=tmp_path / "model", challenge=tmp_path / "challenge.json",

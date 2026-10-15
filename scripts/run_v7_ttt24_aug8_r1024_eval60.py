@@ -130,7 +130,32 @@ def output_identity(template: dict[str, Any], adapter_root: Path,
 
 
 def snapshots(run: Path, output_id: str) -> dict[str, Any]:
-    raw = _read(run / "RAW_OUTPUTS" / f"{_safe(output_id)}.json")
+    # The historical orchestration helper and the production worker do not
+    # share the same filename escaping convention (``:`` became ``__`` in the
+    # former and ``_`` in the latter).  The worker receipt is the authoritative
+    # artifact binding, so resolve the raw output through it instead of
+    # reconstructing a path from the logical output id.
+    matches = []
+    for receipt_path in sorted((run / "OUTPUT_RECEIPTS").glob("*.json")):
+        receipt = _read(receipt_path)
+        if str(receipt.get("output_id")) == output_id:
+            matches.append(receipt)
+    if len(matches) != 1:
+        raise RuntimeError(f"expected one COMPLETE receipt for {output_id}, found {len(matches)}")
+    receipt = matches[0]
+    if (receipt.get("status") != "COMPLETE" or receipt.get("target_blind") is not True
+            or receipt.get("gold_loaded") is not False):
+        raise RuntimeError(f"invalid target-blind completion receipt for {output_id}")
+    raw_relative = Path(str(receipt.get("raw_output", "")))
+    if raw_relative.is_absolute() or ".." in raw_relative.parts:
+        raise RuntimeError(f"unsafe raw-output binding for {output_id}")
+    raw_path = run / raw_relative
+    if not raw_path.is_file():
+        raise RuntimeError(f"receipt-bound raw output missing for {output_id}: {raw_relative}")
+    raw = _read(raw_path)
+    raw_identity = raw.get("output") if isinstance(raw.get("output"), dict) else {}
+    if str(raw_identity.get("output_id")) != output_id or raw.get("gold_loaded") is not False:
+        raise RuntimeError(f"receipt/raw identity mismatch for {output_id}")
     result = {}
     for cell in raw["cells"].values():
         checkpoint = next(row for row in cell["checkpoints"] if int(row["checkpoint_requested"]) == 1024)
