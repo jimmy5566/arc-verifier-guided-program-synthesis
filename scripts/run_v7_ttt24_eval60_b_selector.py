@@ -104,21 +104,38 @@ def build_greedy_candidates(training: Path, output_id: str) -> tuple[list[dict[s
     return rows, {"receipt_sha256": sha256(receipt_path), "unique_grid_count": len(rows)}
 
 
-def adapter_preflight(training: Path, adapter_root: Path, tasks: list[str]) -> dict[str, Any]:
+def adapter_preflight(training: Path, adapter_root: Path, tasks: list[str],
+                      reuse_archive: Path | None = None) -> dict[str, Any]:
     manifest = read_json(training / "TTT24_ADAPTER_MANIFEST.json")
     if manifest.get("status") != "FROZEN" or manifest.get("target_blind") is not True:
         raise RuntimeError("TTT24_ADAPTER_MANIFEST_NOT_FROZEN_TARGET_BLIND")
     if len(manifest.get("task_ids", [])) != len(tasks) or set(manifest.get("task_ids", [])) != set(tasks):
         raise RuntimeError("TTT24_ADAPTER_TASK_IDENTITY_MISMATCH")
     rows: dict[str, Any] = {}
+    cached = None
+    if reuse_archive is not None:
+        from scripts.run_v7_ttt24_aug8_r1024_eval60 import _adapter_stat_snapshot, _cached_manifest_adapter_identity
+        receipt_path = reuse_archive / 'ADAPTER_IDENTITY_REUSE_RECEIPT.json'
+        identity_path = reuse_archive / 'ADAPTER_IDENTITIES.json'
+        if receipt_path.is_file() and identity_path.is_file():
+            receipt = read_json(receipt_path)
+            if (receipt.get('status') == 'PASS'
+                    and receipt.get('training_manifest_sha256') == sha256(training / 'TTT24_ADAPTER_MANIFEST.json')
+                    and receipt.get('adapter_identities_sha256') == sha256(identity_path)
+                    and receipt.get('adapter_stat_snapshot') == _adapter_stat_snapshot(adapter_root, manifest['records'])):
+                cached = read_json(identity_path)
     for task in tasks:
         path = adapter_root / task / "depth_024"
         expected = manifest["records"][task]["adapter_files"]
-        observed = {
-            name: sha256(path / name)
-            for name in sorted(expected)
-            if (path / name).is_file()
-        }
+        if cached is not None:
+            identity = _cached_manifest_adapter_identity(path, manifest['records'][task], cached[task])
+            observed = identity['adapter_files']
+        else:
+            observed = {
+                name: sha256(path / name)
+                for name in sorted(expected)
+                if (path / name).is_file()
+            }
         if observed != expected:
             raise RuntimeError(f"TTT24_ADAPTER_HASH_MISMATCH:{task}")
         rows[task] = {
@@ -127,6 +144,7 @@ def adapter_preflight(training: Path, adapter_root: Path, tasks: list[str]) -> d
             "adapter_config_sha256": observed["adapter_config.json"],
         }
     return {"status": "PASS", "task_count": len(rows), "tasks": rows,
+            "verification_mode": "REUSED_EXACT_SHA256_WITH_STABLE_METADATA" if cached is not None else "FULL_SHA256",
             "manifest_sha256": sha256(training / "TTT24_ADAPTER_MANIFEST.json")}
 
 
@@ -240,7 +258,7 @@ def main() -> None:
     outputs = validate_archive(args.archive, 24)
     archive = archive_contract(args.archive, 24, outputs)
     task_ids = sorted({oid_parts(output_id)[0] for output_id in outputs})
-    adapters = adapter_preflight(args.training, args.adapter_root, task_ids)
+    adapters = adapter_preflight(args.training, args.adapter_root, task_ids, reuse_archive=args.archive)
     write_json(args.output / "ADAPTER_PREFLIGHT.json", adapters)
     tasks = load_dataset(args.challenge)
     candidates_by_source: dict[tuple[str, int], list[dict[str, Any]]] = {}
