@@ -2,7 +2,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from scripts.run_eval60_ready_restore_v1 import capacity, complete, task_groups
+from scripts.run_eval60_ready_restore_v1 import canary_mechanically_valid, capacity, complete, task_groups
 
 
 def row(task, index, identity='same'):
@@ -33,3 +33,17 @@ def test_completed_output_cannot_be_reused_with_missing_artifacts(tmp_path):
                                'raw_output': 'missing', 'checkpoint_output': 'missing', 'eos_events': 'missing'}))
     with pytest.raises(RuntimeError, match='missing artifacts'):
         complete(tmp_path, row('a', 0))
+
+
+def test_inherited_wall_censoring_is_reportable_without_extending_scientific_budget():
+    cells = [{'nodes_expanded': 500, 'completed_candidates': 2, 'termination_reason': 'wall_time',
+              'prefix_reconstruction_failures': [], 'diagnostic_trace': {
+                  'prefill': {'cache_type': 'inference.chunked_kv_cache.ChunkedDynamicCache'},
+                  'branch_probabilities': [{'full_arc_logprobs': [{'logprob': -0.5}]}],
+              }} for _ in range(8)]
+    assert canary_mechanically_valid(cells)
+    cells[0]['nodes_expanded'] = 1025
+    assert not canary_mechanically_valid(cells)
+    cells[0]['nodes_expanded'] = 500
+    cells[0]['prefix_reconstruction_failures'] = ['bad_ancestry']
+    assert not canary_mechanically_valid(cells)
