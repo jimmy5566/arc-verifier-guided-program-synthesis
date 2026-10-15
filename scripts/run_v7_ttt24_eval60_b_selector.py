@@ -113,6 +113,7 @@ def adapter_preflight(training: Path, adapter_root: Path, tasks: list[str],
         raise RuntimeError("TTT24_ADAPTER_TASK_IDENTITY_MISMATCH")
     rows: dict[str, Any] = {}
     cached = None
+    rehashed_changed_files = []
     if reuse_archive is not None:
         from scripts.run_v7_ttt24_aug8_r1024_eval60 import _adapter_stat_snapshot, _cached_manifest_adapter_identity
         receipt_path = reuse_archive / 'ADAPTER_IDENTITY_REUSE_RECEIPT.json'
@@ -121,8 +122,16 @@ def adapter_preflight(training: Path, adapter_root: Path, tasks: list[str],
             receipt = read_json(receipt_path)
             if (receipt.get('status') == 'PASS'
                     and receipt.get('training_manifest_sha256') == sha256(training / 'TTT24_ADAPTER_MANIFEST.json')
-                    and receipt.get('adapter_identities_sha256') == sha256(identity_path)
-                    and receipt.get('adapter_stat_snapshot') == _adapter_stat_snapshot(adapter_root, manifest['records'])):
+                    and receipt.get('adapter_identities_sha256') == sha256(identity_path)):
+                snapshot = _adapter_stat_snapshot(adapter_root, manifest['records'])
+                prior = receipt.get('adapter_stat_snapshot') or {}
+                for task, files in snapshot.items():
+                    for name, metadata in files.items():
+                        if prior.get(task, {}).get(name) != metadata:
+                            path = adapter_root / task / 'depth_024' / name
+                            if sha256(path) != manifest['records'][task]['adapter_files'][name]:
+                                raise RuntimeError(f'TTT24_ADAPTER_HASH_MISMATCH:{task}:{name}')
+                            rehashed_changed_files.append(f'{task}/{name}')
                 cached = read_json(identity_path)
     for task in tasks:
         path = adapter_root / task / "depth_024"
@@ -145,6 +154,7 @@ def adapter_preflight(training: Path, adapter_root: Path, tasks: list[str],
         }
     return {"status": "PASS", "task_count": len(rows), "tasks": rows,
             "verification_mode": "REUSED_EXACT_SHA256_WITH_STABLE_METADATA" if cached is not None else "FULL_SHA256",
+            "rehashed_changed_files": rehashed_changed_files,
             "manifest_sha256": sha256(training / "TTT24_ADAPTER_MANIFEST.json")}
 
 

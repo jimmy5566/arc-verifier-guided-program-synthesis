@@ -53,6 +53,21 @@ def test_changed_adapter_falls_back_to_hash_and_rejects(tmp_path):
         b.adapter_preflight(training, root, ['task'], archive)
 
 
+def test_only_changed_metadata_file_is_rehashed(tmp_path):
+    import os
+    root, training, archive = fixture(tmp_path)
+    config = root / 'task/depth_024/adapter_config.json'
+    stat = config.stat()
+    os.utime(config, ns=(stat.st_atime_ns, stat.st_mtime_ns + 1_000_000_000))
+    original = b.sha256
+    def bounded_hash(path):
+        assert Path(path).suffix != '.safetensors'
+        return original(path)
+    with patch.object(b, 'sha256', side_effect=bounded_hash):
+        result = b.adapter_preflight(training, root, ['task'], archive)
+    assert result['rehashed_changed_files'] == ['task/adapter_config.json']
+
+
 def test_worker_command_cannot_generate_train_or_accept_gold(tmp_path):
     args = argparse.Namespace(**{n: tmp_path / n for n in ('archive', 'training', 'adapter_root',
         'model_path', 'foundation_adapter', 'challenge', 'native_config', 'output')})
