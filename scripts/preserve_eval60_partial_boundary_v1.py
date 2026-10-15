@@ -98,8 +98,12 @@ def main() -> None:
         path = args.run / name
         if path.is_file():
             files[name] = {'sha256': digest(path), 'bytes': path.stat().st_size}
+    sources = sorted({row['execution_source_commit'] for row in rows.values()
+                      if row.get('execution_source_commit')})
     atomic(args.snapshot / 'PARTIAL_EVIDENCE_MANIFEST.json', {
-        'status': 'PRESERVED_PARTIAL_TARGET_BLIND', 'source_commit': 'dd60c55b92f3fc69dd7d3f8f0cd27d810465718f',
+        'status': 'PRESERVED_PARTIAL_TARGET_BLIND',
+        'source_commit': sources[0] if len(sources) == 1 else 'MIXED_OR_RECEIPT_UNSPECIFIED',
+        'source_commits_from_receipts': sources,
         'run': str(args.run), 'completed_outputs': sorted(rows), 'count': len(rows),
         'files': files, 'target_blind': True, 'gold_loaded': False,
         'new_generation_may_not_overwrite_these_files': True,

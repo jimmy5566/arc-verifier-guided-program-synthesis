@@ -1,0 +1,23 @@
+{
+  "canary_outputs_adopted_as_formal": false,
+  "current_outputs": [
+    "8e5c0c38:o0",
+    "8e5c0c38:o1"
+  ],
+  "current_task": "8e5c0c38",
+  "execution_source_commit": "cde188b600600c17cf5c9419db1cfd8cd4898f74",
+  "formal_completed_outputs": 59,
+  "formal_node_budget": 1024,
+  "generation_root": "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/pipeline_v4/generation",
+  "gold_loaded_before_freeze": false,
+  "gpu_job_pid": 147688,
+  "physical_batch_width": 1,
+  "physical_forward_index": 1600,
+  "pipeline_root": "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/pipeline_ready_restore_v2",
+  "pipeline_stage": "source_tests",
+  "verified_active_stage": "generation",
+  "active_stage_basis": "live READY worker PID 147688, task 8e5c0c38, physical forward 1600; mounted pipeline state reported source_tests",
+  "pipeline_status": "RUNNING",
+  "resident_count": 8,
+  "verified_utc": "2026-10-15T14:50:29.199580+00:00"
+}

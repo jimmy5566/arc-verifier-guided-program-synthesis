@@ -1,0 +1,42 @@
+{
+  "batch16_observed": true,
+  "canary_node_budget": 128,
+  "criterion": "all eight views; independent budgets; finite logits; exact EOS ancestry; owned ChunkedDynamicCache; XL completion",
+  "formal_node_budget": 1024,
+  "gold_loaded": false,
+  "rows": [
+    {
+      "histogram": {
+        "2": 512
+      },
+      "mean_effective_batch": 2.0,
+      "mechanical_pass": true,
+      "output_id": "981571dc:o0",
+      "wall_seconds": 86.20895186066628,
+      "wall_time_censored_cells": 0
+    },
+    {
+      "histogram": {
+        "16": 128
+      },
+      "mean_effective_batch": 16.0,
+      "mechanical_pass": true,
+      "output_id": "dd6b8c4b:o0",
+      "wall_seconds": 24.972108627669513,
+      "wall_time_censored_cells": 0
+    },
+    {
+      "histogram": {
+        "16": 128
+      },
+      "mean_effective_batch": 16.0,
+      "mechanical_pass": true,
+      "output_id": "dd6b8c4b:o1",
+      "wall_seconds": 24.972108627669513,
+      "wall_time_censored_cells": 0
+    }
+  ],
+  "status": "PASS",
+  "target_blind": true,
+  "wall_censoring_policy": "preserve inherited 540 seconds; retain and report censored evidence without retry"
+}
