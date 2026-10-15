@@ -773,6 +773,8 @@ def _read_remote_job_manifest(value: str) -> tuple[Path, dict[str, Any]]:
     primary = remote["primary_process"]
     if not isinstance(primary, dict) or not isinstance(primary.get("pid"), int) or not primary.get("role"):
         raise RuntimeError("REMOTE_JOB_PRIMARY_PROCESS_INCOMPLETE")
+    if 'cmdline_sha256' in primary and not re.fullmatch(r'[0-9a-f]{64}', str(primary['cmdline_sha256'])):
+        raise RuntimeError('REMOTE_JOB_CMDLINE_SHA256_INVALID')
     if remote.get('completion_recipient', 'controller') not in {'controller', 'director'}:
         raise RuntimeError('INVALID_COMPLETION_RECIPIENT')
     return remote_path, remote

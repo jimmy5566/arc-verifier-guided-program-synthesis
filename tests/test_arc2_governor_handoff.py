@@ -22,6 +22,19 @@ def binding():
 
 
 class HandoffTests(unittest.TestCase):
+    def test_rejects_mistyped_process_hash_before_monitor_registration(self):
+        with tempfile.TemporaryDirectory() as td:
+            manifest = Path(td) / 'job.json'
+            data = binding()
+            for invalid in ('b' * 65, 'b' * 63, 'g' * 64):
+                data['primary_process']['cmdline_sha256'] = invalid
+                g.atomic(manifest, data)
+                with self.assertRaisesRegex(RuntimeError, 'REMOTE_JOB_CMDLINE_SHA256_INVALID'):
+                    g._read_remote_job_manifest(str(manifest))
+            data['primary_process']['cmdline_sha256'] = 'b' * 64
+            g.atomic(manifest, data)
+            self.assertEqual(g._read_remote_job_manifest(str(manifest))[1], data)
+
     def state(self, root, **values):
         path = root / 'ARC2_WORKFLOW_STATE.json'
         item = g.event('CONTROLLER_TASK', 'controller', 'director', {'stage': 'TEST', 'next_action': 'CPU_ONLY'})
