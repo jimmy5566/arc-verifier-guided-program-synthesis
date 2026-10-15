@@ -134,6 +134,7 @@ def _frozen_b1_fixture(run: Path) -> None:
             "status": "COMPLETE", "output_id": output_id, "target_blind": True,
             "gold_loaded": False, "raw_output": f"RAW_OUTPUTS/{name}",
         }), encoding="utf-8")
+    (run / "OOM_FALLBACK_RECEIPTS.csv").write_text("original\n", encoding="utf-8")
     core._freeze_generation(run, full.EXPERIMENT + "_B1_GATE", 2)
 
 
@@ -157,6 +158,22 @@ def test_frozen_b1_byte_drift_fails_closed(tmp_path: Path) -> None:
         assert "bytes no longer match" in str(error)
     else:
         raise AssertionError("frozen B1 byte drift must fail closed")
+
+
+def test_b1_reuse_records_bounded_operational_receipt_drift(tmp_path: Path) -> None:
+    run = tmp_path / "B1_PARITY"
+    _frozen_b1_fixture(run)
+    (run / "OOM_FALLBACK_RECEIPTS.csv").write_text("rejected re-entry\n", encoding="utf-8")
+    with patch.object(full, "_run_surface", side_effect=AssertionError("worker must not rerun")):
+        disposition = full.ensure_b1_generation(
+            argparse.Namespace(), run, [{}, {}], {"profiles": {}},
+        )
+    assert disposition == "REUSED_FROZEN"
+    audit = json.loads((tmp_path / "B1_FREEZE_REUSE_AUDIT.json").read_text(encoding="utf-8"))
+    assert audit["full_ledger_status"] == "FAIL"
+    assert [row["path"] for row in audit["allowed_post_freeze_operational_drift"]] == [
+        "OOM_FALLBACK_RECEIPTS.csv",
+    ]
 
 
 def test_worker_diagnostic_trace_is_explicit_and_passive_flag(tmp_path: Path) -> None:
