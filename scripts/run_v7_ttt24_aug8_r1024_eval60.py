@@ -520,7 +520,7 @@ def main() -> None:
         if args.preservation_manifest is None:
             raise RuntimeError('READY restoration requires the partial preservation manifest')
         preserved = _read(args.preservation_manifest)
-        _atomic_json(args.output / 'EXECUTION_POLICY_AMENDMENT_READY_RESTORE_V1.json', {
+        _atomic_json(args.output / 'EXECUTION_POLICY_AMENDMENT_READY_ACTIVE_TIME_V2.json', {
             'source_commit': contract['source_commit'], 'mode': MODE, 'target_blind': True, 'gold_loaded': False,
             'preservation_manifest': str(args.preservation_manifest),
             'preservation_manifest_sha256': sha256(args.preservation_manifest),
@@ -531,6 +531,7 @@ def main() -> None:
             'physical_ceiling_by_root': {'S': 16, 'M': 8, 'L': 4, 'XL': 2},
             'soft_B16_to_B8': '20 GiB live allocated or current cache position above 2048',
             'fairness_max_wait': 3, 'same_adapter_multioutput_pool': True,
+            'cell_time_budget': '540 seconds of participating work; excludes queue wait; R1024/cap32 unchanged',
             'frozen_scientific_conditions': 'V7+task TTT24; canonical AUG8; regret4; R1024; cap32; EOS15; max931',
         })
         command = [str(args.worker_python), str(ROOT / 'scripts/run_eval60_ready_restore_v1.py'),
@@ -539,7 +540,7 @@ def main() -> None:
                    '--challenge', str(args.challenge), '--native-config-dir', str(args.native_config_dir),
                    '--candidate-pool', str(args.candidate_pool), '--aug8-ids', str(args.output / 'AUG8_IDS.json'),
                    '--preservation-manifest', str(args.preservation_manifest),
-                   '--canary-output', str(args.output.parent / 'generation_READY_RESTORE_CANARY_V1')]
+                   '--canary-output', str(args.output.parent / 'generation_READY_ACTIVE_TIME_CANARY_V2')]
         subprocess.run(command, cwd=ROOT, check=True)
         if (args.output / 'READY_CONTROLLED_STOP.json').exists():
             raise RuntimeError('controlled task-boundary stop; generation incomplete')

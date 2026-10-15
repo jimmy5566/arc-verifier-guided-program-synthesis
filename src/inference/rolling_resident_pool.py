@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from collections import OrderedDict, deque
 from dataclasses import dataclass
+import time
 from typing import Any, Callable, Iterable
 
 from inference.nvarc_turbodfs_dynamic_ready import (
@@ -99,6 +100,7 @@ def run_rolling_resident_scheduler(
     cache_pack_observer: Callable[[str, dict[str, Any]], None] | None = None,
     release_batch_temporaries_for_audit: bool = False,
     hidden_state_layers: tuple[int, ...] | None = None,
+    synchronize_forward: Callable[[], None] | None = None,
 ) -> dict[str, Any]:
     """Run a FIFO rolling pool through the common physical-forward path.
 
@@ -221,6 +223,9 @@ def run_rolling_resident_scheduler(
              compatible_class_sizes=decision.compatible_class_sizes if decision is not None else None,
              selected_class_size=decision.selected_class_size if decision is not None else physical_batch,
              request_position=int(requests[0].position) if requests else None)
+        if synchronize_forward is not None:
+            synchronize_forward()
+        active_started = time.perf_counter()
         replies, telemetry = execute_ready_forward(
             model=model,
             selected=selected,
@@ -230,6 +235,15 @@ def run_rolling_resident_scheduler(
             release_batch_temporaries_for_audit=release_batch_temporaries_for_audit,
             hidden_state_layers=hidden_state_layers,
         )
+        if synchronize_forward is not None:
+            synchronize_forward()
+        active_forward_seconds = time.perf_counter() - active_started
+        # Exclude other cells' queue time, but charge this entire physical
+        # operation to each participating cell, never its duration divided by B.
+        for cell in selected:
+            if cell.state.get('active_time_accounting', False):
+                cell.active_elapsed_seconds += active_forward_seconds
+                cell.state['active_elapsed_seconds'] += active_forward_seconds
         for key in forward_timing:
             forward_timing[key] += float(telemetry.get(key, 0.0))
         physical_forward_records.append({
@@ -245,6 +259,7 @@ def run_rolling_resident_scheduler(
             "cache_pack_seconds": float(telemetry.get("cache_pack_seconds", 0.0)),
             "cache_adoption_seconds": float(telemetry.get("cache_adoption_seconds", 0.0)),
             "elapsed_seconds": float(telemetry.get("elapsed_seconds", 0.0)),
+            "active_forward_seconds": active_forward_seconds,
         })
         histogram[physical_batch] = histogram.get(physical_batch, 0) + 1
         logical_advances += physical_batch

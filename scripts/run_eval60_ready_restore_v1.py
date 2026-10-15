@@ -40,7 +40,7 @@ from scripts.run_real_project_aug16_dynamic_b16_pilot_v1 import (
 )
 from scripts.run_ttt24_aug8_r1024_core_v1 import AUG8, _sha_file
 
-MODE = 'HISTORICAL_ROOT_AWARE_READY_RESTORED_V1'
+MODE = 'HISTORICAL_ROOT_AWARE_READY_RESTORED_ACTIVE_TIME_V2'
 
 
 def task_groups(outputs: list[dict]) -> list[list[dict]]:
@@ -231,7 +231,7 @@ def run_task(args: argparse.Namespace, runtime: Runtime, group: list[dict],
     default_resident, default_ceiling = capacity(root_max, len(roots))
     resident = min(resident or default_resident, len(roots))
     ceiling = min(ceiling or default_ceiling, resident)
-    config = _config(1024, diagnostic_trace=True)
+    config = _config(int(getattr(args, 'max_expanded_nodes', 1024)), diagnostic_trace=True)
     schedule = (128, 256, 512, 1024)
     started = time.time()
     progress = args.output / 'READY_LIVE_STATE.json'
@@ -255,7 +255,8 @@ def run_task(args: argparse.Namespace, runtime: Runtime, group: list[dict],
         cell = start_ready_cell(model=model, input_ids=prepared[key][0].to(args.device),
                                 config=config, cell_key=key, normalize_root_cache=True,
                                 root_cache_transform=transform, cache_strategy='rollback',
-                                release_prefill_temporaries=True, eos_event_sink=eos)
+                                release_prefill_temporaries=True, eos_event_sink=eos,
+                                active_time_accounting=True)
         residents[key] = cell
         if cell.cache_owner is None or cell.request is None:
             raise RuntimeError('historical READY admission produced no owned request')
@@ -296,6 +297,7 @@ def run_task(args: argparse.Namespace, runtime: Runtime, group: list[dict],
             physical_batch_ceiling=ceiling, create_cell=create, consume_result=consume,
             release_cell=release, admission_policy='root_aware', root_lengths=roots,
             safe_batch_ceiling=safe_ceiling, fairness_max_wait=3, event_sink=live,
+            synchronize_forward=lambda: torch.cuda.synchronize(args.device),
         )
         torch.cuda.synchronize(args.device)
         wall = time.perf_counter() - began
@@ -329,6 +331,7 @@ def run_task(args: argparse.Namespace, runtime: Runtime, group: list[dict],
                 'experiment': args.experiment, 'target_blind': True, 'gold_loaded': False,
                 'status': 'COMPLETE', 'output': selected, 'attempt_index': attempt,
                 'execution_source_commit': source, 'execution_mode': MODE,
+                'requested_node_budget': config.max_expanded_nodes,
                 'runtime_identity': runtime.identity, 'logical_search_order_policy': 'legacy',
                 'profile_configuration': {'resident_capacity': resident, 'physical_batch_ceiling': ceiling},
                 'cells': cells, 'scheduler': {k: v for k, v in scheduler.items() if k != 'events'},
@@ -336,6 +339,8 @@ def run_task(args: argparse.Namespace, runtime: Runtime, group: list[dict],
                 'scheduler_group_id': group_id, 'scheduler_group_output_count': len(group),
                 'root_admission': {'policy': 'root_aware', 'root_lengths': roots, 'fairness_max_wait': 3},
                 'wall_seconds': wall / len(group), 'shared_group_wall_seconds': wall,
+                'time_budget': {'limit_seconds': config.local_time_limit_seconds,
+                                'basis': 'prefill + full participating physical forward + own DFS CPU; queue wait excluded'},
                 'timings': output_timings, 'memory': memory, 'eos_events_path': str(eos_path.relative_to(args.output)),
                 'eos_event_count': len(output_events), 'top5_hidden_state_capture': {'enabled': False},
             })
@@ -428,6 +433,9 @@ def main() -> None:
         production = args.output
         args.output = args.canary_output
         args.output.mkdir(parents=True, exist_ok=True)
+        # A capacity/cache smoke needs only R128. Its candidates must never be
+        # adopted as formal R1024 outputs. Production remains R1024 below.
+        args.max_expanded_nodes = 128
         for group in sorted(task_groups(canary_rows), key=lambda g: max(int(r['root_length_max']) for r in g)):
             execute(group)
         gate_rows = []
@@ -445,12 +453,15 @@ def main() -> None:
             'status': 'PASS' if passed else 'FAIL', 'target_blind': True, 'gold_loaded': False,
             'rows': gate_rows, 'criterion': 'all eight views; independent budgets; finite logits; exact EOS ancestry; owned ChunkedDynamicCache; XL completion',
             'batch16_observed': any(int(r['histogram'].get('16', 0)) > 0 for r in gate_rows),
+            'canary_node_budget': 128, 'formal_node_budget': 1024,
             'wall_censoring_policy': 'preserve inherited 540 seconds; retain and report censored evidence without retry',
         })
         if not passed:
             raise RuntimeError('restored READY mechanical canary failed')
         # Preserve completed canary bytes, and reuse previously ungenerated outputs.
         for selected in canary_rows:
+            if args.max_expanded_nodes != 1024:
+                continue
             if complete(production, selected):
                 continue
             safe = _safe_id(selected['output_id'])
@@ -465,6 +476,7 @@ def main() -> None:
                 if _sha_file(source) != _sha_file(dest):
                     raise RuntimeError('canary adoption exact-byte verification failed')
         args.output = production
+        args.max_expanded_nodes = 1024
     for group in task_groups(outputs):
         if (args.output / 'STOP_AFTER_TASK').exists():
             _atomic_json(args.output / 'READY_CONTROLLED_STOP.json', {'status': 'STOPPED_AT_TASK_BOUNDARY',

@@ -40,6 +40,8 @@ def main() -> None:
     parser.add_argument('--worker-pid', type=int, required=True)
     parser.add_argument('--parent-pids', type=int, nargs='+', required=True)
     parser.add_argument('--timeout', type=int, default=2400)
+    parser.add_argument('--stop-now', action='store_true')
+    parser.add_argument('--identity-root', type=Path)
     args = parser.parse_args()
     if (args.run / 'GENERATION_FREEZE.json').exists():
         raise RuntimeError('already frozen; do not stop or alter completed experiment')
@@ -47,7 +49,7 @@ def main() -> None:
     # Verify every PID against the exact source/run before sending any signal.
     for pid in [args.worker_pid, *args.parent_pids]:
         command = Path(f'/proc/{pid}/cmdline').read_bytes().replace(b'\0', b' ').decode()
-        if str(args.run) not in command:
+        if str(args.identity_root or args.run) not in command:
             raise RuntimeError(f'PID {pid} is not bound to the requested run')
     initial = completed(args.run)
     for pid in args.parent_pids:
@@ -58,7 +60,7 @@ def main() -> None:
         'run': str(args.run), 'requested_unix': time.time(),
     })
     deadline = time.monotonic() + args.timeout
-    while len(completed(args.run)) <= len(initial):
+    while not args.stop_now and len(completed(args.run)) <= len(initial):
         if not Path(f'/proc/{args.worker_pid}').exists():
             raise RuntimeError('worker exited before boundary; inspect existing artifacts')
         if time.monotonic() >= deadline:
@@ -67,7 +69,8 @@ def main() -> None:
     os.kill(args.worker_pid, signal.SIGSTOP)
     rows = completed(args.run)
     atomic(args.snapshot / 'CONTROLLED_STOP.json', {
-        'status': 'STOPPED_AFTER_ATOMIC_OUTPUT', 'completed_outputs': sorted(rows),
+        'status': 'STOPPED_WITH_UNCOMMITTED_WORK_DISCARDED' if args.stop_now else 'STOPPED_AFTER_ATOMIC_OUTPUT',
+        'completed_outputs': sorted(rows),
         'count': len(rows), 'run': str(args.run), 'stopped_unix': time.time(),
         'target_blind': True, 'gold_loaded': False,
     })
