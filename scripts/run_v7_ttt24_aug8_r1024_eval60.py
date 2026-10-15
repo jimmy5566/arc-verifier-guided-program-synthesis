@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import statistics
 import sys
 from pathlib import Path
 from typing import Any
@@ -235,6 +236,84 @@ def b1_policy(rows: list[dict[str, Any]]) -> dict[str, Any]:
     }}
 
 
+def write_throughput_report(run: Path) -> None:
+    """Summarize target-blind runtime costs without opening evaluation Gold."""
+    rows = []
+    for receipt_path in sorted((run / "OUTPUT_RECEIPTS").glob("*.json")):
+        receipt = _read(receipt_path)
+        if receipt.get("status") != "COMPLETE":
+            continue
+        raw_path = run / str(receipt["raw_output"])
+        raw = _read(raw_path)
+        timings = dict(raw.get("timings") or receipt.get("timings") or {})
+        scheduler = dict(raw.get("scheduler") or {})
+        rows.append({
+            "output_id": str(receipt["output_id"]),
+            "execution_mode": str(raw.get("execution_mode") or "ROLLING_READY_CELL"),
+            "adapter_stage_seconds": float(timings.get("adapter_stage_seconds", 0.0)),
+            "model_load_seconds": float(timings.get("model_load_seconds", 0.0)),
+            "search_seconds": float(timings.get("search_seconds", raw.get("wall_seconds", 0.0))),
+            "artifact_write_seconds": float(timings.get("artifact_write_seconds", 0.0)),
+            "physical_forwards": int(scheduler.get("physical_forwards", 0)),
+            "mean_active_lanes": float(scheduler.get("mean_active_lanes", 0.0)),
+        })
+    fixed = [row for row in rows if row["execution_mode"] == "FIXED4_D1_INDEPENDENT_LANES"]
+    def total(field: str) -> float:
+        return sum(float(row[field]) for row in fixed)
+    measured = total("adapter_stage_seconds") + total("model_load_seconds") + total("search_seconds") + total("artifact_write_seconds")
+    report = {
+        "status": "COMPLETE" if len(rows) == 89 else "PARTIAL",
+        "target_blind": True,
+        "gold_loaded": False,
+        "completed_outputs": len(rows),
+        "execution_mode_counts": {
+            mode: sum(row["execution_mode"] == mode for row in rows)
+            for mode in sorted({row["execution_mode"] for row in rows})
+        },
+        "fixed4_outputs": len(fixed),
+        "fixed4_totals_seconds": {
+            field: total(field) for field in (
+                "adapter_stage_seconds", "model_load_seconds", "search_seconds", "artifact_write_seconds"
+            )
+        },
+        "fixed4_mean_active_lanes": (
+            statistics.mean(row["mean_active_lanes"] for row in fixed) if fixed else None
+        ),
+        "fixed4_mean_search_seconds": (
+            statistics.mean(row["search_seconds"] for row in fixed) if fixed else None
+        ),
+        "measured_pipeline_seconds": measured,
+        "next_speed_priorities": [
+            {
+                "rank": 1,
+                "change": "persistent base_plus_V7 model with exact task-adapter state swap",
+                "upper_bound_seconds": total("model_load_seconds"),
+                "gate": "two-task load-vs-swap native-logit and candidate parity before production",
+            },
+            {
+                "rank": 2,
+                "change": "reuse hash-verified persistent adapter files without per-output staging copy",
+                "upper_bound_seconds": total("adapter_stage_seconds"),
+                "gate": "source SHA256 equals runtime SHA256 and no mutable staging path",
+            },
+            {
+                "rank": 3,
+                "change": "overlap gzip and hashing with the next GPU output",
+                "upper_bound_seconds": total("artifact_write_seconds"),
+                "gate": "bounded one-output CPU queue with atomic publish and identical SHA256",
+            },
+            {
+                "rank": 4,
+                "change": "evaluate fixed B8 only after the fixed4 run",
+                "upper_bound_seconds": None,
+                "gate": "new short/long capacity and semantic-parity canary; current D1 engine is validated only to four lanes",
+            },
+        ],
+        "rows": rows,
+    }
+    _atomic_json(run / "TARGET_BLIND_THROUGHPUT_REPORT.json", report)
+
+
 def frozen_generation_ready(run: Path, *, experiment: str, expected: int,
                             allow_operational_receipt_drift: bool = False) -> bool:
     """Return whether an existing immutable generation can be reused safely.
@@ -396,8 +475,13 @@ def main() -> None:
     }
     if contract["foundation_adapter_sha256"] != V7_ADAPTER_SHA256:
         raise RuntimeError("frozen V7 adapter identity mismatch")
-    _atomic_json(args.output / "PRE_GOLD_CONTRACT.json", contract)
-    _atomic_json(args.output / "CONTRACT.json", contract)
+    # Do not rewrite a prior scientific binding during an operational resume.
+    # A later executor amendment is additive and records exactly which outputs
+    # were already complete under the original rolling implementation.
+    for name in ("PRE_GOLD_CONTRACT.json", "CONTRACT.json"):
+        path = args.output / name
+        if not path.is_file():
+            _atomic_json(path, contract)
     identity_payload = {
         task: next(row["adapter_identity"] for row in outputs if row["task_id"] == task)
         for task in sorted({row["task_id"] for row in outputs})
@@ -421,8 +505,8 @@ def main() -> None:
     smoke_policy = b1_policy(smoke)
     ensure_b1_generation(args, smoke_b1, smoke, smoke_policy)
 
-    # Generate the same two outputs with the frozen production policy before
-    # allowing the other 87 outputs to start.
+    # Generate the same two outputs with the original rolling production path.
+    # On a resumed run these receipts are reused byte-for-byte.
     _run_surface(args, args.output, smoke, depth=24, experiment=EXPERIMENT, policy=policy)
     def compare_parity() -> list[dict[str, Any]]:
         rows = []
@@ -458,7 +542,80 @@ def main() -> None:
             "gold_loaded": False}
     _atomic_json(args.output / "B1_PARITY_GATE.json", gate)
 
+    # Switch only the remaining work to the historical cross-cell D1 engine.
+    # Four independent searches share each physical forward; divergence is
+    # expected and completed lanes become inert PAD lanes.  Preserve the
+    # already-generated rolling outputs and bind the mixed implementation
+    # explicitly rather than silently rewriting their execution identity.
+    completed_before_switch = []
+    for receipt_path in sorted((args.output / "OUTPUT_RECEIPTS").glob("*.json")):
+        receipt = _read(receipt_path)
+        if receipt.get("status") == "COMPLETE":
+            completed_before_switch.append(str(receipt.get("output_id")))
+    fixed_worker = ROOT / "scripts" / "run_eval60_fixed4_d1_worker_v1.py"
+    args.worker_entrypoint = fixed_worker
+    fixed_canary = args.output.parent / f"{args.output.name}_FIXED4_CANARY_V1"
+    fixed_canary.mkdir(parents=True, exist_ok=True)
+    fixed_canary_experiment = EXPERIMENT + "_FIXED4_CANARY"
+    if not frozen_generation_ready(
+        fixed_canary, experiment=fixed_canary_experiment, expected=len(smoke)
+    ):
+        _run_surface(
+            args, fixed_canary, smoke, depth=24,
+            experiment=fixed_canary_experiment, policy=policy,
+        )
+        _freeze_generation(fixed_canary, fixed_canary_experiment, len(smoke))
+    fixed_rows = []
+    for row in smoke:
+        rolling = snapshots(args.output, row["output_id"])
+        fixed = snapshots(fixed_canary, row["output_id"])
+        fixed_rows.append({
+            "output_id": row["output_id"],
+            "profile": row["profile"],
+            "exact_candidate_pool_parity": rolling == fixed,
+            "rolling_sha256": _sha_json(rolling),
+            "fixed4_sha256": _sha_json(fixed),
+            "fixed4_cell_count": len(fixed),
+            "fixed4_all_aug8_present": set(fixed) == set(AUG8),
+        })
+    fixed_mechanical_pass = all(
+        row["fixed4_cell_count"] == 8 and row["fixed4_all_aug8_present"]
+        for row in fixed_rows
+    )
+    fixed_gate = {
+        "status": "PASS" if fixed_mechanical_pass else "FAIL",
+        "criterion": "short and long canaries complete all eight exact-root fixed4 lanes at R1024",
+        "candidate_pool_parity_is_diagnostic": True,
+        "candidate_pool_parity_blocking": False,
+        "reason": "the deployed batched numerical route is the estimand; B1/rolling are sensitivity diagnostics",
+        "rows": fixed_rows,
+        "target_blind": True,
+        "gold_loaded": False,
+    }
+    _atomic_json(args.output / "FIXED4_CANARY_GATE.json", fixed_gate)
+    if not fixed_mechanical_pass:
+        raise RuntimeError("fixed4 short/long mechanical canary failed")
+    _atomic_json(args.output / "EXECUTION_POLICY_AMENDMENT_FIXED4_V1.json", {
+        "status": "ACTIVE",
+        "source_commit": contract["source_commit"],
+        "worker_entrypoint": str(fixed_worker.relative_to(ROOT)),
+        "execution_mode": "FIXED4_D1_INDEPENDENT_LANES",
+        "physical_width": 4,
+        "logical_budgets": "independent R1024 per AUG8 cell",
+        "root_grouping": "two exact-root groups of four",
+        "inactive_lane_policy": "PAD physical slot with no logical state mutation",
+        "completed_before_switch": completed_before_switch,
+        "completed_before_switch_count": len(completed_before_switch),
+        "remaining_outputs_use_fixed4": True,
+        "scientific_settings_changed": False,
+        "candidate_generation_route_changed": True,
+        "fixed4_canary_gate": str(args.output / "FIXED4_CANARY_GATE.json"),
+        "target_blind": True,
+        "gold_loaded": False,
+    })
+
     _run_surface(args, args.output, outputs, depth=24, experiment=EXPERIMENT, policy=policy)
+    write_throughput_report(args.output)
     _freeze_generation(args.output, EXPERIMENT, 89)
     compact = _ledger(args.output, "HASHES.json", include_raw=False)
     compact_verification = _verify(args.output, args.output / "HASHES.json")

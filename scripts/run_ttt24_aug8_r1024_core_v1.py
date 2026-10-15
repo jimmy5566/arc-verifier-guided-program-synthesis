@@ -122,7 +122,11 @@ def _write_cohort(path: Path, outputs: list[dict[str, Any]], experiment: str) ->
 
 
 def _worker(args: argparse.Namespace, run: Path, selected: dict[str, Any], attempt: int, config: dict[str, int], *, depth: int, experiment: str) -> tuple[int, dict[str, Any]]:
-    base = ROOT / "scripts" / "run_eval60_budget_eos_pilot18_v1.py"
+    base = Path(getattr(args, "worker_entrypoint", None) or (
+        ROOT / "scripts" / "run_eval60_budget_eos_pilot18_v1.py"
+    ))
+    if not base.is_file():
+        raise RuntimeError(f"worker entrypoint is missing: {base}")
     # Phase-specific controllers may pin a previously validated interpreter.
     # Older Core callers retain their original sys.executable behavior.
     worker_python = str(getattr(args, "worker_python", None) or sys.executable)
