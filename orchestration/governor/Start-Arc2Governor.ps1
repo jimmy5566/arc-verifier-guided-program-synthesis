@@ -85,12 +85,16 @@ function Start-Arc2GovernorProcess {
   if ($existing) { return @{ started = $true; already_running = $true; pid = $existing.Id; error = $null } }
   Remove-StaleGovernorPid
   New-Item -ItemType Directory -Force (Split-Path -Parent $stdout) | Out-Null
-  $arguments = @('-3', $GovernorScript, '--daemon', '--state', $state,
+  $pythonExecutable = (& py.exe -3 -c 'import sys; print(sys.executable)' | Out-String).Trim()
+  if ($LASTEXITCODE -ne 0 -or -not (Test-Path -LiteralPath $pythonExecutable)) {
+    return @{ started = $false; already_running = $false; pid = $null; error = 'DIRECT_PYTHON_RESOLUTION_FAILED' }
+  }
+  $arguments = @($GovernorScript, '--daemon', '--state', $state,
     '--pid-file', $pidPath, '--service-state', $serviceState,
     '--idle-seconds', $IdleSeconds, '--paused-seconds', $PausedSeconds,
     '--controller-retry-seconds', $ControllerRetrySeconds)
   try {
-    $child = Start-Process -FilePath 'py.exe' -ArgumentList $arguments -WorkingDirectory $Root -WindowStyle Hidden -RedirectStandardOutput $stdout -RedirectStandardError $stderr -PassThru -ErrorAction Stop
+    $child = Start-Process -FilePath $pythonExecutable -ArgumentList $arguments -WorkingDirectory $Root -WindowStyle Hidden -RedirectStandardOutput $stdout -RedirectStandardError $stderr -PassThru -ErrorAction Stop
   } catch {
     return @{ started = $false; already_running = $false; pid = $null; error = "START_PROCESS_FAILED:$($_.Exception.Message)" }
   }
