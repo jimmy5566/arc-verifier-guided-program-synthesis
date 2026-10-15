@@ -7,6 +7,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from scripts import run_ttt24_aug8_r1024_core_v1 as core
+from scripts import run_eval60_budget_eos_pilot18_v1 as budget_worker
 from scripts import run_v7_ttt24_aug8_r1024_eval60 as full
 from scripts import run_v7_ttt24_eval60_b_selector as b_selector
 from scripts import score_v7_ttt24_eval60_postfreeze as postfreeze
@@ -92,6 +93,27 @@ def test_worker_diagnostic_trace_is_explicit_and_passive_flag(tmp_path: Path) ->
     assert "--diagnostic-trace" in command
     assert command[command.index("--search-order-policy") + 1] == "legacy"
     assert "--frontier-telemetry" not in command
+
+
+def test_adapter_staging_preserves_bytes_without_copying_posix_metadata(tmp_path: Path) -> None:
+    source = tmp_path / "source"
+    destination = tmp_path / "destination"
+    source.mkdir()
+    (source / "adapter_config.json").write_bytes(b"config")
+    (source / "adapter_model.safetensors").write_bytes(b"weights")
+
+    def identity(path: Path) -> dict[str, str]:
+        return {
+            "adapter_sha256": hashlib.sha256((path / "adapter_model.safetensors").read_bytes()).hexdigest(),
+            "adapter_config_sha256": hashlib.sha256((path / "adapter_config.json").read_bytes()).hexdigest(),
+        }
+
+    with patch.object(budget_worker, "_adapter_identity", side_effect=identity), \
+            patch.object(budget_worker.shutil, "copy2", side_effect=AssertionError("copy2 must not be used")):
+        staged = budget_worker._stage_adapter(source, destination)
+    assert staged == destination
+    assert (destination / "adapter_config.json").read_bytes() == b"config"
+    assert (destination / "adapter_model.safetensors").read_bytes() == b"weights"
 
 
 def test_worker_passes_frozen_v7_as_separate_foundation_adapter(tmp_path: Path) -> None:

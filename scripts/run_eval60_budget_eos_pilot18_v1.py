@@ -317,7 +317,10 @@ def _stage_adapter(source: Path, destination: Path) -> Path:
     destination.mkdir(parents=True, exist_ok=True)
     for source_file in source.iterdir():
         if source_file.is_file():
-            shutil.copy2(source_file, destination / source_file.name)
+            # Mounted RunPod storage preserves file bytes but may reject the
+            # timestamp mutation performed by copy2/copystat.  Adapter identity
+            # is cryptographic and does not depend on incidental POSIX metadata.
+            shutil.copyfile(source_file, destination / source_file.name)
     staged = _adapter_identity(destination)
     if staged["adapter_sha256"] != expected["adapter_sha256"] or staged["adapter_config_sha256"] != expected["adapter_config_sha256"]:
         raise RuntimeError("staged adapter identity differs from frozen source")
