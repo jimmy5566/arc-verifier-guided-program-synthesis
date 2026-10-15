@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 from pathlib import Path
 from unittest.mock import patch
@@ -21,12 +22,55 @@ def test_full_cohort_rebinds_all_89_outputs_to_fresh_v7_ttt24_adapters(tmp_path:
                          "root_length_min": 100, "root_length_max": 100,
                          "adapter_path": "historical", "adapter_identity": {"status": "PASS"}})
     assert len(rows) == 89
-    with patch.object(full, "_adapter_identity", return_value={"status": "PASS", "adapter_sha256": "a" * 64,
-                                                               "adapter_config_sha256": "b" * 64}):
-        rebound = full.output_identity({"outputs": rows}, tmp_path / "fresh")
+    root = tmp_path / "fresh"
+    records = {}
+    for task_index in range(60):
+        task = f"task{task_index:02d}"
+        path = root / task / "depth_024"
+        path.mkdir(parents=True)
+        config = {
+            "peft_type": "LORA", "task_type": "CAUSAL_LM", "r": 256,
+            "lora_alpha": 32, "use_rslora": True,
+            "target_modules": sorted(full.TTT24_TARGET_MODULES),
+        }
+        (path / "adapter_config.json").write_text(json.dumps(config), encoding="utf-8")
+        (path / "adapter_model.safetensors").write_bytes(task.encode())
+        files = {
+            file.name: hashlib.sha256(file.read_bytes()).hexdigest()
+            for file in sorted(path.iterdir())
+        }
+        records[task] = {
+            "adapter_path": str(path), "adapter_files": files,
+            "adapter_files_sha256": full._sha_json(files),
+        }
+    manifest = {
+        "status": "FROZEN", "target_blind": True, "solutions_opened": False,
+        "task_ids": sorted(records), "records": records,
+    }
+    rebound = full.output_identity({"outputs": rows}, root, manifest)
     assert len(rebound) == 89
     assert len({row["task_id"] for row in rebound}) == 60
     assert all(Path(row["adapter_path"]).parts[-2:] == (row["task_id"], "depth_024") for row in rebound)
+    assert all(row["adapter_identity"]["identity_authority"] == "FROZEN_TTT24_ADAPTER_MANIFEST"
+               for row in rebound)
+
+
+def test_full_cohort_rejects_adapter_byte_drift(tmp_path: Path) -> None:
+    task = tmp_path / "task" / "depth_024"
+    task.mkdir(parents=True)
+    (task / "adapter_config.json").write_text("{}", encoding="utf-8")
+    (task / "adapter_model.safetensors").write_bytes(b"changed")
+    record = {
+        "adapter_path": str(task),
+        "adapter_files": {"adapter_config.json": "0" * 64, "adapter_model.safetensors": "1" * 64},
+        "adapter_files_sha256": "2" * 64,
+    }
+    try:
+        full._manifest_adapter_identity(task, record)
+    except RuntimeError as error:
+        assert "bytes mismatch" in str(error)
+    else:
+        raise AssertionError("adapter byte drift must fail closed")
 
 
 def test_worker_diagnostic_trace_is_explicit_and_passive_flag(tmp_path: Path) -> None:

@@ -114,7 +114,8 @@ def main() -> None:
         "--output", str(generation), "--model-path", str(args.model_path),
         "--foundation-adapter", str(args.foundation_adapter), "--challenge", str(args.challenge),
         "--native-config-dir", str(args.native_config), "--candidate-pool", str(args.candidate_pool),
-        "--adapter-root", str(args.adapter_root), "--historical-run-cohort", str(args.cohort),
+        "--adapter-root", str(args.adapter_root), "--training-manifest", str(manifest_path),
+        "--historical-run-cohort", str(args.cohort),
         "--coarse-policy", str(args.coarse_policy), "--worker-python", str(args.python),
     ], cwd=args.source, output=output, environment=environment, state=state)
 
