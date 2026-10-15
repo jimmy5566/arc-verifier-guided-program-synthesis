@@ -23,7 +23,7 @@ LOW_FREQUENCY_RECONCILIATION_SECONDS = 5
 # Bound production workers use COMPLETE after they have written their immutable
 # terminal receipt.  Keep it distinct from scientific acceptance: the
 # Controller still ingests and reviews the frozen score artifact.
-TERMINAL_STATES = {"SUCCESS", "COMPLETE", "TRAIN_FAILED", "OOM", "INFRA_FAILED", "INTERRUPTED", "FAILED_OR_PARTIAL_NO_RETRY"}
+TERMINAL_STATES = {"SUCCESS", "COMPLETE", "TRAIN_FAILED", "OOM", "INFRA_FAILED", "INTERRUPTED", "FAILED_OR_PARTIAL_NO_RETRY", "UNKNOWN"}
 ROUND_CLASS_SCIENTIFIC = "SCIENTIFIC"
 ROUND_CLASS_DUMMY = "DUMMY"
 ROUND_CLASS_SMOKE = "SMOKE"
@@ -372,6 +372,7 @@ class Supervisor:
                         "round_class": ROUND_CLASS_SCIENTIFIC,
                         "bound_remote_job": True,
                         "required_action": "INGEST_FREEZE_AND_IF_SCIENTIFIC_EMIT_ONE_SHA_BOUND_REVIEW_REQUEST",
+                        "completion_context": transport.get('completion_context'),
                     },
                 })
             record["governor_event_path"] = str(governor_event.resolve())
@@ -1058,8 +1059,66 @@ def remote_job_manifests(remote_job_dir: Path) -> list[dict[str, Any]]:
             continue
         manifests.append({"job_id": job_id, "ssh_target": target,
                           "terminal_receipt": terminal_receipt,
-                          "manifest_path": str(path.resolve())})
+                          "manifest_path": str(path.resolve()),
+                          **({key: value[key] for key in ('pipeline_status_path', 'primary_process',
+                                                         'source_commit', 'completion_context') if key in value}
+                             if value.get('pipeline_status_path') == output_root.rstrip('/') + '/PIPELINE_STATE.json'
+                             else {})})
     return manifests
+
+
+def pipeline_terminal_observation(manifest: dict, observed: dict) -> dict | None:
+    """Classify process completion only; no scientific interpretation or rerun."""
+    if observed.get('observation_error'):
+        raise RuntimeError('PIPELINE_METADATA_OBSERVATION_FAILED')
+    pipeline = observed['pipeline']
+    expected = manifest['primary_process']
+    actual = observed.get('process') or {}
+    same_process = all(actual.get(k) == expected.get(k) and actual.get(k) is not None
+                       for k in ('pid', 'start_ticks', 'boot_id', 'cmdline_sha256'))
+    source_matches = pipeline.get('execution_source_commit') == manifest['source_commit']
+    if not source_matches:
+        status, reason = 'UNKNOWN', 'PIPELINE_SOURCE_IDENTITY_MISMATCH'
+    elif pipeline.get('status') == 'COMPLETE':
+        status, reason = 'COMPLETE', 'PIPELINE_PUBLISHED_COMPLETE'
+    elif pipeline.get('status') == 'FAILED':
+        status, reason = 'INFRA_FAILED', 'PIPELINE_PUBLISHED_FAILED'
+    elif not same_process:
+        status, reason = 'UNKNOWN', 'BOUND_PROCESS_EXITED_OR_IDENTITY_LOST_WITHOUT_TERMINAL_STATUS'
+    else:
+        return None
+    return {'schema_version': 1, 'job_id': manifest['job_id'], 'status': status,
+            'reason': reason, 'receipt_origin': 'LOCAL_SUPERVISOR_PIPELINE_OBSERVATION_V1',
+            'observed_at': datetime.now(timezone.utc).isoformat(),
+            'pipeline_status_path': manifest['pipeline_status_path'],
+            'pipeline_status_sha256': observed['pipeline_status_sha256'],
+            'execution_source_commit': pipeline.get('execution_source_commit'),
+            'bound_process_identity': expected, 'observed_process_identity': actual,
+            'scientific_acceptance': 'NOT_INFERRED_FROM_PROCESS_RECEIPT',
+            'automatic_rerun_authorized': False}
+
+
+def pipeline_observation_script(manifest: dict) -> str:
+    """Metadata-only bridge for an already-running, unwrapped pipeline."""
+    return f'''python3 - <<'PY'
+import hashlib,json,pathlib
+path = pathlib.Path({manifest['pipeline_status_path']!r})
+pid = {int(manifest['primary_process']['pid'])}
+try:
+    raw = path.read_bytes()
+    process = None
+    proc = pathlib.Path('/proc') / str(pid)
+    try:
+        text = (proc/'stat').read_text()
+        process = {{'pid': pid, 'start_ticks': text[text.rfind(')')+2:].split()[19],
+                   'boot_id': pathlib.Path('/proc/sys/kernel/random/boot_id').read_text().strip(),
+                   'cmdline_sha256': hashlib.sha256((proc/'cmdline').read_bytes()).hexdigest()}}
+    except FileNotFoundError:
+        pass
+    print(json.dumps({{'pipeline': json.loads(raw), 'pipeline_status_sha256': hashlib.sha256(raw).hexdigest(), 'process': process}}))
+except Exception as exc:
+    print(json.dumps({{'observation_error': type(exc).__name__}}))
+PY'''
 
 
 def fetch_remote_job_receipts(remote_job_dir: Path, cache_root: Path,
@@ -1087,6 +1146,18 @@ def fetch_remote_job_receipts(remote_job_dir: Path, cache_root: Path,
                 fetched.append({**manifest, "local_receipt": str(destination.resolve()),
                                 "receipt_sha256": hashlib.sha256(content).hexdigest()})
                 continue
+        if manifest.get('pipeline_status_path'):
+            output = remote_shell(manifest['ssh_target'], pipeline_observation_script(manifest), identity_file)
+            for observed in structured_json_records(output):
+                if 'pipeline' not in observed and 'observation_error' not in observed:
+                    continue
+                receipt = pipeline_terminal_observation(manifest, observed)
+                if receipt is not None:
+                    atomic_json(destination, receipt)
+                    fetched.append({**manifest, 'local_receipt': str(destination.resolve()),
+                                    'receipt_sha256': canonical_hash(destination)})
+                break
+            continue
         script = f'''python3 - <<'PY'
 import base64, json, os
 path = {terminal_receipt!r}

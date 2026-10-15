@@ -16,11 +16,25 @@
 Each event has a content-derived ID and exactly four states:
 `QUEUED -> DELIVERED -> CLAIMED -> COMPLETE`.
 
-Governor persists `DELIVERED` before calling Herdr. Therefore a restart or an
-ambiguous CLI return cannot duplicate the prompt. If the recipient is working,
+Governor persists `DELIVERED` with `delivery_state=ATTEMPTING` before calling
+Herdr. This is an intent, not acknowledgement. A successful blocking wake is
+`CONFIRMED`; a Controller claim is `ACKNOWLEDGED`. An ambiguous caller return
+is `UNKNOWN_DELIVERY` and is never blindly repeated. Only documented pre-input
+`agent_blocked` rejection allows one retry, after 60 seconds, with a total
+two-attempt ceiling. A late claim/result always wins over a caller error.
+
+If the recipient is working,
 the event stays `QUEUED`; Governor does not prompt, poll the turn, or append a
 second message. When the recipient becomes idle, Governor delivers the oldest
 queued event once.
+
+The existing exception is one terminal notice to an unclaimed Controller pane
+whose UI still reports working; a claimed event is never interrupted. There is
+no periodic reminder prompt. Unconfirmed delivery produces one local incident
+file in `delivery_alerts/` and an actionable service status, not a prompt flood.
+Confirmed Director reviews have a 30-minute grace period for their response.
+State mutations use a short cross-process transaction lock, released before
+Herdr calls; completion/claim changes during a wake cannot be overwritten.
 
 Controller claims and completes events with `scripts/arc2_governor.py` CLI
 commands. A Director response is consumed only when its
@@ -35,6 +49,23 @@ Supervisor writes terminal events to
 idle Controller once. Controller ingests and freezes the receipt/result. A
 complete result then becomes one SHA-bound Director review. This is the P0
 path: remote completion must not require a user to wake Controller manually.
+
+All handoff paths persist the same immutable manifest in `remote_jobs/`.
+Normal Controller completion with `WAIT_REMOTE` registers it automatically.
+An already-running pipeline can be adopted, without launch or rearm, using:
+
+```text
+py -3 scripts/arc2_governor.py --state STATE --register-remote-job MANIFEST
+```
+
+For legacy pipelines without a terminal receipt, the optional
+`pipeline_status_path` must be exactly `output_root/PIPELINE_STATE.json`.
+Supervisor observes only that metadata and the bound PID, boot identity,
+start ticks and command hash. It records an explicitly local mechanical
+receipt: matching `COMPLETE` -> completion; `FAILED` -> infrastructure failure;
+missing/reused process or wrong source -> `UNKNOWN`, never automatic rerun.
+The original pipeline and experiment bytes remain untouched. This bridge is
+monitoring only, not a replacement scientific launcher or authorization gate.
 
 ## State and provenance
 

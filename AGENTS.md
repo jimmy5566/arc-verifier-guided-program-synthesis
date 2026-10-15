@@ -13,7 +13,7 @@
   directive/acknowledgement state machines are provenance, not normal work
   queues. See [`orchestration/SIMPLE_ORCHESTRATION_V1.md`](orchestration/SIMPLE_ORCHESTRATION_V1.md).
 - `scripts/arc2_governor.py --daemon` is the sole live persistent scheduler. It owns a process-lifetime lock and service heartbeat, routes
-  immutable content-addressed events, and persists delivery before prompting to prevent duplicates. While an agent is working, new events remain queued and are delivered once after it becomes idle.
+  immutable content-addressed events. Persisted delivery intent is distinct from acknowledgement; ambiguous delivery never grants blind redelivery. All detached jobs use one durable Supervisor registry; the router never interprets results or authorizes reruns.
   `orchestration/governor/Start-Arc2Governor.ps1` starts the service. `scripts/arc2_runner.py` and historical directive loops are
   deprecated provenance and must not run concurrently.
 

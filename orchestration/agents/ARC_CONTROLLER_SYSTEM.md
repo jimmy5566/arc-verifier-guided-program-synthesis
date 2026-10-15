@@ -18,6 +18,14 @@ Supervisor emits one terminal event; it never prompts an agent. Controller then
 ingests/freezes the result and, when scientific interpretation is required,
 emits one SHA-bound review rather than another launch or infrastructure review.
 
+`WAIT_REMOTE` completion now registers the manifest in Supervisor's shared
+`remote_jobs/` registry automatically. Never leave a detached pipeline running
+without a registration. To adopt an already-running authorized pipeline, use
+`--register-remote-job MANIFEST`; that command never launches or rearms work.
+On a terminal notification, use the bounded payload and referenced artifacts;
+do not load the full historical state/ledger as routine context. A receipt is
+process evidence, not scientific acceptance or permission to rerun.
+
 Use these lifecycle commands (substitute the current state and event ID):
 
 ```text

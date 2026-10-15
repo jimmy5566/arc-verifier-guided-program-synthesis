@@ -11,10 +11,13 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
 import time
+from contextlib import contextmanager
+from functools import wraps
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -105,7 +108,9 @@ def load(path: Path) -> dict[str, Any]:
 
 
 def save(path: Path, state: dict[str, Any], transition: str) -> None:
-    state = compact_state(state)
+    compacted = compact_state(state)
+    state.clear()
+    state.update(compacted)
     state["revision"] = int(state.get("revision") or 0) + 1
     state["last_transition"] = transition
     state["updated_at"] = now()
@@ -197,6 +202,29 @@ class GovernorLock:
             self.handle = None
 
 
+@contextmanager
+def state_transaction(path: Path):
+    """Serialize short state mutations, never network calls or Agent execution."""
+    lock = GovernorLock(path.with_suffix('.transaction.lock'))
+    deadline = time.monotonic() + 10
+    while not lock.acquire():
+        if time.monotonic() >= deadline:
+            raise RuntimeError('STATE_TRANSACTION_BUSY')
+        time.sleep(0.05)
+    try:
+        yield
+    finally:
+        lock.release()
+
+
+def state_mutation(function):
+    @wraps(function)
+    def serialized(state_path, *args, **kwargs):
+        with state_transaction(state_path):
+            return function(state_path, *args, **kwargs)
+    return serialized
+
+
 def event(kind: str, recipient: str, producer: str, payload: dict[str, Any]) -> dict[str, Any]:
     event_id = stable_id(kind, recipient, payload)
     return {"event_id": event_id, "kind": kind, "recipient": recipient, "producer": producer,
@@ -259,24 +287,32 @@ def import_external_events(state: dict[str, Any], state_path: Path) -> bool:
             if not isinstance(payload, dict):
                 raise RuntimeError("EXTERNAL_EVENT_PAYLOAD_INVALID")
             recipient = value.get("recipient") or ("director" if value["kind"] == "REVIEW_REQUEST" else "controller")
+            if value['kind'] == 'REMOTE_TERMINAL' and state.get('remote_job'):
+                if payload.get('round_id') != (state['remote_job'].get('job_id') or state['remote_job'].get('run_id')):
+                    raise RuntimeError('TERMINAL_EVENT_ACTIVE_JOB_MISMATCH')
             item = event(value["kind"], recipient, value.get("producer") or "supervisor", payload)
-            changed = enqueue(state, item) or changed
-            if value["kind"] == "REMOTE_TERMINAL":
+            added = enqueue(state, item)
+            changed = added or changed
+            if added and value["kind"] == "REMOTE_TERMINAL" and state['disposition'] != 'PAUSED':
                 state.update({"disposition": "CONTINUE_CONTROLLER",
                               "next_action": "INGEST_FREEZE_AND_ROUTE_REMOTE_RESULT",
                               "remote_job": None, "terminal_reason": None})
-            elif value["kind"] == "CONTROLLER_TASK":
+            elif added and value["kind"] == "CONTROLLER_TASK":
                 state.update({"disposition": "CONTINUE_CONTROLLER",
                               "stage": payload.get("stage") or state["stage"],
                               "next_action": payload.get("next_action"),
                               "pause_reason": None, "terminal_reason": None})
-            elif value["kind"] == "REVIEW_REQUEST":
+            elif added and value["kind"] == "REVIEW_REQUEST":
                 state.update({"disposition": "REVIEW_REQUIRED", "review": {
                     "brief_path": payload.get("brief_path"),
                     "brief_sha256": payload.get("brief_sha256"),
                     "reason": payload.get("review_reason"),
                 }})
             target = processed / f"{item['event_id']}.json"
+            # Persist the queue before removing its producer's durable outbox.
+            # A crash in between is a harmless idempotent import on restart.
+            if added:
+                save(state_path, state, f'EXTERNAL_EVENT_IMPORTED:{item["event_id"]}')
             if target.exists():
                 source.unlink()
             else:
@@ -288,6 +324,7 @@ def import_external_events(state: dict[str, Any], state_path: Path) -> bool:
                 shutil.copyfile(source, marker)
                 changed = producer_error(state, {"event_id": digest, "producer": "controller"},
                                          f"{type(exc).__name__}:{exc}") or changed
+                save(state_path, state, f'EXTERNAL_EVENT_REJECTED:{digest}')
             source.unlink(missing_ok=True)
     return changed
 
@@ -330,10 +367,16 @@ def validate_queued_reviews(state: dict[str, Any]) -> bool:
 def herdr_agents() -> list[dict[str, Any]]:
     result = subprocess.run(["herdr", "agent", "list"], capture_output=True, check=False,
                             text=True, encoding="utf-8", errors="replace",
-                            creationflags=windows_creationflags())
+                            creationflags=windows_creationflags(), timeout=20)
     if result.returncode:
         raise RuntimeError(f"HERDR_AGENT_LIST_FAILED:{result.returncode}")
-    return json.loads(result.stdout).get("result", {}).get("agents", [])
+    try:
+        agents = json.loads(result.stdout)['result']['agents']
+        if not isinstance(agents, list):
+            raise ValueError('agents is not a list')
+        return agents
+    except (ValueError, KeyError, TypeError) as exc:
+        raise RuntimeError('HERDR_AGENT_LIST_FAILED:INVALID_RESPONSE') from exc
 
 
 def resolve_agent(role: str, state: dict[str, Any]) -> dict[str, Any]:
@@ -377,10 +420,12 @@ def prompt_text(item: dict[str, Any], state_path: Path) -> str:
     event_id = item["event_id"]
     if item["recipient"] == "controller":
         return (
-            f"ARC2 Governor event {event_id}. Read {state_path.resolve()}, {PROJECT_ROOT / 'AGENTS.md'}, and "
+            f"ARC2 Governor event {event_id}. Read {PROJECT_ROOT / 'AGENTS.md'} and "
             f"{PROJECT_ROOT / 'orchestration/agents/ARC_CONTROLLER_SYSTEM.md'}. Claim with: py -3 {PROJECT_ROOT / 'scripts/arc2_governor.py'} "
             f"--state \"{state_path.resolve()}\" --claim-event {event_id}. Execute only this event payload: "
-            f"{json.dumps(payload, sort_keys=True)}. Complete it through the same Governor CLI; never prompt Director directly."
+            f"{json.dumps(payload, sort_keys=True)}. Complete it through the same Governor CLI; never prompt Director directly. "
+            "This payload is the bounded handoff. Do not read the full workflow/event history unless diagnosing a specific binding error. "
+            "A terminal event authorizes ingestion of existing artifacts, not a rerun or new scientific execution."
         )
     brief_path = payload.get("brief_path")
     brief_sha = payload.get("brief_sha256")
@@ -411,17 +456,19 @@ def dispatch(state: dict[str, Any], state_path: Path, timeout: int) -> str:
     queued = next((item for item in state["pending_events"] if item["status"] == "QUEUED"), None)
     if not queued:
         return "IDLE"
+    if queued.get('retry_not_before', 0) > time.time():
+        return 'CONFIRMED_NON_DELIVERY_BACKOFF'
+    if state.get('active_event'):
+        return 'RECIPIENT_WORKING_EVENT_QUEUED'
     target_key = f"{queued['recipient']}_target"
     previous_target = state.get(target_key)
     try:
         target = resolve_agent(queued["recipient"], state)
-    except RuntimeError as exc:
+    except (RuntimeError, subprocess.TimeoutExpired) as exc:
         detail = str(exc)
-        if detail.startswith("HERDR_AGENT_LIST_FAILED:") or detail.endswith("_TARGET_UNRESOLVED"):
+        if isinstance(exc, subprocess.TimeoutExpired) or detail.startswith("HERDR_AGENT_LIST_FAILED:") or detail.endswith("_TARGET_UNRESOLVED"):
             return "RECIPIENT_TARGET_UNAVAILABLE_EVENT_QUEUED"
         raise
-    if state.get(target_key) != previous_target:
-        save(state_path, state, f"{queued['recipient'].upper()}_TARGET_RESOLVED:{target.get('pane_id')}")
     # A terminal Supervisor receipt must wake an otherwise unclaimed Controller even
     # when Herdr still reports its pane as working. Suppressing that prompt used to
     # strand completed remote runs until a user message arrived. A claimed event
@@ -433,22 +480,54 @@ def dispatch(state: dict[str, Any], state_path: Path, timeout: int) -> str:
     )
     if target.get("agent_status") == "working" and not wake_working_controller:
         return "RECIPIENT_WORKING_EVENT_QUEUED"
-    queued.update({"status": "DELIVERED", "attempts": int(queued.get("attempts") or 0) + 1,
-                   "delivered_at": now(), "target": target.get("pane_id")})
-    save(state_path, state, f"EVENT_DELIVERY_RESERVED:{queued['event_id']}")
+    # DELIVERED remains the compatible lifecycle state; delivery_state explicitly
+    # distinguishes durable intent from confirmed input. Re-read after observation
+    # so another CLI transition can never be overwritten by this snapshot.
+    with state_transaction(state_path):
+        fresh = load(state_path)
+        queued = find_event(fresh, queued['event_id'])
+        if queued['status'] != 'QUEUED' or fresh.get('active_event'):
+            return 'EVENT_CHANGED_DURING_OBSERVATION'
+        if fresh['disposition'] in {'PAUSED', 'TERMINAL'} and queued['kind'] != 'PRODUCER_ERROR':
+            return 'WORKFLOW_QUIESCENT'
+        queued.update({"status": "DELIVERED", "delivery_state": "ATTEMPTING",
+                       "attempts": int(queued.get("attempts") or 0) + 1,
+                       "delivered_at": now(), "target": target.get("pane_id")})
+        fresh[target_key] = target.get('pane_id')
+        save(state_path, fresh, f"EVENT_DELIVERY_RESERVED:{queued['event_id']}")
     command = ["herdr", "agent", "prompt", target["pane_id"], prompt_text(queued, state_path),
                "--wait", "--until", "working", "--timeout", str(timeout * 1000)]
+    classification, error_code = 'UNKNOWN_DELIVERY', None
     try:
         completed = subprocess.run(command, capture_output=True, check=False, text=True,
                                    encoding="utf-8", errors="replace", timeout=timeout + 10,
                                    creationflags=windows_creationflags())
     except (OSError, subprocess.TimeoutExpired) as exc:
-        append_ledger(state_path, {"transition": "HERDR_PROMPT_RESULT", "event_id": queued["event_id"],
-                                   "outcome": "UNKNOWN_FAIL_CLOSED", "error": type(exc).__name__})
-        return "EVENT_DELIVERY_UNKNOWN_FAIL_CLOSED"
-    append_ledger(state_path, {"transition": "HERDR_PROMPT_RESULT", "event_id": queued["event_id"],
-                               "exit_code": completed.returncode})
-    return "EVENT_DELIVERED" if completed.returncode == 0 else "EVENT_DELIVERY_UNKNOWN_FAIL_CLOSED"
+        error_code = type(exc).__name__
+    else:
+        error_code = f'EXIT_{completed.returncode}'
+        if completed.returncode == 0:
+            classification = 'CONFIRMED'
+        elif 'agent_blocked' in (completed.stdout + completed.stderr).casefold():
+            # Documented pre-input rejection only. Generic timeouts are ambiguous.
+            classification = 'CONFIRMED_NON_DELIVERY'
+    with state_transaction(state_path):
+        fresh = load(state_path)
+        item = find_event(fresh, queued['event_id'])
+        # A quick claim/completion or bound Director response is stronger evidence
+        # than the caller return code. Never resurrect or overwrite that transition.
+        if item['status'] == 'DELIVERED':
+            item.update(delivery_state=classification, delivery_error=error_code)
+            if classification == 'CONFIRMED':
+                item['delivery_confirmed_at'] = now()
+            if classification == 'CONFIRMED_NON_DELIVERY' and item['attempts'] < 2:
+                item['status'] = 'QUEUED'
+                item['retry_not_before'] = time.time() + 60
+            save(state_path, fresh, f'EVENT_DELIVERY_CLASSIFIED:{item["event_id"]}:{classification}')
+        append_ledger(state_path, {'transition': 'HERDR_PROMPT_RESULT',
+                                  'event_id': queued['event_id'], 'delivery_state': classification,
+                                  'error_code': error_code})
+    return 'EVENT_DELIVERED' if classification == 'CONFIRMED' else 'EVENT_DELIVERY_UNKNOWN_FAIL_CLOSED'
 
 
 def resume_claimed_event(state_path: Path, event_id: str, timeout: int) -> str:
@@ -605,6 +684,7 @@ def consume_director_response(state: dict[str, Any], state_path: Path) -> bool:
     return True
 
 
+@state_mutation
 def claim_event(state_path: Path, event_id: str) -> None:
     state = load(state_path)
     item = find_event(state, event_id)
@@ -621,11 +701,12 @@ def claim_event(state_path: Path, event_id: str) -> None:
         raise RuntimeError("EVENT_NOT_CLAIMABLE")
     if state.get("active_event") not in {None, event_id}:
         raise RuntimeError("ANOTHER_EVENT_ALREADY_ACTIVE")
-    item.update({"status": "CLAIMED", "claimed_at": now()})
+    item.update({"status": "CLAIMED", "claimed_at": now(), "delivery_state": "ACKNOWLEDGED"})
     state["active_event"] = event_id
     save(state_path, state, f"EVENT_CLAIMED:{event_id}")
 
 
+@state_mutation
 def complete_event(state_path: Path, args: argparse.Namespace) -> None:
     state = load(state_path)
     item = find_event(state, args.complete_event)
@@ -644,8 +725,11 @@ def complete_event(state_path: Path, args: argparse.Namespace) -> None:
     if disposition == "WAIT_REMOTE":
         if not args.remote_job_file:
             raise RuntimeError("REMOTE_JOB_FILE_REQUIRED")
-        remote_path = resolve_artifact(args.remote_job_file)
-        state["remote_job"] = json.loads(remote_path.read_text(encoding="utf-8-sig"))
+        _, remote = _read_remote_job_manifest(args.remote_job_file)
+        if state.get('remote_job') and state['remote_job'] != remote:
+            raise RuntimeError('ACTIVE_REMOTE_JOB_PROTECTED')
+        persist_remote_binding(state_path, remote)
+        state["remote_job"] = remote
     else:
         state["remote_job"] = None
     item.update({"status": "COMPLETE", "completed_at": now(), "outcome": args.outcome or "COMPLETE"})
@@ -662,12 +746,27 @@ def _read_remote_job_manifest(value: str) -> tuple[Path, dict[str, Any]]:
     required = ("job_id", "ssh_target", "output_root", "terminal_receipt", "primary_process")
     if any(not remote.get(key) for key in required):
         raise RuntimeError("REMOTE_JOB_MANIFEST_INCOMPLETE")
+    if not re.fullmatch(r'[A-Za-z0-9_-]+', str(remote['job_id'])):
+        raise RuntimeError('REMOTE_JOB_ID_UNSAFE')
+    if not str(remote['output_root']).startswith('/') or remote['terminal_receipt'] != remote['output_root'].rstrip('/') + '/TERMINAL_RECEIPT.json':
+        raise RuntimeError('REMOTE_TERMINAL_PATH_NOT_BOUND')
     primary = remote["primary_process"]
     if not isinstance(primary, dict) or not isinstance(primary.get("pid"), int) or not primary.get("role"):
         raise RuntimeError("REMOTE_JOB_PRIMARY_PROCESS_INCOMPLETE")
     return remote_path, remote
 
 
+def persist_remote_binding(state_path: Path, remote: dict) -> None:
+    """One registry for normal handoff, recovery and adoption paths."""
+    destination = state_path.parent / 'remote_jobs' / f'{remote["job_id"]}.json'
+    if destination.exists():
+        if json.loads(destination.read_text(encoding='utf-8-sig')) != remote:
+            raise RuntimeError('IMMUTABLE_REMOTE_BINDING_CONFLICT')
+    else:
+        atomic(destination, remote)
+
+
+@state_mutation
 def replace_stale_wait_remote_job(state_path: Path, args: argparse.Namespace) -> None:
     """Atomically replace a proven pre-model failed remote registration."""
     state = load(state_path)
@@ -683,11 +782,13 @@ def replace_stale_wait_remote_job(state_path: Path, args: argparse.Namespace) ->
     _, remote = _read_remote_job_manifest(args.replace_stale_wait_remote_job)
     if remote["job_id"] == previous.get("job_id") or remote["output_root"] == previous.get("output_root"):
         raise RuntimeError("REMOTE_JOB_REPLACEMENT_NOT_FRESH")
+    persist_remote_binding(state_path, remote)
     state.update({"remote_job": remote,
                   "next_action": args.next_action or "SUPERVISOR_MONITORS_REPAIRED_BOUND_REMOTE_JOB",
                   "pause_reason": None, "terminal_reason": None})
     save(state_path, state, f"STALE_WAIT_REMOTE_REPLACED:{previous['job_id']}:{remote['job_id']}")
 
+@state_mutation
 def resume_paused_remote_job(state_path: Path, args: argparse.Namespace) -> None:
     """Atomically register a detached job after a pre-model paused-stage repair.
 
@@ -701,11 +802,59 @@ def resume_paused_remote_job(state_path: Path, args: argparse.Namespace) -> None
     if state.get("remote_job") is not None:
         raise RuntimeError("REMOTE_JOB_ALREADY_REGISTERED")
     _, remote = _read_remote_job_manifest(args.resume_paused_remote_job)
+    persist_remote_binding(state_path, remote)
 
     state.update({"disposition": "WAIT_REMOTE", "remote_job": remote,
                   "next_action": args.next_action or "SUPERVISOR_MONITORS_BOUND_REMOTE_JOB",
                   "pause_reason": None, "terminal_reason": None})
     save(state_path, state, f"PAUSED_REMOTE_JOB_REGISTERED:{remote['job_id']}")
+
+
+@state_mutation
+def register_remote_job(state_path: Path, value: str) -> None:
+    """Adopt an existing job for monitoring only; never launch or rearm it."""
+    state = load(state_path)
+    _, remote = _read_remote_job_manifest(value)
+    if state.get('active_event'):
+        raise RuntimeError('ACTIVE_EVENT_MUST_REGISTER_ON_COMPLETION')
+    previous = state.get('remote_job')
+    if previous and previous != remote:
+        raise RuntimeError('ACTIVE_REMOTE_JOB_PROTECTED')
+    if state.get('review'):
+        raise RuntimeError('PENDING_REVIEW_PROTECTED')
+    if remote.get('pipeline_status_path'):
+        process = remote['primary_process']
+        if not process.get('start_ticks') or not process.get('boot_id') or not remote.get('source_commit'):
+            raise RuntimeError('ADOPTED_PROCESS_CREATION_IDENTITY_REQUIRED')
+        if remote['pipeline_status_path'] != remote['output_root'].rstrip('/') + '/PIPELINE_STATE.json':
+            raise RuntimeError('PIPELINE_STATUS_MUST_BE_BOUND_TO_OUTPUT_ROOT')
+    persist_remote_binding(state_path, remote)
+    if previous == remote and state['disposition'] == 'WAIT_REMOTE':
+        return
+    state.update(remote_job=remote, disposition='WAIT_REMOTE',
+                 stage=remote.get('stage') or state['stage'],
+                 next_action='SUPERVISOR_MONITORS_BOUND_REMOTE_JOB',
+                 pause_reason=None, terminal_reason=None)
+    save(state_path, state, f'REMOTE_JOB_REGISTERED:{remote["job_id"]}')
+
+
+def delivery_alerts(state: dict[str, Any], state_path: Path) -> list[str]:
+    """One durable alert per incident, no repeated Agent wake or state churn."""
+    alerts = []
+    for item in state['pending_events']:
+        if item['status'] != 'DELIVERED':
+            continue
+        stamp = item.get('delivered_at')
+        grace = 1800 if item['recipient'] == 'director' and item.get('delivery_state') == 'CONFIRMED' else 120
+        if not stamp or (datetime.now(timezone.utc) - datetime.fromisoformat(stamp.replace('Z', '+00:00'))).total_seconds() < grace:
+            continue
+        incident = item.get('delivery_state', 'LEGACY_UNCONFIRMED')
+        marker = state_path.parent / 'delivery_alerts' / f'{item["event_id"]}_{item.get("attempts", 0)}.json'
+        if not marker.exists():
+            atomic(marker, {'event_id': item['event_id'], 'incident': incident,
+                            'observed_at': now(), 'action': 'RECONCILE_ACK_OR_RESULT_WITHOUT_BLIND_REDELIVERY'})
+        alerts.append(item['event_id'])
+    return alerts
 
 
 def write_service_state(path: Path | None, status: str, state: dict[str, Any], detail: str | None = None) -> None:
@@ -717,20 +866,27 @@ def write_service_state(path: Path | None, status: str, state: dict[str, Any], d
                  1 for item in state["pending_events"] if item["status"] == "QUEUED")}
     if detail:
         value["detail"] = detail
+    value['remote_job_id'] = (state.get('remote_job') or {}).get('job_id')
+    value['unacknowledged_events'] = [item['event_id'] for item in state['pending_events']
+                                     if item['status'] == 'DELIVERED']
     atomic(path, value)
 
 
 def cycle(state_path: Path, *, agent_timeout_seconds: int, **_: Any) -> tuple[str, dict[str, Any]]:
-    state = load(state_path)
-    changed = import_external_events(state, state_path)
-    changed = synthesize_state_event(state) or changed
-    changed = validate_queued_reviews(state) or changed
-    if changed:
-        save(state_path, state, "EVENTS_RECONCILED")
+    with state_transaction(state_path):
         state = load(state_path)
-    if consume_director_response(state, state_path):
-        state = load(state_path)
+        changed = import_external_events(state, state_path)
+        changed = synthesize_state_event(state) or changed
+        changed = validate_queued_reviews(state) or changed
+        if changed:
+            save(state_path, state, "EVENTS_RECONCILED")
+            state = load(state_path)
+        if consume_director_response(state, state_path):
+            state = load(state_path)
+        alerts = delivery_alerts(state, state_path)
     result = dispatch(state, state_path, agent_timeout_seconds)
+    if result == 'IDLE' and alerts:
+        result = 'DELIVERY_ACK_REQUIRED'
     return result, load(state_path)
 
 
@@ -750,6 +906,7 @@ def main() -> int:
     parser.add_argument("--resume-claimed-event")
     parser.add_argument("--complete-event")
     parser.add_argument("--resume-paused-remote-job")
+    parser.add_argument('--register-remote-job', help='Monitor an existing immutable job; does not launch it')
     parser.add_argument("--replace-stale-wait-remote-job")
     parser.add_argument("--failure-receipt")
     parser.add_argument("--next-disposition", choices=sorted(DISPOSITIONS))
@@ -772,7 +929,8 @@ def main() -> int:
     args = parser.parse_args()
     modes = sum(bool(value) for value in (args.migrate_legacy, args.repair_recursive_reviews, args.claim_event,
                                           args.resume_claimed_event, args.complete_event,
-                                          args.resume_paused_remote_job, args.replace_stale_wait_remote_job))
+                                          args.resume_paused_remote_job, args.replace_stale_wait_remote_job,
+                                          args.register_remote_job))
     if modes > 1:
         parser.error("migration, claim, and completion are mutually exclusive")
     if args.migrate_legacy:
@@ -792,6 +950,9 @@ def main() -> int:
         return 0
     if args.resume_paused_remote_job:
         resume_paused_remote_job(args.state, args)
+        return 0
+    if args.register_remote_job:
+        register_remote_job(args.state, args.register_remote_job)
         return 0
     if args.replace_stale_wait_remote_job:
         if not args.failure_receipt:
