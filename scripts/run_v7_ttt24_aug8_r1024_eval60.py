@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import shutil
 import sys
 from pathlib import Path
 from typing import Any
@@ -103,8 +104,58 @@ def _manifest_adapter_identity(path: Path, record: dict[str, Any]) -> dict[str, 
     }
 
 
+def _adapter_stat_snapshot(adapter_root: Path, records: dict[str, Any]) -> dict[str, Any]:
+    result: dict[str, Any] = {}
+    for task, record in sorted(records.items()):
+        path = adapter_root / str(task) / "depth_024"
+        files = {}
+        for relative in sorted(record.get("adapter_files") or {}):
+            file = path / relative
+            if not file.is_file():
+                raise RuntimeError(f"frozen adapter file is missing: {file}")
+            stat = file.stat()
+            files[relative] = {
+                "size": stat.st_size,
+                "mtime_ns": stat.st_mtime_ns,
+                "inode": stat.st_ino,
+                "device": stat.st_dev,
+            }
+        result[str(task)] = files
+    return result
+
+
+def _cached_manifest_adapter_identity(path: Path, record: dict[str, Any],
+                                      cached: dict[str, Any]) -> dict[str, Any]:
+    expected_files = dict(record.get("adapter_files") or {})
+    if (cached.get("status") != "PASS"
+            or cached.get("identity_authority") != "FROZEN_TTT24_ADAPTER_MANIFEST"
+            or cached.get("adapter_path") != str(path)
+            or cached.get("adapter_files") != expected_files
+            or cached.get("adapter_files_sha256") != record.get("adapter_files_sha256")):
+        raise RuntimeError(f"cached adapter identity does not match frozen manifest: {path}")
+    actual_names = {
+        str(file.relative_to(path)) for file in path.rglob("*") if file.is_file()
+    }
+    if actual_names != set(expected_files):
+        raise RuntimeError(f"cached adapter file set changed: {path}")
+    config_path = path / "adapter_config.json"
+    if sha256(config_path) != expected_files.get("adapter_config.json"):
+        raise RuntimeError(f"cached adapter config bytes changed: {path}")
+    config = _read(config_path)
+    semantics = {
+        "peft_type": config.get("peft_type"), "task_type": config.get("task_type"),
+        "r": config.get("r"), "lora_alpha": config.get("lora_alpha"),
+        "use_rslora": config.get("use_rslora"),
+        "target_modules": sorted(map(str, config.get("target_modules") or ())),
+    }
+    if semantics != cached.get("adapter_config_semantics"):
+        raise RuntimeError(f"cached adapter semantics changed: {path}")
+    return dict(cached)
+
+
 def output_identity(template: dict[str, Any], adapter_root: Path,
-                    training_manifest: dict[str, Any]) -> list[dict[str, Any]]:
+                    training_manifest: dict[str, Any],
+                    cached_identities: dict[str, Any] | None = None) -> list[dict[str, Any]]:
     rows = list(template.get("outputs", ()))
     if len(rows) != 89 or len({row["output_id"] for row in rows}) != 89:
         raise RuntimeError("historical full cohort must contain 89 unique outputs")
@@ -118,13 +169,19 @@ def output_identity(template: dict[str, Any], adapter_root: Path,
             or set(map(str, training_manifest.get("task_ids") or ())) != tasks
             or set(map(str, records)) != tasks):
         raise RuntimeError("TTT24 training manifest identity/completeness failure")
+    if cached_identities is not None and set(map(str, cached_identities)) != tasks:
+        raise RuntimeError("cached adapter identity coverage mismatch")
     identities: dict[str, dict[str, Any]] = {}
     result = []
     for row in rows:
         task = str(row["task_id"])
         path = adapter_root / task / "depth_024"
         if task not in identities:
-            identities[task] = _manifest_adapter_identity(path, records[task])
+            identities[task] = (
+                _cached_manifest_adapter_identity(path, records[task], cached_identities[task])
+                if cached_identities is not None
+                else _manifest_adapter_identity(path, records[task])
+            )
         result.append({**row, "adapter_path": str(path), "adapter_identity": identities[task]})
     return result
 
@@ -161,6 +218,55 @@ def snapshots(run: Path, output_id: str) -> dict[str, Any]:
         checkpoint = next(row for row in cell["checkpoints"] if int(row["checkpoint_requested"]) == 1024)
         result[cell["augmentation_id"]] = checkpoint["candidate_pool_snapshot"]
     return result
+
+
+def _archive_prefreeze_output(run: Path, output_id: str) -> dict[str, Any]:
+    if (run / "GENERATION_FREEZE.json").exists():
+        raise RuntimeError("cannot archive an output from frozen generation")
+    matches = []
+    for path in sorted((run / "OUTPUT_RECEIPTS").glob("*.json")):
+        receipt = _read(path)
+        if receipt.get("output_id") == output_id:
+            matches.append((path, receipt))
+    if len(matches) != 1:
+        raise RuntimeError(f"expected one pre-freeze receipt for {output_id}")
+    receipt_path, receipt = matches[0]
+    if (receipt.get("status") != "COMPLETE" or receipt.get("target_blind") is not True
+            or receipt.get("gold_loaded") is not False):
+        raise RuntimeError(f"refusing to archive invalid pre-freeze output: {output_id}")
+    relatives = [
+        Path(str(receipt[key]))
+        for key in ("raw_output", "checkpoint_output", "eos_events")
+    ] + [receipt_path.relative_to(run)]
+    if any(path.is_absolute() or ".." in path.parts for path in relatives):
+        raise RuntimeError(f"unsafe pre-freeze artifact binding: {output_id}")
+    archive = run.parent / "PREFREEZE_PARITY_REJECTED" / _safe(output_id)
+    if archive.exists():
+        raise RuntimeError(f"pre-freeze parity archive already exists: {archive}")
+    rows = []
+    for relative in relatives:
+        source = run / relative
+        if not source.is_file():
+            raise RuntimeError(f"pre-freeze artifact missing: {source}")
+        destination = archive / relative
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(source, destination)
+        before, after = sha256(source), sha256(destination)
+        if before != after:
+            raise RuntimeError(f"pre-freeze archive verification failed: {source}")
+        rows.append({"path": str(relative), "sha256": before, "size": source.stat().st_size})
+    for relative in relatives:
+        (run / relative).unlink()
+    payload = {
+        "status": "ARCHIVED_BEFORE_GENERATION_FREEZE",
+        "output_id": output_id,
+        "target_blind": True,
+        "gold_loaded": False,
+        "reason": "material Batch1 candidate-pool parity failure",
+        "artifacts": rows,
+    }
+    _atomic_json(archive / "ARCHIVE_MANIFEST.json", payload)
+    return {**payload, "archive": str(archive)}
 
 
 def b1_policy(rows: list[dict[str, Any]]) -> dict[str, Any]:
@@ -294,7 +400,19 @@ def main() -> None:
         args.output.mkdir(parents=True, exist_ok=True)
     template = _read(args.historical_run_cohort)
     training_manifest = _read(args.training_manifest)
-    outputs = output_identity(template, args.adapter_root, training_manifest)
+    records = dict(training_manifest.get("records") or {})
+    stat_snapshot = _adapter_stat_snapshot(args.adapter_root, records)
+    identity_path = args.output / "ADAPTER_IDENTITIES.json"
+    reuse_path = args.output / "ADAPTER_IDENTITY_REUSE_RECEIPT.json"
+    cached_identities = _read(identity_path) if identity_path.is_file() else None
+    cache_mode = "FULL_SHA256_VERIFICATION"
+    prior_reuse = _read(reuse_path) if reuse_path.is_file() else None
+    if cached_identities is not None:
+        if prior_reuse is not None and prior_reuse.get("adapter_stat_snapshot") != stat_snapshot:
+            cached_identities = None
+        else:
+            cache_mode = "REUSED_PRIOR_EXACT_SHA256_IDENTITIES_WITH_STABLE_FILE_METADATA"
+    outputs = output_identity(template, args.adapter_root, training_manifest, cached_identities)
     policy = _read(args.coarse_policy)
     args.device = "cuda:0"
     args.diagnostic_trace = True
@@ -328,9 +446,18 @@ def main() -> None:
         raise RuntimeError("frozen V7 adapter identity mismatch")
     _atomic_json(args.output / "PRE_GOLD_CONTRACT.json", contract)
     _atomic_json(args.output / "CONTRACT.json", contract)
-    _atomic_json(args.output / "ADAPTER_IDENTITIES.json", {
+    identity_payload = {
         task: next(row["adapter_identity"] for row in outputs if row["task_id"] == task)
         for task in sorted({row["task_id"] for row in outputs})
+    }
+    _atomic_json(identity_path, identity_payload)
+    _atomic_json(reuse_path, {
+        "status": "PASS",
+        "mode": cache_mode,
+        "training_manifest_sha256": sha256(args.training_manifest),
+        "adapter_identities_sha256": sha256(identity_path),
+        "adapter_stat_snapshot": stat_snapshot,
+        "full_rehash_required_if": "manifest, file set, size, mtime, inode, or device changes",
     })
 
     # Deterministically choose one shortest and one longest output.  The
@@ -345,16 +472,51 @@ def main() -> None:
     # Generate the same two outputs with the frozen production policy before
     # allowing the other 87 outputs to start.
     _run_surface(args, args.output, smoke, depth=24, experiment=EXPERIMENT, policy=policy)
-    parity_rows = []
-    for row in smoke:
-        b1, production = snapshots(smoke_b1, row["output_id"]), snapshots(args.output, row["output_id"])
-        exact = b1 == production
-        parity_rows.append({"output_id": row["output_id"], "profile": row["profile"], "exact": exact,
-                            "b1_sha256": __import__("hashlib").sha256(json.dumps(b1, sort_keys=True, separators=(",", ":")).encode()).hexdigest(),
-                            "production_sha256": __import__("hashlib").sha256(json.dumps(production, sort_keys=True, separators=(",", ":")).encode()).hexdigest()})
+    def compare_parity() -> list[dict[str, Any]]:
+        rows = []
+        for row in smoke:
+            b1 = snapshots(smoke_b1, row["output_id"])
+            production = snapshots(args.output, row["output_id"])
+            exact = b1 == production
+            rows.append({
+                "output_id": row["output_id"], "profile": row["profile"], "exact": exact,
+                "b1_sha256": __import__("hashlib").sha256(
+                    json.dumps(b1, sort_keys=True, separators=(",", ":")).encode()
+                ).hexdigest(),
+                "production_sha256": __import__("hashlib").sha256(
+                    json.dumps(production, sort_keys=True, separators=(",", ":")).encode()
+                ).hexdigest(),
+            })
+        return rows
+
+    parity_rows = compare_parity()
+    fallback = None
+    if not all(row["exact"] for row in parity_rows):
+        failed_ids = {row["output_id"] for row in parity_rows if not row["exact"]}
+        failed_smoke = [row for row in smoke if row["output_id"] in failed_ids]
+        failed_profiles = sorted({str(row["profile"]) for row in failed_smoke})
+        archives = [_archive_prefreeze_output(args.output, row["output_id"]) for row in failed_smoke]
+        for profile in failed_profiles:
+            policy["profiles"][profile] = {
+                "primary": {"resident_capacity": 1, "physical_batch_ceiling": 1},
+                "fallbacks": [],
+            }
+        fallback = {
+            "status": "APPLIED",
+            "reason": "material parsed candidate-pool difference versus Batch1",
+            "failed_outputs": sorted(failed_ids),
+            "profiles_forced_to_batch1": failed_profiles,
+            "initial_rows": parity_rows,
+            "archives": archives,
+            "target_blind": True,
+            "gold_loaded": False,
+        }
+        _atomic_json(args.output / "B1_ADAPTIVE_FALLBACK.json", fallback)
+        _run_surface(args, args.output, failed_smoke, depth=24, experiment=EXPERIMENT, policy=policy)
+        parity_rows = compare_parity()
     gate = {"status": "PASS" if all(row["exact"] for row in parity_rows) else "FAIL",
             "criterion": "exact R1024 parsed/canonical candidate-pool agreement on fixed short and long outputs",
-            "rows": parity_rows}
+            "rows": parity_rows, "adaptive_fallback": fallback}
     _atomic_json(args.output / "B1_PARITY_GATE.json", gate)
     if gate["status"] != "PASS":
         raise RuntimeError("B1 parity gate failed; remaining Eval60 outputs were not started")

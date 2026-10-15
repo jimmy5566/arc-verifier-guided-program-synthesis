@@ -76,6 +76,37 @@ def test_full_cohort_rejects_adapter_byte_drift(tmp_path: Path) -> None:
         raise AssertionError("adapter byte drift must fail closed")
 
 
+def test_cached_adapter_identity_avoids_rehashing_large_weight(tmp_path: Path) -> None:
+    task = tmp_path / "task" / "depth_024"
+    task.mkdir(parents=True)
+    config = {
+        "peft_type": "LORA", "task_type": "CAUSAL_LM", "r": 256,
+        "lora_alpha": 32, "use_rslora": True,
+        "target_modules": sorted(full.TTT24_TARGET_MODULES),
+    }
+    (task / "adapter_config.json").write_text(json.dumps(config), encoding="utf-8")
+    (task / "adapter_model.safetensors").write_bytes(b"weights")
+    files = {
+        file.name: hashlib.sha256(file.read_bytes()).hexdigest()
+        for file in sorted(task.iterdir())
+    }
+    record = {
+        "adapter_path": str(task), "adapter_files": files,
+        "adapter_files_sha256": full._sha_json(files),
+    }
+    cached = full._manifest_adapter_identity(task, record)
+    original = full.sha256
+
+    def reject_large_rehash(path: Path) -> str:
+        if path.name == "adapter_model.safetensors":
+            raise AssertionError("large frozen weight must not be rehashed")
+        return original(path)
+
+    with patch.object(full, "sha256", side_effect=reject_large_rehash):
+        actual = full._cached_manifest_adapter_identity(task, record, cached)
+    assert actual == cached
+
+
 def test_b1_policy_accepts_actual_frozen_profile_labels() -> None:
     policy = full.b1_policy([
         {"profile": "PROFILE_S"},
