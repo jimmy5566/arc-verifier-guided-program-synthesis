@@ -233,6 +233,15 @@ def verify_source_ledger(source: Path, ledger_name: str, freeze_name: str) -> di
     freeze = json_load(source / freeze_name)
     expected_root = freeze.get("ledger_sha256") or freeze.get("compact_ledger_sha256")
     canonical_root = hashlib.sha256(json.dumps(ledger, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()
+    stored_root = sha256_file(source / ledger_name)
+    # Historical ledger_sha256 binds canonical JSON. The V7 compact writer
+    # instead explicitly hashes HASHES.json bytes for compact_ledger_sha256.
+    # Support both documented producers without rewriting either frozen asset.
+    root_matches = canonical_root == expected_root
+    root_representation = 'CANONICAL_JSON'
+    if not freeze.get('ledger_sha256') and freeze.get('compact_ledger_sha256') == stored_root:
+        root_matches = True
+        root_representation = 'EXACT_FILE_BYTES'
     result = {
         "ledger": ledger_name,
         "entries": len(entries),
@@ -240,7 +249,9 @@ def verify_source_ledger(source: Path, ledger_name: str, freeze_name: str) -> di
         "mismatches": mismatches,
         "canonical_root": canonical_root,
         "expected_root": expected_root,
-        "status": "PASS" if not missing and not mismatches and canonical_root == expected_root else "FAIL",
+        "stored_bytes_root": stored_root,
+        "root_representation": root_representation,
+        "status": "PASS" if not missing and not mismatches and root_matches else "FAIL",
     }
     if result["status"] != "PASS":
         raise RuntimeError(f"source ledger verification failed: {ledger_name}")
