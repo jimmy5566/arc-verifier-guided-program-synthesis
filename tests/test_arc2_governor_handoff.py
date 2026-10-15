@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -131,6 +132,43 @@ class HandoffTests(unittest.TestCase):
         observation = {'pipeline': {'status': 'RUNNING', 'execution_source_commit': 'a' * 40},
                        'pipeline_status_sha256': 'c' * 64, 'process': None}
         self.assertEqual(s.pipeline_terminal_observation(binding(), observation)['status'], 'UNKNOWN')
+
+    def test_concurrent_real_cli_claims_keep_exactly_one_active_event(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            path, first = self.state(root)
+            second = g.event('CONTROLLER_TASK', 'controller', 'director', {'stage': 'OTHER', 'next_action': 'CPU_ONLY'})
+            saved = g.load(path)
+            saved['pending_events'].append(second)
+            g.atomic(path, saved)
+            children = [subprocess.Popen([sys.executable, str(g.PROJECT_ROOT / 'scripts/arc2_governor.py'),
+                         '--state', str(path), '--claim-event', item['event_id']],
+                         stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True) for item in (first, second)]
+            for child in children:
+                child.communicate(timeout=15)
+            self.assertEqual(sorted(c.returncode for c in children), [0, 1])
+            fresh = g.load(path)
+            claimed = [e for e in fresh['pending_events'] if e['status'] == 'CLAIMED']
+            self.assertEqual(len(claimed), 1)
+            self.assertEqual(fresh['active_event'], claimed[0]['event_id'])
+
+    def test_old_completed_event_replay_cannot_pollute_current_job(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            path = root / 'state.json'
+            payload = {'round_id': 'OLD_JOB', 'terminal_receipt_sha256': 'd' * 64}
+            old = g.event('REMOTE_TERMINAL', 'controller', 'supervisor', payload)
+            old['status'] = 'COMPLETE'
+            g.atomic(path, initial_state(disposition='WAIT_REMOTE', remote_job=binding(), pending_events=[old]))
+            g.atomic(root / 'events/duplicate.json', {'schema_version': 1, 'kind': 'REMOTE_TERMINAL',
+                'producer': 'supervisor', 'recipient': 'controller', 'payload': payload})
+            with mock.patch.object(g.subprocess, 'run') as run:
+                g.cycle(path, agent_timeout_seconds=1)
+            run.assert_not_called()
+            fresh = g.load(path)
+            self.assertEqual(fresh['remote_job']['job_id'], 'PIPELINE_TEST')
+            self.assertEqual(fresh['disposition'], 'WAIT_REMOTE')
+            self.assertEqual(len(fresh['pending_events']), 1)
 
     def test_external_completion_does_not_override_owner_pause(self):
         with tempfile.TemporaryDirectory() as td:

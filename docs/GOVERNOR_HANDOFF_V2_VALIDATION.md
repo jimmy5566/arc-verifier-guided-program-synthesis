@@ -76,3 +76,44 @@ At `2026-10-15T18:20:55Z`:
   from these infrastructure commits; unrelated dirty files were preserved.
 - Actual terminal-to-Agent acknowledgement remains **PENDING_REMOTE_COMPLETION**,
   not claimed as proven by CPU mocks or a healthy service heartbeat.
+
+## Owner-requested functional acceptance, 2026-10-16 Adelaide
+
+Expanded core suite: **35 passed**; Supervisor UTF-8/observability/directive
+compatibility: **19 passed**, **54 total**. These include actual isolated
+Windows process-host tests, not only Python mocks.
+
+| Function | Evidence | Result |
+| --- | --- | --- |
+| Busy queue, exactly-once dispatch, active-event exclusivity | CPU router tests | PASS |
+| Timeout, bounded pre-input rejection recovery, late result | CPU injected failures | PASS |
+| Concurrent state mutation and two competing claims | Mock transition plus two real CLI processes | PASS |
+| Registration, process exit/PID reuse, source mismatch | CPU registry/Supervisor integration | PASS |
+| Controller-to-Director-to-Controller result routing | Isolated bound-brief CPU integration | PASS |
+| Singleton lock and quiescent heartbeat | Real isolated Governor processes | PASS |
+| Watchdog start and recovery after intentional child termination | Real isolated Windows Watchdog/daemon | PASS |
+| Existing Controller wake, claim and completion | One actual Herdr prompt through Governor; isolated state | PASS |
+| Current Eval60 metadata transport | Real authorized SSH metadata-only probe; process/source match | PASS |
+| Real Eval60 terminal-to-result-review handoff | Experiment still running | PENDING |
+
+Real smoke event `f2e71ae91ef8ef6b3b0b8dc2efb618bf9cbec332c0d8ad6f9cb47b016d08750d`
+was delivered once at `18:33:55Z`, claimed at `18:34:06Z`, and completed at
+`18:34:06Z` on 2026-10-15 UTC. Two subsequent real Governor `--once` calls were
+IDLE and did not issue another prompt. Controller returned to done. Its only
+permitted action was claim/complete the isolated NOOP event; no scientific
+artifacts, model or GPU work were part of this smoke.
+
+Production state remained revision **275**, WAIT_REMOTE, no active event. The
+deferred eight-hour window stayed unactivated. Test state/ledger are retained
+under local `service_validation/governor_20261016/`; not imported into the live
+event inbox.
+
+Two issues found during expanded testing were fixed:
+
+- The old Watchdog test tried to clean up a launcher parent that no longer
+  exists with direct Python. Cleanup now terminates only its exact test-owned
+  daemon; the initially orphaned test daemon was identified and stopped.
+- A replay of an already-completed old-job event could be misclassified as a
+  conflict with the current job. Known event identity is now checked before
+  active-job validation. A regression test confirms no new prompt, producer
+  error, remote-binding change or workflow transition on that replay.

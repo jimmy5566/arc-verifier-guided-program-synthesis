@@ -287,10 +287,11 @@ def import_external_events(state: dict[str, Any], state_path: Path) -> bool:
             if not isinstance(payload, dict):
                 raise RuntimeError("EXTERNAL_EVENT_PAYLOAD_INVALID")
             recipient = value.get("recipient") or ("director" if value["kind"] == "REVIEW_REQUEST" else "controller")
-            if value['kind'] == 'REMOTE_TERMINAL' and state.get('remote_job'):
+            item = event(value["kind"], recipient, value.get("producer") or "supervisor", payload)
+            already_known = any(entry['event_id'] == item['event_id'] for entry in state['pending_events'])
+            if not already_known and value['kind'] == 'REMOTE_TERMINAL' and state.get('remote_job'):
                 if payload.get('round_id') != (state['remote_job'].get('job_id') or state['remote_job'].get('run_id')):
                     raise RuntimeError('TERMINAL_EVENT_ACTIVE_JOB_MISMATCH')
-            item = event(value["kind"], recipient, value.get("producer") or "supervisor", payload)
             added = enqueue(state, item)
             changed = added or changed
             if added and value["kind"] == "REMOTE_TERMINAL" and state['disposition'] != 'PAUSED':
