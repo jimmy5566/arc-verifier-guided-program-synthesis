@@ -119,6 +119,46 @@ def test_parity_snapshots_follow_worker_receipt_artifact_binding(tmp_path: Path)
     }
 
 
+def _frozen_b1_fixture(run: Path) -> None:
+    for directory in ("RAW_OUTPUTS", "OUTPUT_CHECKPOINTS", "OUTPUT_RECEIPTS", "EOS_EVENTS"):
+        (run / directory).mkdir(parents=True, exist_ok=True)
+    for index in range(2):
+        output_id = f"task{index}:o0"
+        name = f"task{index}_o0.json"
+        (run / "RAW_OUTPUTS" / name).write_text(json.dumps({
+            "output": {"output_id": output_id}, "gold_loaded": False, "cells": {},
+        }), encoding="utf-8")
+        (run / "OUTPUT_CHECKPOINTS" / name).write_text("{}", encoding="utf-8")
+        (run / "EOS_EVENTS" / name).write_text("{}", encoding="utf-8")
+        (run / "OUTPUT_RECEIPTS" / name).write_text(json.dumps({
+            "status": "COMPLETE", "output_id": output_id, "target_blind": True,
+            "gold_loaded": False, "raw_output": f"RAW_OUTPUTS/{name}",
+        }), encoding="utf-8")
+    core._freeze_generation(run, full.EXPERIMENT + "_B1_GATE", 2)
+
+
+def test_valid_frozen_b1_is_verified_and_reused_without_worker(tmp_path: Path) -> None:
+    _frozen_b1_fixture(tmp_path)
+    with patch.object(full, "_run_surface", side_effect=AssertionError("worker must not rerun")):
+        disposition = full.ensure_b1_generation(
+            argparse.Namespace(), tmp_path, [{}, {}], {"profiles": {}},
+        )
+    assert disposition == "REUSED_FROZEN"
+
+
+def test_frozen_b1_byte_drift_fails_closed(tmp_path: Path) -> None:
+    _frozen_b1_fixture(tmp_path)
+    (tmp_path / "EOS_EVENTS" / "task0_o0.json").write_text("{\"drift\":true}", encoding="utf-8")
+    try:
+        full.frozen_generation_ready(
+            tmp_path, experiment=full.EXPERIMENT + "_B1_GATE", expected=2,
+        )
+    except RuntimeError as error:
+        assert "bytes no longer match" in str(error)
+    else:
+        raise AssertionError("frozen B1 byte drift must fail closed")
+
+
 def test_worker_diagnostic_trace_is_explicit_and_passive_flag(tmp_path: Path) -> None:
     args = argparse.Namespace(
         worker_python="python", model_path=tmp_path / "model", challenge=tmp_path / "challenge.json",

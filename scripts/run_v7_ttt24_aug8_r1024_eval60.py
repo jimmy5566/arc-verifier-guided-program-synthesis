@@ -179,6 +179,72 @@ def b1_policy(rows: list[dict[str, Any]]) -> dict[str, Any]:
     }}
 
 
+def frozen_generation_ready(run: Path, *, experiment: str, expected: int) -> bool:
+    """Return whether an existing immutable generation can be reused safely.
+
+    A missing freeze means generation may proceed.  A present but invalid
+    freeze is never treated as an incomplete run: it fails closed so the
+    worker cannot overwrite evidence that had already been declared frozen.
+    """
+    freeze_path = run / "GENERATION_FREEZE.json"
+    if not freeze_path.is_file():
+        return False
+    freeze = _read(freeze_path)
+    required = {
+        "experiment": experiment,
+        "status": "FROZEN",
+        "target_blind": True,
+        "gold_loaded": False,
+        "raw_count": expected,
+    }
+    if any(freeze.get(key) != value for key, value in required.items()):
+        raise RuntimeError(f"existing generation freeze contract mismatch: {run}")
+
+    ledger_path = run / "GENERATION_HASHES.json"
+    verification_path = run / "GENERATION_HASH_VERIFICATION.json"
+    if not ledger_path.is_file() or not verification_path.is_file():
+        raise RuntimeError(f"existing generation freeze lacks hash evidence: {run}")
+    ledger = _read(ledger_path)
+    if _sha_value(ledger) != freeze.get("ledger_sha256"):
+        raise RuntimeError(f"existing generation freeze ledger identity mismatch: {run}")
+    recorded_verification = _read(verification_path)
+    if recorded_verification.get("status") != "PASS":
+        raise RuntimeError(f"existing generation recorded verification failed: {run}")
+    verification = _verify(run, ledger_path)
+    if verification.get("status") != "PASS":
+        raise RuntimeError(f"existing generation bytes no longer match freeze: {run}")
+
+    artifact_counts = {
+        name: len(list((run / name).glob("*.json")))
+        for name in ("RAW_OUTPUTS", "OUTPUT_CHECKPOINTS", "OUTPUT_RECEIPTS", "EOS_EVENTS")
+    }
+    if any(count != expected for count in artifact_counts.values()):
+        raise RuntimeError(
+            f"existing generation frozen artifact counts mismatch: {artifact_counts} expected={expected}"
+        )
+    receipts = [_read(path) for path in sorted((run / "OUTPUT_RECEIPTS").glob("*.json"))]
+    if any(
+        receipt.get("status") != "COMPLETE"
+        or receipt.get("target_blind") is not True
+        or receipt.get("gold_loaded") is not False
+        for receipt in receipts
+    ):
+        raise RuntimeError(f"existing generation has invalid completion receipt: {run}")
+    if len({str(receipt.get("output_id")) for receipt in receipts}) != expected:
+        raise RuntimeError(f"existing generation receipt identity mismatch: {run}")
+    return True
+
+
+def ensure_b1_generation(args: argparse.Namespace, run: Path, outputs: list[dict[str, Any]],
+                         policy: dict[str, Any]) -> str:
+    experiment = EXPERIMENT + "_B1_GATE"
+    if frozen_generation_ready(run, experiment=experiment, expected=len(outputs)):
+        return "REUSED_FROZEN"
+    _run_surface(args, run, outputs, depth=24, experiment=experiment, policy=policy)
+    _freeze_generation(run, experiment, len(outputs))
+    return "GENERATED"
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     for name in ("output", "model_path", "foundation_adapter", "challenge", "native_config_dir", "candidate_pool",
@@ -238,8 +304,7 @@ def main() -> None:
     smoke = [ordered[0], ordered[-1]]
     smoke_b1 = args.output / "B1_PARITY"
     smoke_policy = b1_policy(smoke)
-    _run_surface(args, smoke_b1, smoke, depth=24, experiment=EXPERIMENT + "_B1_GATE", policy=smoke_policy)
-    _freeze_generation(smoke_b1, EXPERIMENT + "_B1_GATE", 2)
+    ensure_b1_generation(args, smoke_b1, smoke, smoke_policy)
 
     # Generate the same two outputs with the frozen production policy before
     # allowing the other 87 outputs to start.
