@@ -11,6 +11,13 @@
 - Governor is a deterministic event router. It does not poll RunPod, interpret
   science, repair infrastructure, or manage authorization.
 
+Owner-assigned direct Director execution uses `DIRECTOR_TASK`, not a fabricated
+scientific review brief. A registered long job may specify
+`completion_recipient=director`; Supervisor then emits one Director continuation
+on every mechanical terminal status, including failure and UNKNOWN. Director
+claims/completes the same event and yields with WAIT_REMOTE for further long
+work. This is a status/task handoff, not an extra approval layer or Agent.
+
 ## Event lifecycle
 
 Each event has a content-derived ID and exactly four states:

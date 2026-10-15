@@ -281,15 +281,17 @@ def import_external_events(state: dict[str, Any], state_path: Path) -> bool:
     for source in sorted(event_dir.glob("*.json")):
         try:
             value = json.loads(source.read_text(encoding="utf-8-sig"))
-            if value.get("schema_version") != 1 or value.get("kind") not in {"REMOTE_TERMINAL", "CONTROLLER_TASK", "REVIEW_REQUEST"}:
+            if value.get("schema_version") != 1 or value.get("kind") not in {"REMOTE_TERMINAL", "CONTROLLER_TASK", "REVIEW_REQUEST", "DIRECTOR_TASK"}:
                 raise RuntimeError("EXTERNAL_EVENT_SCHEMA_INVALID")
             payload = value.get("payload")
             if not isinstance(payload, dict):
                 raise RuntimeError("EXTERNAL_EVENT_PAYLOAD_INVALID")
-            recipient = value.get("recipient") or ("director" if value["kind"] == "REVIEW_REQUEST" else "controller")
+            recipient = value.get("recipient") or ("director" if value["kind"] in {"REVIEW_REQUEST", "DIRECTOR_TASK"} else "controller")
+            if value['kind'] == 'DIRECTOR_TASK' and recipient != 'director':
+                raise RuntimeError('DIRECTOR_TASK_RECIPIENT_MISMATCH')
             item = event(value["kind"], recipient, value.get("producer") or "supervisor", payload)
             already_known = any(entry['event_id'] == item['event_id'] for entry in state['pending_events'])
-            if not already_known and value['kind'] == 'REMOTE_TERMINAL' and state.get('remote_job'):
+            if not already_known and (value['kind'] == 'REMOTE_TERMINAL' or payload.get('bound_remote_job')) and state.get('remote_job'):
                 if payload.get('round_id') != (state['remote_job'].get('job_id') or state['remote_job'].get('run_id')):
                     raise RuntimeError('TERMINAL_EVENT_ACTIVE_JOB_MISMATCH')
             added = enqueue(state, item)
@@ -309,6 +311,12 @@ def import_external_events(state: dict[str, Any], state_path: Path) -> bool:
                     "brief_sha256": payload.get("brief_sha256"),
                     "reason": payload.get("review_reason"),
                 }})
+            elif added and value['kind'] == 'DIRECTOR_TASK' and state['disposition'] != 'PAUSED':
+                state.update(disposition='REVIEW_REQUIRED', review=None,
+                             stage=payload.get('stage') or state['stage'],
+                             next_action='DIRECTOR_CONTINUES_BOUND_OWNER_TASK', terminal_reason=None)
+                if payload.get('bound_remote_job'):
+                    state['remote_job'] = None
             target = processed / f"{item['event_id']}.json"
             # Persist the queue before removing its producer's durable outbox.
             # A crash in between is a harmless idempotent import on restart.
@@ -419,6 +427,17 @@ def resolve_agent(role: str, state: dict[str, Any]) -> dict[str, Any]:
 def prompt_text(item: dict[str, Any], state_path: Path) -> str:
     payload = item["payload"]
     event_id = item["event_id"]
+    if item['kind'] == 'DIRECTOR_TASK' or (item['kind'] == 'PRODUCER_ERROR' and item['recipient'] == 'director'):
+        return (
+            f'ARC2 Governor Director continuation event {event_id}. Owner assigned this work directly to Director. '
+            f'Claim once: py -3 {PROJECT_ROOT / "scripts/arc2_governor.py"} --state "{state_path.resolve()}" --claim-event {event_id}. '
+            f'Execute only this bounded payload and its owner-authorized references: {json.dumps(payload, sort_keys=True)}. '
+            'This is a task/status handoff, not a new scientific approval request. Preserve failed evidence; '
+            'an infrastructure failure does not silently terminate a pending owner task. Do not poll long jobs in chat. '
+            'Before yielding to a long job, register it with completion_recipient=director and complete this same event '
+            'with WAIT_REMOTE. Supervisor/Governor will wake this same Director pane once on success OR failure. '
+            'When fully complete or genuinely blocked, close this same event with an honest outcome; never rerun completed generation.'
+        )
     if item["recipient"] == "controller":
         return (
             f"ARC2 Governor event {event_id}. Read {PROJECT_ROOT / 'AGENTS.md'} and "
@@ -754,6 +773,8 @@ def _read_remote_job_manifest(value: str) -> tuple[Path, dict[str, Any]]:
     primary = remote["primary_process"]
     if not isinstance(primary, dict) or not isinstance(primary.get("pid"), int) or not primary.get("role"):
         raise RuntimeError("REMOTE_JOB_PRIMARY_PROCESS_INCOMPLETE")
+    if remote.get('completion_recipient', 'controller') not in {'controller', 'director'}:
+        raise RuntimeError('INVALID_COMPLETION_RECIPIENT')
     return remote_path, remote
 
 

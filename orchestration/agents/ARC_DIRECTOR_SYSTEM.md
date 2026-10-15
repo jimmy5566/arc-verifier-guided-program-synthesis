@@ -1,5 +1,15 @@
 # ARC2 Director
 
+## Active owner goal continuation
+
+For `DIRECTOR_TASK`, read the latest direct owner assignment at
+`orchestration/owner_requests/SCORE_OPTIMIZATION_DIRECTOR_GOAL_V2.json`.
+It supersedes the older read-only/Controller implementation split for this
+bounded task. Claim/complete the given event, perform authorized work, register
+long jobs with `completion_recipient=director`, then yield instead of polling.
+Success and infrastructure failure both return to this same Director. Never
+falsely complete unfinished work to activate or replace a product Goal.
+
 ## Deferred owner direction: score optimization
 
 For the Governor result review following job

@@ -359,11 +359,12 @@ class Supervisor:
             })
             governor_event = self.governor_event_dir / f"REMOTE_TERMINAL_{job_id}_{digest[:12]}.json"
             if not governor_event.exists():
+                recipient = transport.get('completion_recipient', 'controller')
                 atomic_json(governor_event, {
                     "schema_version": 1,
-                    "kind": "REMOTE_TERMINAL",
+                    "kind": "DIRECTOR_TASK" if recipient == 'director' else "REMOTE_TERMINAL",
                     "producer": "supervisor",
-                    "recipient": "controller",
+                    "recipient": recipient,
                     "payload": {
                         "round_id": job_id,
                         "terminal_receipt": str(local_receipt.resolve()),
@@ -371,7 +372,7 @@ class Supervisor:
                         "terminal_status": status,
                         "round_class": ROUND_CLASS_SCIENTIFIC,
                         "bound_remote_job": True,
-                        "required_action": "INGEST_FREEZE_AND_IF_SCIENTIFIC_EMIT_ONE_SHA_BOUND_REVIEW_REQUEST",
+                        "required_action": "DIRECTOR_CONTINUE_OWNER_TASK_ON_SUCCESS_OR_FAILURE" if recipient == 'director' else "INGEST_FREEZE_AND_IF_SCIENTIFIC_EMIT_ONE_SHA_BOUND_REVIEW_REQUEST",
                         "completion_context": transport.get('completion_context'),
                     },
                 })
@@ -1055,11 +1056,13 @@ def remote_job_manifests(remote_job_dir: Path) -> list[dict[str, Any]]:
         # arbitrary remote file.  A receipt must be an immediate descendant of
         # the bound output root and use the immutable terminal filename.
         if (not job_id or not target or not output_root.startswith("/")
-                or terminal_receipt != output_root.rstrip("/") + "/TERMINAL_RECEIPT.json"):
+                or terminal_receipt != output_root.rstrip("/") + "/TERMINAL_RECEIPT.json"
+                or value.get('completion_recipient', 'controller') not in {'controller', 'director'}):
             continue
         manifests.append({"job_id": job_id, "ssh_target": target,
                           "terminal_receipt": terminal_receipt,
                           "manifest_path": str(path.resolve()),
+                          "completion_recipient": value.get('completion_recipient', 'controller'),
                           **({key: value[key] for key in ('pipeline_status_path', 'primary_process',
                                                          'source_commit', 'completion_context') if key in value}
                              if value.get('pipeline_status_path') == output_root.rstrip('/') + '/PIPELINE_STATE.json'

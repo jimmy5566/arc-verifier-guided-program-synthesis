@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "request_id": "SCORE_OPTIMIZATION_DIRECTOR_GOAL_V2",
+  "owner_instruction": "Persist the experiment queue and rules as a goal; Director owns completion. Do not poll long jobs; Governor wakes the same Director on success or failure.",
+  "queue_reference": {
+    "path": "orchestration/owner_requests/SCORE_OPTIMIZATION_8H_AFTER_EVAL60_V1.json",
+    "sha256": "9364ce4550172e67ae2b9232d9eb3293f16908dbc0072d0c6c457fb6ddb1899d",
+    "retain": "P0/P1/P2 score priorities; preserve scientific identities; no early Gold, duplicate generation, unsupported independent-validation claim, official submission/release or material budget overrun."
+  },
+  "overrides": {
+    "execution_owner": "Existing Director pane wJ:pF. Ordinary implementation and CPU/GPU work assigned directly by owner; no new agents or automatic Controller delegation.",
+    "activation_trigger": "Next Governor DIRECTOR_TASK wake for this request, including after infrastructure failure rather than a scientific result review.",
+    "failure_reporting": "Every long job returns a status continuation to Director on success, failure or UNKNOWN. Infrastructure failure does not silently terminate a pending queue.",
+    "waiting": "Register each detached job with completion_recipient=director, complete the same claimed event with WAIT_REMOTE, and end the turn. No chat polling, periodic Agent prompts or manual-wake dependency.",
+    "handoff_context": "Use bounded payload/referenced manifests, not full workflow history. Reporting failure or continuing an unchanged engineering repair is not a new scientific approval."
+  },
+  "current_state": {
+    "generation": "COMPLETE_TARGET_BLIND: 60 tasks / 89 outputs; 139-file and 411-file checks passed",
+    "archive": "INFRA_FAILED_ARCHIVE_HASHES_LEDGER_VERIFICATION",
+    "scientific_scores": "NOT_RUN: B-freeze, scoring and Gold-path",
+    "failure_evidence_commit": "d3f987b7086260cd3a412af17eda1c4e44270d66",
+    "failure_receipt": "C:/w/v7ttt24/experiments/v7_ttt24_aug8_r1024_eval60_v1/READY_RESTORE_V2_INFRA_FAILURE_INGESTION_RECEIPT.json",
+    "archive_repair_commit": "4d9f98fafea60cba064172f94f99f537695ecf64",
+    "confirmed_repair": "Compare compact_ledger_sha256 to exact HASHES.json bytes; preserve canonical ledger_sha256 semantics and every member hash check; never rewrite frozen source assets.",
+    "repair_tests": "3 passed: both producer representations, no source mutation, corruption rejection, canonical generation-root enforcement."
+  },
+  "next_executable_action": "Claim and activate the one-time window, refresh refs and rule out live duplicates. Resume archive -> B-freeze -> scoring -> Gold-path from frozen generation, with a fresh recovery output and pinned repaired source. Preserve the failed pipeline. Never invoke generation/training. Run RunPod CPU preflight before bounded detached execution; register exact process identity and Director completion.",
+  "budget": {
+    "hard_wall_seconds": 28800,
+    "activation_receipt": ".arc2-local/orchestration/owner_windows/SCORE_OPTIMIZATION_8H_AFTER_EVAL60_V1.json",
+    "activation_rule": "On triggering Director wake, atomically create activated_at_utc and deadline_utc once if absent. Reuse existing deadline across retries/handoffs; never reset.",
+    "closing_reserve_seconds": 600,
+    "command_rule": "No new command may exceed remaining time minus reserve. Require timeout and partial preservation before detaching; at expiry stop new optimization, preserve and report.",
+    "material_budget_overrun": "Requires owner approval."
+  },
+  "product_goal_status": "Existing unfinished product Goal is paused; create_goal rejected replacement and no agent resume API is available. Never falsely complete it or claim activation. Owner may resume in UI; this durable request and Governor events independently preserve authorized work.",
+  "final_report": "Numerical results and cohort/validity; best verified Pass@2 and Oracle; bottleneck map; positive/negative findings; remaining ranked queue and costs; verified pushed SHA/evidence paths; honest partial or blocked outcomes."
+}

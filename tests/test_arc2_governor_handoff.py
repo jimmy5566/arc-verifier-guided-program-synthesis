@@ -263,6 +263,45 @@ class HandoffTests(unittest.TestCase):
             g.claim_event(path, item['event_id'])
             self.assertEqual(g.load(path)['active_event'], item['event_id'])
 
+    def test_failed_remote_job_routes_directly_to_director_once(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            manifest = {**binding(), 'completion_recipient': 'director'}
+            path = root / 'state.json'
+            g.atomic(path, initial_state(disposition='WAIT_REMOTE', remote_job=manifest))
+            g.persist_remote_binding(path, manifest)
+            observed = {'pipeline': {'status': 'FAILED', 'execution_source_commit': 'a' * 40},
+                        'pipeline_status_sha256': 'c' * 64, 'process': None}
+            with mock.patch.object(s, 'remote_shell', return_value=json.dumps(observed)):
+                transported = s.fetch_remote_job_receipts(root / 'remote_jobs', root / 'receipts')
+            sup = s.Supervisor(root / 'supervisor.json', root / 'notifications', root / 'events')
+            self.assertEqual(sup.reconcile_bound_remote_jobs(transported), ['PIPELINE_TEST'])
+            self.assertEqual(sup.reconcile_bound_remote_jobs(transported), [])
+            fake = FakeHerdr({'director': 'idle', 'controller': 'idle'})
+            with mock.patch.object(g.subprocess, 'run', side_effect=fake):
+                g.cycle(path, agent_timeout_seconds=1)
+                g.cycle(path, agent_timeout_seconds=1)
+            self.assertEqual(len(fake.prompts), 1)
+            self.assertEqual(fake.prompts[0][3], 'director-pane')
+            self.assertIn('success OR failure', fake.prompts[0][4])
+            self.assertNotIn('reviewed_brief_sha256', fake.prompts[0][4])
+            saved = g.load(path)
+            self.assertIsNone(saved['remote_job'])
+            self.assertEqual(saved['pending_events'][0]['kind'], 'DIRECTOR_TASK')
+
+    def test_director_task_queues_while_director_busy(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            path = root / 'state.json'
+            g.atomic(path, initial_state(disposition='TERMINAL'))
+            g.atomic(root / 'events/director.json', {'schema_version': 1, 'kind': 'DIRECTOR_TASK',
+                'producer': 'owner', 'recipient': 'director', 'payload': {'stage': 'GOAL_CONTINUE'}})
+            fake = FakeHerdr({'director': 'working'})
+            with mock.patch.object(g.subprocess, 'run', side_effect=fake):
+                g.cycle(path, agent_timeout_seconds=1)
+            self.assertEqual(fake.prompts, [])
+            self.assertEqual(g.load(path)['pending_events'][0]['status'], 'QUEUED')
+
 
 if __name__ == '__main__':
     unittest.main()
