@@ -90,6 +90,10 @@ def _manifest_adapter_identity(path: Path, record: dict[str, Any]) -> dict[str, 
         raise RuntimeError(f"frozen TTT24 adapter semantics mismatch: {path}")
     return {
         "status": "PASS", "adapter_path": str(path),
+        # ``adapter_sha256`` is the established worker/cohort interface.  Keep
+        # the explicit model-file alias for readability without breaking the
+        # production worker contract.
+        "adapter_sha256": actual_files["adapter_model.safetensors"],
         "adapter_model_sha256": actual_files["adapter_model.safetensors"],
         "adapter_config_sha256": actual_files["adapter_config.json"],
         "adapter_files": actual_files,

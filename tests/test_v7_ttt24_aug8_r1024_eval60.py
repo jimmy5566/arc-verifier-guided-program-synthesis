@@ -54,6 +54,8 @@ def test_full_cohort_rebinds_all_89_outputs_to_fresh_v7_ttt24_adapters(tmp_path:
     assert all(Path(row["adapter_path"]).parts[-2:] == (row["task_id"], "depth_024") for row in rebound)
     assert all(row["adapter_identity"]["identity_authority"] == "FROZEN_TTT24_ADAPTER_MANIFEST"
                for row in rebound)
+    assert all(row["adapter_identity"]["adapter_sha256"]
+               == row["adapter_identity"]["adapter_model_sha256"] for row in rebound)
 
 
 def test_full_cohort_rejects_adapter_byte_drift(tmp_path: Path) -> None:
