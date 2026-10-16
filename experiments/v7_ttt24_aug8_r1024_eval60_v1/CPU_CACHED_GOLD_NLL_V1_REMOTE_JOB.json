@@ -1,0 +1,34 @@
+{
+  "GPU_used": false,
+  "completion_context": {
+    "authorization": "CPU-only reuse. No new GPU authority, model call, selector tuning or generation.",
+    "experiment_queue": "C:/w/arc2-governor-thin/orchestration/owner_requests/SCORE_OPTIMIZATION_QUEUE_PROGRESS_V3.json",
+    "next_action": "Claim once on COMPLETE, failure or UNKNOWN. Verify pipeline/result hashes. Ingest conditional full-sequence Gold NLL derived from existing B_VIEW_LIKELIHOOD caches, paired all eight views only where cached Gold exists in both Base24 and V7. Preserve candidate-availability bias, TTT parameterization mismatch, and absent per-request token-SHA caveat. Do not claim full 89-output Gold-path/rank/regret completion or promotion. If successful, preserve detailed results in PRIVATE scientific-artifacts branch and link a small manifest, update owner queue honestly. On failure preserve evidence and repair only CPU code if possible. No archive rescoring, rehashing weights, inference, training or reranking. Goal remains active and owner queue not TERMINAL while required work incomplete. Long CPU jobs register director callback and yield without polling.",
+    "output_root": "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/cpu_cached_gold_nll_v1_98038540",
+    "private_evidence_checkout": "C:/w/arc2-scientific-artifacts",
+    "research_branch": "codex/v7-ttt24-aug8-r1024-eval60-v1",
+    "research_checkout": "C:/w/v7ttt24"
+  },
+  "completion_recipient": "director",
+  "deadline_utc": "2026-10-16T10:25:10.710496+00:00",
+  "generation_rerun": false,
+  "job_id": "V7_EVAL60_CPU_CACHED_GOLD_NLL_V1_98038540",
+  "max_wall_seconds": 600,
+  "model_loaded": false,
+  "output_root": "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/cpu_cached_gold_nll_v1_98038540",
+  "pipeline_status_path": "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/cpu_cached_gold_nll_v1_98038540/PIPELINE_STATE.json",
+  "preflight": "37 CPU tests PASS locally and in actual Pod runtime. No model/weight reads; clean exact source; no active duplicate.",
+  "primary_process": {
+    "boot_id": "1218e1c6-b7a5-4f6b-9215-a30c4165e147",
+    "cmdline_sha256": "0af83d22dc5c117aa4a43e83dfc55ae7169146672259ab8fd92059bb8eb14119",
+    "pid": 161845,
+    "role": "bounded_CPU_cached_gold_NLL_wrapper",
+    "start_ticks": "1507310140"
+  },
+  "schema_version": 1,
+  "source_commit": "9803854030878eccf8755a021f611f169476168c",
+  "ssh_target": "g9620ys5vilaxx-64412079@ssh.runpod.io",
+  "stage": "CPU_ONLY_CACHED_GOLD_SEQUENCE_NLL",
+  "started_utc": "2026-10-16T10:14:40.710496+00:00",
+  "terminal_receipt": "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/cpu_cached_gold_nll_v1_98038540/TERMINAL_RECEIPT.json"
+}
