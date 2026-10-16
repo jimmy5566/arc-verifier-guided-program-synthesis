@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "status": "OBSERVED_CACHED_RANKING_FAILURES_CPU_ONLY",
+  "source": "Frozen complete V7 TTT24 DFS B shards, exact reuse index b701e8e8f951196494e36064dd09a2b15ce51d162a7ad43acb3be9a1fecc8016",
+  "input_scorecard_sha256": "233da76e89b0d7f223416b10d264a7bc6def270c8181d4c22c69ed1472cd48e2",
+  "rounding": "Feature numbers below rounded to six decimals; original full precision remains in immutable shards",
+  "rows": [
+    {
+      "output_id": "142ca369:o0",
+      "correct_B_rank": 4,
+      "candidates": 126,
+      "correct": {
+        "support": 1,
+        "mean_view_nll": 0.058239,
+        "original_mean_nll": 0.002629
+      },
+      "selected_top2": [
+        {
+          "support": 2,
+          "mean_view_nll": 0.044286,
+          "original_mean_nll": 0.04653
+        },
+        {
+          "support": 1,
+          "mean_view_nll": 0.043441,
+          "original_mean_nll": 0.06294
+        }
+      ]
+    },
+    {
+      "output_id": "97d7923e:o0",
+      "correct_B_rank": 24,
+      "candidates": 52,
+      "correct": {
+        "support": 1,
+        "mean_view_nll": 0.039022,
+        "original_mean_nll": 0.017028
+      },
+      "selected_top2": [
+        {
+          "support": 4,
+          "mean_view_nll": 0.026753,
+          "original_mean_nll": 0.022145
+        },
+        {
+          "support": 3,
+          "mean_view_nll": 0.025809,
+          "original_mean_nll": 0.009048
+        }
+      ]
+    },
+    {
+      "output_id": "b5ca7ac4:o0",
+      "correct_B_rank": 4,
+      "candidates": 27,
+      "correct": {
+        "support": 1,
+        "mean_view_nll": 0.015124,
+        "original_mean_nll": 0.018787
+      },
+      "selected_top2": [
+        {
+          "support": 2,
+          "mean_view_nll": 0.010726,
+          "original_mean_nll": 0.001308
+        },
+        {
+          "support": 2,
+          "mean_view_nll": 0.013998,
+          "original_mean_nll": 0.026698
+        }
+      ]
+    },
+    {
+      "output_id": "b6f77b65:o0",
+      "correct_B_rank": 5,
+      "candidates": 157,
+      "correct": {
+        "support": 2,
+        "mean_view_nll": 0.050501,
+        "original_mean_nll": 0.060225
+      },
+      "selected_top2": [
+        {
+          "support": 2,
+          "mean_view_nll": 0.014144,
+          "original_mean_nll": 0.016306
+        },
+        {
+          "support": 2,
+          "mean_view_nll": 0.02686,
+          "original_mean_nll": 0.031292
+        }
+      ]
+    }
+  ],
+  "established": "The four correct DFS candidates exist but rank below Top2 under frozen historical B; cross-view support and NLL favor the selected wrong grids. For 142ca369:o0, correct original-view NLL is better than both selected candidates, but not its eight-view average.",
+  "not_established": "This does not prove that simply removing support or using original NLL improves the full cohort. No coefficients, thresholds or selector weights were tuned.",
+  "runtime": {
+    "GPU_seconds": 0,
+    "models_loaded": 0,
+    "generated_candidates": 0,
+    "source_node_archives_read": 0,
+    "small_B_shards_read": 4,
+    "source_files_changed": false
+  },
+  "next_CPU": "Prefer existing cached feature rows or historical frozen scores. If full source NLL is required, process/hash/checkpoint per output and reuse each completed row; do not repeat an all-or-nothing full-node scan. Keep raw-path NLL distinct from eight-view B scores. Preserve owner GPU stop.",
+  "budget": "No GPU continuation or deadline reset. Original hard deadline 2026-10-16T04:07:04Z remains; this is closing interpretation/preservation, not a new GPU experiment."
+}
