@@ -1,0 +1,15 @@
+{
+  "complete_output_pairs": 51,
+  "conflicts_not_reused": [],
+  "duplicate_identical_copies": 168,
+  "gold_loaded": false,
+  "gpu_used": false,
+  "index_path": "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/cpu_reuse_index_9e4f3d3e/REUSE_INDEX.json",
+  "index_sha256": "b701e8e8f951196494e36064dd09a2b15ce51d162a7ad43acb3be9a1fecc8016",
+  "rejected_not_reused": [],
+  "reusable_source_units": 102,
+  "scope": "Exact complete B shards only. Source-view NLL is separate; no missing-view imputation or bulk backfill.",
+  "source_files_read": 270,
+  "source_modified_or_deleted": false,
+  "status": "INDEXED_NO_GPU"
+}
