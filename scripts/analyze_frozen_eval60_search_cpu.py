@@ -115,7 +115,10 @@ def analyze_cell(cell, tokens):
             first_halt = {'position': pos, 'state': state,
                           'reasons': sorted({str(n['prune_reason']) for n in ns if n.get('prune_reason')} |
                                             {str(e['prune_reason']) for e in es if e.get('prune_reason')})}
-        inserted = [e for e in es if e.get('frontier_insert_order') is not None]
+        # Production mutates the insertion event on pop, overwriting elapsed_seconds.
+        # A single row carrying both counters has no recoverable insertion clock.
+        inserted = [e for e in es if e.get('frontier_insert_order') is not None
+                    and e.get('frontier_pop_order') is None]
         popped = [e for e in es if e.get('frontier_pop_order') is not None]
         ins_times = [e['elapsed_seconds'] for e in inserted if isinstance(e.get('elapsed_seconds'),(int,float))]
         pop_times = [e['elapsed_seconds'] for e in popped if isinstance(e.get('elapsed_seconds'),(int,float))]
@@ -249,6 +252,7 @@ def main():
             'limitations':['Survivor-conditioned observed paths, not full-path probabilities',
                            'Different TTT parameterization/runtime configurations confound a pure V7 effect when present',
                            'Missing historical frontier telemetry is UNAVAILABLE, not zero waiting',
+                           'Final trace rows mutate at pop; checkpoint summaries are observation bounds, not complete historical frontier snapshots',
                            'Canonical native Gold serialization plus EOS only; parsed-equivalent token serializations may differ',
                            'Exposed Eval60; no independent or competition improvement claim'],
             'checkpoint_manifest':manifest}

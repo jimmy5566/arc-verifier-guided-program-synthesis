@@ -82,6 +82,16 @@ def test_retained_completed_and_bad_trace():
             {'parent_node_id': 0, 'prefix_length': 99}]}}, (1, 15))
 
 
+def test_production_mutated_event_cannot_establish_wait_seconds():
+    prefix = hashlib.sha256(b'1').hexdigest()
+    cell = {'nodes': [node(0, None, None), node(1, 0, 1, 'expanded')],
+            'diagnostic_trace': {'search_trace': [{
+                'prefix_hash': prefix, 'frontier_insert_order': 100,
+                'frontier_pop_order': 3, 'elapsed_seconds': 5,
+            }]}}
+    assert analyze_cell(cell, (1, 15))['states'][0]['wait_seconds'] is None
+
+
 def test_task_cluster_means_not_pseudoreplicated_outputs():
     result = task_interval([('a:o0', 0), ('a:o1', 2), ('b:o0', 3)])
     assert result['tasks'] == 2

@@ -1,0 +1,16 @@
+{
+  "status": "CPU_ANALYSIS_INGESTED_QUEUE_NOT_FINISHED",
+  "execution_source_commit": "2ca05caf76f7998f25f12eb6e383ac62622da602",
+  "private_repository": "jimmy5566/arc2-scientific-artifacts",
+  "visibility_verified": "PRIVATE",
+  "private_branch": "research/v7-eval60-observed-search-v1",
+  "private_commit": "c177ec50822dbbffe60599b29f663db7523c2781",
+  "private_evidence_directory": "eval60/v7_ttt24_observed_search_v1",
+  "ingested_exact_export_sha256": "dc5065a8a5e834904a33e5490f6be24fad28ee7844a32b46411ad2357ea86445",
+  "additional_audit_sha256": "71ef72e32ac14591021040f019874f6c4b51f3fc1a9874de0bb626096f98653f",
+  "director_audit_sha256": "16f3d079cda37257fca3c7baae08349d290ca7626d88a8306f5ec5d9f7cf2a63",
+  "publication_boundary": "Detailed new audit evidence remains private. Do not stage the local untracked INGESTED, ADDITIONAL_AUDIT or DIRECTOR_AUDIT JSON files into this public source repository.",
+  "no_new_GPU_or_generation": true,
+  "original_checkpoint_wait_values": "INVALIDATED_NOT_USED; insertion timestamp overwritten on production pop",
+  "required_queue_work_remains": true
+}
