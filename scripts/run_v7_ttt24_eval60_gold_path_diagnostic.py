@@ -37,6 +37,7 @@ from scripts.run_exact_b_selector_phase3_r1024_v1 import (
 from scripts.run_v7_ttt24_eval60_b_selector import EXPECTED_V7_SHA256, activate_task, adapter_preflight
 from scripts.score_phase3_eval60_union_v1 import validate_archive
 from scripts.score_v7_ttt24_eval60_postfreeze import EXPECTED_GOLD_SHA256, archive_payload_hashes_valid, load_gold_compact
+from scripts.analyze_frozen_eval60_search_cpu import frontier_wait_seconds
 
 
 LEGAL_ARC_TOKENS = tuple(range(11)) + (15,)
@@ -264,10 +265,12 @@ def search_anatomy(archive: Path, outputs: list[str], gold: dict[str, Any], mode
                     "matched_node_ids": [int(node["node_id"]) for node in nodes],
                     "frontier_insert_order": min(inserted) if inserted else None,
                     "frontier_pop_order": min(popped) if popped else None,
-                    "frontier_wait": (min(popped) - min(inserted)) if inserted and popped else None,
+                    "frontier_wait": None,  # Deprecated: insertion/pop counters have different meanings.
+                    "frontier_wait_seconds": frontier_wait_seconds(events),
+                    "frontier_wait_status": "MEASURED_DISTINCT_CLOCKS" if frontier_wait_seconds(events) is not None else "UNAVAILABLE_INSERTION_CLOCK_NOT_PRESERVED",
                     "nodes_expanded_at_event": min((int(event.get("nodes_expanded_so_far", 10**9)) for event in events), default=None),
                     "first_divergence_position": first_divergence,
-                    "wall_censored": bool(cell.get("wall_time_censored")),
+                    "wall_censored": cell.get("wall_time_censored"),
                     "diagnostic_trace_available": bool(trace),
                 })
     return rows

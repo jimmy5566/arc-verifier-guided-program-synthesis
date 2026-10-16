@@ -60,6 +60,22 @@ def prefix_hashes(tokens):
     return result
 
 
+def frontier_wait_seconds(events):
+    """Only distinct insertion/pop clock observations establish elapsed wait.
+
+    Production updates insertion rows in place at pop, replacing elapsed_seconds.
+    Such a final row proves ordering but cannot recover the earlier clock.
+    """
+    inserted = [e['elapsed_seconds'] for e in events
+                if e.get('frontier_insert_order') is not None
+                and e.get('frontier_pop_order') is None
+                and isinstance(e.get('elapsed_seconds'), (int, float))]
+    popped = [e['elapsed_seconds'] for e in events
+              if e.get('frontier_pop_order') is not None
+              and isinstance(e.get('elapsed_seconds'), (int, float))]
+    return min(popped)-min(inserted) if inserted and popped and min(popped)>=min(inserted) else None
+
+
 def analyze_cell(cell, tokens):
     nodes = cell.get('nodes', []); by_id, lengths = gold_node_lengths(nodes, tokens)
     grouped = defaultdict(list)
@@ -115,16 +131,8 @@ def analyze_cell(cell, tokens):
             first_halt = {'position': pos, 'state': state,
                           'reasons': sorted({str(n['prune_reason']) for n in ns if n.get('prune_reason')} |
                                             {str(e['prune_reason']) for e in es if e.get('prune_reason')})}
-        # Production mutates the insertion event on pop, overwriting elapsed_seconds.
-        # A single row carrying both counters has no recoverable insertion clock.
-        inserted = [e for e in es if e.get('frontier_insert_order') is not None
-                    and e.get('frontier_pop_order') is None]
-        popped = [e for e in es if e.get('frontier_pop_order') is not None]
-        ins_times = [e['elapsed_seconds'] for e in inserted if isinstance(e.get('elapsed_seconds'),(int,float))]
-        pop_times = [e['elapsed_seconds'] for e in popped if isinstance(e.get('elapsed_seconds'),(int,float))]
-        wait = min(pop_times)-min(ins_times) if ins_times and pop_times and min(pop_times)>=min(ins_times) else None
         # Insert and pop ranks are different counters: never subtract them as a wait.
-        states.append({'position': pos, 'state': state, 'wait_seconds': wait,
+        states.append({'position': pos, 'state': state, 'wait_seconds': frontier_wait_seconds(es),
                        'node_ids': [n['node_id'] for n in ns]})
     checkpoints = {}
     for budget in (128,256,512,1024):

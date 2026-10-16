@@ -3,7 +3,7 @@ import hashlib
 import pytest
 
 from scripts.analyze_frozen_eval60_search_cpu import (
-    LEGAL, analyze_cell, gold_node_lengths, gold_tokens, prefix_hashes, task_interval,
+    LEGAL, analyze_cell, gold_node_lengths, gold_tokens, prefix_hashes, task_interval, frontier_wait_seconds,
 )
 
 
@@ -90,6 +90,15 @@ def test_production_mutated_event_cannot_establish_wait_seconds():
                 'frontier_pop_order': 3, 'elapsed_seconds': 5,
             }]}}
     assert analyze_cell(cell, (1, 15))['states'][0]['wait_seconds'] is None
+
+
+def test_wait_units_and_unknown_clock_cases():
+    assert frontier_wait_seconds([]) is None
+    assert frontier_wait_seconds([{'frontier_insert_order':99}, {'frontier_pop_order':2}]) is None
+    assert frontier_wait_seconds([{'frontier_insert_order':99,'elapsed_seconds':5},
+                                  {'frontier_pop_order':2,'elapsed_seconds':3}]) is None
+    assert frontier_wait_seconds([{'frontier_insert_order':99,'elapsed_seconds':3},
+                                  {'frontier_pop_order':2,'elapsed_seconds':5}]) == 2
 
 
 def test_task_cluster_means_not_pseudoreplicated_outputs():
