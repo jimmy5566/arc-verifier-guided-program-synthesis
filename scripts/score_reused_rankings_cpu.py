@@ -104,13 +104,16 @@ def main():
         for method in ('NLL', 'SUPPORT_NLL'):
             all_rankings[label + '_' + method] = {oid: row[method] for oid, row in found.items()}
     cached = {0: {}, 24: {}}
-    for unit in read(args.reuse_index)['index'].values():
+    def cached_one(unit):
         path = Path(unit['path'])
-        verified, error = inspect(path)
+        verified, error = inspect(path, include_payload=True)
         if error or verified['payload_sha256'] != unit['payload_sha256']:
             raise RuntimeError('B_SHARD_RECHECK_FAILED')
-        payload = json.loads(gzip.decompress(path.read_bytes()))
-        cached[payload['depth']][payload['output_id']] = b_top2(payload)
+        payload = verified['_payload']
+        return payload['depth'], payload['output_id'], b_top2(payload)
+    with ThreadPoolExecutor(max_workers=8) as executor:
+        for depth, oid, attempts in executor.map(cached_one, read(args.reuse_index)['index'].values()):
+            cached[depth][oid] = attempts
     matched = sorted(set(cached[0]) & set(cached[24]))
     for label, depth in [('B_GREEDY_PARTIAL', 0), ('B_DFS_PARTIAL', 24)]:
         all_rankings[label] = {oid: cached[depth][oid] for oid in matched}

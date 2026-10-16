@@ -20,7 +20,7 @@ def sha(data):
     return hashlib.sha256(data).hexdigest()
 
 
-def inspect(path):
+def inspect(path, include_payload=False):
     try:
         data = path.read_bytes()
         payload = json.loads(gzip.decompress(data))
@@ -39,9 +39,12 @@ def inspect(path):
         if any(not math.isfinite(float(row[key])) for row in rows
                for key in ('original_log_likelihood', 'mean_view_nll')):
             raise ValueError('NONFINITE_SCORE')
-        return {'path': str(path), 'shard_sha256': sha(data), 'payload_sha256': payload['payload_sha256'],
+        result = {'path': str(path), 'shard_sha256': sha(data), 'payload_sha256': payload['payload_sha256'],
                 'identity': {k: payload[k] for k in KEYS}, 'candidate_count': len(rows),
-                'view_score_rows': len(details)}, None
+                'view_score_rows': len(details)}
+        if include_payload:
+            result['_payload'] = payload
+        return result, None
     except (ValueError, KeyError, OSError, EOFError) as exc:
         return None, {'path': str(path), 'reason': str(exc)}
 
