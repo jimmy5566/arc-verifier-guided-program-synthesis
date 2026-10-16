@@ -1,0 +1,34 @@
+{
+  "GPU_used": false,
+  "completion_context": {
+    "authorization": "CPU-only; not new GPU authorization. Existing budget/deadline not reset.",
+    "experiment_queue": "C:/w/arc2-governor-thin/orchestration/owner_requests/SCORE_OPTIMIZATION_QUEUE_PROGRESS_V3.json",
+    "next_action": "Claim once on COMPLETE/failure/UNKNOWN. Verify CPU_CACHE_PREFLIGHT.json and pipeline hash. Check real mounted challenge/tokenizer matches all 89 outputs x 8 views x 2 frozen systems; compare cache completeness to 183 reusable cells and 1241 missing cells. Invalid foundation/adapter/solutions paths must never be read. Preserve failure honestly and repair CPU code only if necessary. No model loading, GPU inference, new generation, TTT, B rescoring or selector tuning. Store detailed receipts privately and update owner queue without claiming full Gold-path completion. Goal remains active while meaningful authorized CPU work remains; once truly exhausted, audit the specific fresh-GPU-authorization blocker rather than manufacturing more work or false completion. Do not terminal-close unfinished owner queue. Long work uses Director callback and no chat polling.",
+    "output_root": "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/cpu_gold_cache_preflight_v1_e17445cd",
+    "private_evidence_checkout": "C:/w/arc2-scientific-artifacts",
+    "research_branch": "codex/v7-ttt24-aug8-r1024-eval60-v1",
+    "research_checkout": "C:/w/v7ttt24"
+  },
+  "completion_recipient": "director",
+  "deadline_utc": "2026-10-16T10:40:17.075819+00:00",
+  "generation_rerun": false,
+  "job_id": "V7_EVAL60_CPU_GOLD_CACHE_PREFLIGHT_V1_e17445cd",
+  "max_wall_seconds": 600,
+  "model_loaded": false,
+  "output_root": "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/cpu_gold_cache_preflight_v1_e17445cd",
+  "pipeline_status_path": "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/cpu_gold_cache_preflight_v1_e17445cd/PIPELINE_STATE.json",
+  "preflight": "49 tests PASS on Windows and Pod. CUDA masked. Foundation/adapter/target paths are deliberately invalid; CPU preflight must not read them. No full weight or raw archive rehash.",
+  "primary_process": {
+    "boot_id": "1218e1c6-b7a5-4f6b-9215-a30c4165e147",
+    "cmdline_sha256": "b12e9a22f2804675fb9f7141bf426e287e4e4d8f2166eed850b206aedad30277",
+    "pid": 162034,
+    "role": "bounded_CPU_real_cache_preflight",
+    "start_ticks": "1507400788"
+  },
+  "schema_version": 1,
+  "source_commit": "e17445cd5092d2f2b8a3292769ff92f2ce4ba9d8",
+  "ssh_target": "g9620ys5vilaxx-64412079@ssh.runpod.io",
+  "stage": "CPU_ONLY_REAL_TOKENIZER_CACHE_PREFLIGHT",
+  "started_utc": "2026-10-16T10:29:47.075819+00:00",
+  "terminal_receipt": "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/cpu_gold_cache_preflight_v1_e17445cd/TERMINAL_RECEIPT.json"
+}
