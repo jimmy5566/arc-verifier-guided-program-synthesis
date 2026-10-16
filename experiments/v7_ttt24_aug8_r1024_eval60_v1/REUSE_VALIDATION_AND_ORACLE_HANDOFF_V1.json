@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "status": "CPU_REUSE_AND_FREEZE_COMPLETED",
+  "owner_requests": [
+    "Maximize reuse; no large reruns; freeze current algorithm and selector reuse",
+    "Report ORC now and compare coverage with historical Qwen TTT24 DFS R1024"
+  ],
+  "algorithm_freeze": {
+    "path": "CURRENT_ALGORITHM_AND_REUSE_FREEZE_V1.json",
+    "sha256": "3307f220c4aee3ac0ff3ec3d65913110c2f406597446ba84d1c6459e1823f32e",
+    "execution_source_commit": "18d31ccf4c9a7e8d4bc7b53743a73ea563dc46a0",
+    "running_checkout_changed": false
+  },
+  "reuse_implementation": {
+    "helper": "scripts/recover_frozen_source_path_scores.py",
+    "sha256": "0a1602a5b6d624f7d705f0efb4dea3ffefe037d475ba6504aebb9a98427846e6",
+    "local_tests": "14 passed: source recovery, missing data rejection, shard identity reuse, oracle input integrity and freeze-before-Gold",
+    "actual_pod_cpu_sample": {
+      "output_id": "0934a4d8:o0",
+      "token_count_including_eos": 30,
+      "sequence_nll_from_token_logprobs": 0.3981739957484933,
+      "stored_cumulative_nll": 0.3981739957484933,
+      "status": "SOURCE_PATH_RECOVERED",
+      "sample_count": 1,
+      "gpu_used": false
+    },
+    "generation_scores_reuse_scope": "Observed source-path score extraction implemented and verified on one real sample. NOT a proof of all 89 outputs or exact numerical equivalence to batched B scores.",
+    "historical_B_substitution": "NOT_VALIDATED; do not silently substitute generation NLL for eight-view teacher-forced B scores",
+    "Greedy_token_probability_coverage": "UNVERIFIED",
+    "allowed_next_work": "CPU extraction/deduplication and exact-identity shard/cache reuse. No new bulk GPU backfill or generation/training rerun under this request."
+  },
+  "oracle_result": {
+    "path": "ORACLE_ONLY_SCORECARD_20261016.json",
+    "sha256": "71373776ff14aa00b375b6123cbbf8ce6e8b6350619b1303793f6f7add34243a",
+    "remote_output": "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/oracle_only_cpu_2972ec6c",
+    "input_freeze_sha256": "8a93495af98d2a51aa23b8f1421f0f20f32c349ad4a1ddb6397a28002356753a",
+    "historical_references_reproduced": true,
+    "V7": 30,
+    "Base_D24": 31,
+    "shared": 26,
+    "FIX": 4,
+    "HARM": 5,
+    "net": -1,
+    "V7_plus_Base_D24": 35,
+    "Base_D24_D48": 35,
+    "V7_plus_Base_D24_D48": 36,
+    "metric": "Output-level candidate ORC /89, exposed development only, not Pass@2 or Kaggle LB",
+    "covers_all_Base_D24": false,
+    "decision": "Do not globally replace historical Base. V7 is a complementary frozen candidate source; promotion/selector gains unproven."
+  },
+  "boundary_update": "Direct owner request authorized this isolated CPU oracle score now. All consumed candidate identities were verified and frozen before designated Eval60 targets. Existing B code/config was frozen and receives no targets or oracle feedback; no changed selector/tuning during this stage. This does not fabricate a completed B freeze.",
+  "runtime_handoff": {
+    "job": "V7_EVAL60_B_FREEZE_FINAL_WINDOW_V3_18d31ccf",
+    "remains_supervisor_monitored": true,
+    "deadline_utc": "2026-10-16T04:07:04Z",
+    "no_hot_patch": true,
+    "next_action": "On terminal wake read this addendum and exact ORC result, do not repeat oracle scoring, do not launch bulk reruns. Preserve remaining partial B data, report genuine completeness and budget boundary. Do not promote, submit, reset deadline or treat source-score extraction as validated B substitution."
+  },
+  "transport": "Small CPU scorecard returned through bounded SSH command/control, exact SHA256 verified locally; source and tests synchronized via GitHub. Large archived data and weights were neither transferred nor reread wholesale."
+}
