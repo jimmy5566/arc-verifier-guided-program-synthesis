@@ -33,7 +33,10 @@ def test_bounded_production_route_and_failure_receipt(monkeypatch,tmp_path,exit_
             assert 'scripts.run_v7_ttt24_eval60_gold_path_diagnostic' in command
             assert '--reuse-observed-search' in command and '1428' in command
             assert '--cpu-cache-preflight-only' not in command
-            assert 'CUDA_VISIBLE_DEVICES' not in kw['env'] or kw['env']['CUDA_VISIBLE_DEVICES']!=''
+            # CPU fixtures may deliberately mask CUDA; the launcher must not
+            # silently change the caller's device policy.
+            import os
+            assert kw['env'].get('CUDA_VISIBLE_DEVICES')==os.environ.get('CUDA_VISIBLE_DEVICES')
             (output/'diagnostic').mkdir()
             (output/'diagnostic/SUMMARY.json').write_text(json.dumps({'status':'COMPLETE','output_count':89}))
         def wait(self,timeout):
