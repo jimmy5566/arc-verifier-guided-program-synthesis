@@ -1,0 +1,19 @@
+{
+  "status": "DECLARED_BEFORE_CPU_COMPLETION_SCORING",
+  "owner_task": "Maximize reuse of existing data to complete selector work; GPU scoring remains stopped",
+  "scope": "CPU-only continuation specifically requested after the original GPU window; not a GPU deadline reset",
+  "cohort": {"tasks": 60, "outputs": 89},
+  "historical_B": {"complete_output_pairs": 51, "missing_output_pairs": 38, "formula_unchanged": true},
+  "full_cohort_rules": [
+    "Per archive: existing historical NLL and SUPPORT_NLL rules using frozen terminal cumulative NLL",
+    "Fixed portfolio: Base24 NLL first, first distinct V7 NLL second, otherwise Base24 second",
+    "Explicit hybrid: cached V7 DFS B Top2 where complete, otherwise historical V7 SUPPORT_NLL Top2"
+  ],
+  "hybrid_is_complete_historical_B": false,
+  "prohibited": ["model loading", "GPU work", "new generation", "TTT rerun", "Gold-conditioned selection", "coefficient fitting", "checkpoint promotion", "official submission"],
+  "implementation": "Streaming terminal-only decoding with per-output hash-bound CPU ranking checkpoints; never overwrite frozen source artifacts",
+  "evaluation": "Freeze complete ranked attempts before isolated designated post-freeze scoring. Eval60 is exposed development data, not independent validation or leaderboard.",
+  "new_CPU_job_wall_limit_seconds": 1800,
+  "handoff": "If detached, register exact PID/start/boot/command/source with completion_recipient=director. Wake once on success or failure, no chat polling.",
+  "success": "All 89 outputs selected and scored for each declared full-cohort rule; retain exact B as partial and explicitly report missing cross-view scores"
+}

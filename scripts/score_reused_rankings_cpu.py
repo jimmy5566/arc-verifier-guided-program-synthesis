@@ -4,6 +4,8 @@ from concurrent.futures import ThreadPoolExecutor
 import gzip
 import json
 import math
+import io
+import re
 from pathlib import Path
 
 from scripts.score_v7_frozen_oracle_only import checked, read, write, canonical, digest, GOLD_SHA256
@@ -11,8 +13,32 @@ from scripts.score_phase3_eval60_union_v1 import aggregate_candidates, ranking, 
 from scripts.index_frozen_b_score_reuse import inspect
 
 
-def source_rankings(root, depth):
-    hashes = read(root / 'manifests/ARCHIVE_HASHES.json')['files']
+def terminal_scores(node_bytes, wanted):
+    """Stream the frozen index; decode only candidate terminal nodes, not every node."""
+    found = {}
+    ids = {int(node) for _, node in wanted}
+    with gzip.GzipFile(fileobj=io.BytesIO(node_bytes)) as stream:
+        for line in stream:
+            match = re.search(rb'"node_id"\s*:\s*(\d+)', line)
+            if not match or int(match.group(1)) not in ids:
+                continue
+            row = json.loads(line)
+            node = row['node']
+            key = (row['augmentation_id'], node['node_id'])
+            if key not in wanted:
+                continue
+            value = node.get('cumulative_score')
+            if key in found and found[key] != value:
+                raise RuntimeError('CONFLICTING_TERMINAL_SCORE')
+            found[key] = value
+    return found
+
+
+def source_rankings(root, depth, checkpoint_dir=None):
+    ledger = read(root / 'manifests/ARCHIVE_HASHES.json')
+    if ledger.get('status') != 'PASS' or read(root / 'manifests/ARCHIVE_HASH_VERIFICATION.json').get('status') != 'PASS':
+        raise RuntimeError('ARCHIVE_NOT_VERIFIED')
+    hashes = ledger['files']
     contract = json.loads(checked(root, 'CONTRACT.json', hashes))
     audit = json.loads(checked(root, 'SOURCE_COMPLETENESS_AUDIT.json', hashes))
     cohort = json.loads(checked(root, 'RUN_COHORT.json', hashes))
@@ -21,21 +47,28 @@ def source_rankings(root, depth):
     outputs = [x['output_id'] for x in cohort['outputs']]
     if len(outputs) != 89 or len(set(outputs)) != 89:
         raise RuntimeError('COHORT_NOT_89')
+    if checkpoint_dir:
+        checkpoint_dir.mkdir(parents=True, exist_ok=True)
     def one(oid):
         name = oid.replace(':', '_') + '.jsonl.gz'
-        node_bytes = checked(root, 'tables/node_index/' + name, hashes)
+        identity = {'archive': str(root), 'depth': depth, 'output_id': oid,
+                    'candidate_sha256': hashes['tables/candidate_index/' + name],
+                    'node_sha256': hashes['tables/node_index/' + name],
+                    'algorithm': 'SOURCE_NLL_SUPPORT_NLL_TERMINAL_STREAM_V1'}
+        cache = checkpoint_dir / (oid.replace(':', '_') + '.json') if checkpoint_dir else None
+        if cache and cache.exists():
+            saved = read(cache)
+            payload = saved['payload']
+            if saved['sha256'] != digest(canonical(payload).encode()) or payload['identity'] != identity:
+                raise RuntimeError('RANKING_CHECKPOINT_IDENTITY_MISMATCH')
+            return oid, payload['rankings']
         candidate_bytes = checked(root, 'tables/candidate_index/' + name, hashes)
-        scores = {}
-        for line in gzip.decompress(node_bytes).splitlines():
-            row = json.loads(line)
-            n = row['node']
-            if isinstance(n, dict) and n.get('node_id') is not None:
-                scores[row['augmentation_id'], n['node_id']] = n.get('cumulative_score')
+        rows = [json.loads(line) for line in gzip.decompress(candidate_bytes).splitlines() if line.strip()]
+        rows = [row for row in rows if int(row['checkpoint']) == 1024 and row.get('canonical_grid') is not None]
+        node_bytes = checked(root, 'tables/node_index/' + name, hashes)
+        scores = terminal_scores(node_bytes, {(row['augmentation_id'], row['terminal_node_id']) for row in rows})
         occurrences = []
-        for line in gzip.decompress(candidate_bytes).splitlines():
-            row = json.loads(line)
-            if int(row['checkpoint']) != 1024 or row.get('canonical_grid') is None:
-                continue
+        for row in rows:
             if row['output_id'] != oid or int(row['depth']) != depth:
                 raise RuntimeError('CANDIDATE_IDENTITY_MISMATCH')
             nll = scores.get((row['augmentation_id'], row.get('terminal_node_id')))
@@ -45,8 +78,15 @@ def source_rankings(root, depth):
                                 'depth': depth, 'augmentation_id': row['augmentation_id'], 'nll': nll,
                                 'regret': None, 'nodes_expanded_so_far': row.get('nodes_expanded_so_far')})
         aggregated = aggregate_candidates(occurrences)
-        return oid, {method: [r['canonical_grid'] for r in ranking(aggregated, method)[:2]]
-                     for method in ('NLL', 'SUPPORT_NLL')}
+        result = {method: [r['canonical_grid'] for r in ranking(aggregated, method)[:2]]
+                  for method in ('NLL', 'SUPPORT_NLL')}
+        if cache:
+            payload = {'identity': identity, 'rankings': result}
+            temporary = cache.with_suffix('.tmp')
+            write(temporary, {'payload': payload, 'sha256': digest(canonical(payload).encode())})
+            temporary.replace(cache)
+        print('RANKING_COMPLETE ' + str(depth) + ' ' + oid, flush=True)
+        return oid, result
     with ThreadPoolExecutor(max_workers=8) as executor:
         result = dict(executor.map(one, outputs))
     return outputs, result, {key: hashes[key] for oid in outputs for key in
@@ -84,8 +124,11 @@ def main():
     parser.add_argument('--reuse-index-sha256', required=True)
     parser.add_argument('--cached-only', action='store_true',
                         help='Score already-complete B units without rereading full source node archives')
+    parser.add_argument('--resume', action='store_true', help='Reuse identity-checked per-output CPU checkpoints only')
     args = parser.parse_args()
-    args.output.mkdir(parents=True, exist_ok=False)
+    args.output.mkdir(parents=True, exist_ok=args.resume)
+    if (args.output / 'CPU_RANKINGS_FROZEN.json').exists():
+        raise RuntimeError('FROZEN_RANKINGS_IMMUTABLE_USE_FRESH_OUTPUT')
     if digest(args.reuse_index.read_bytes()) != args.reuse_index_sha256:
         raise RuntimeError('REUSE_INDEX_HASH_MISMATCH')
     all_rankings, inputs, outputs = {}, {}, None
@@ -97,7 +140,7 @@ def main():
             raise RuntimeError('COHORT_NOT_89')
         inputs['cohort_sha256'] = digest(cohort_bytes)
     for label, root, depth in ([] if args.cached_only else [('V7', args.v7, 24), ('BASE24', args.d24, 24), ('BASE48', args.d48, 48)]):
-        ids, found, inputs[label] = source_rankings(root, depth)
+        ids, found, inputs[label] = source_rankings(root, depth, args.output / 'checkpoints' / label)
         if outputs is not None and ids != outputs:
             raise RuntimeError('COHORT_MISMATCH')
         outputs = ids
@@ -130,10 +173,13 @@ def main():
         portfolio[oid] = [base[0], second]
     if not args.cached_only:
         all_rankings['FIXED_BASE24_V7_PORTFOLIO'] = portfolio
+        all_rankings['V7_B_WITH_SOURCE_SUPPORT_NLL_FALLBACK'] = {
+            oid: cached[24].get(oid, all_rankings['V7_SUPPORT_NLL'][oid]) for oid in outputs}
     write(args.output / 'CPU_RANKINGS_FROZEN.json', {'status': 'FROZEN', 'gpu_used': False,
           'source_input_hashes': inputs, 'reuse_index_sha256': args.reuse_index_sha256,
           'rankings': all_rankings, 'B_full_89_completed': False,
-          'policy': 'Historical NLL/support-NLL and historical B formula unchanged. Portfolio prespecified in code before this scoring. Exposed Eval60, descriptive only.'})
+          'fallback_output_ids': [] if args.cached_only else sorted(set(outputs)-set(cached[24])),
+          'policy': 'NLL/support-NLL and cached B formulas unchanged. Explicit hybrid uses B where cached, SUPPORT_NLL otherwise; NOT complete historical B. Fixed portfolio and fallback declared in source before score. Exposed Eval60, descriptive only; no promotion or Gold-tuned coefficients.'})
     # Only now read designated targets. No GPU/model/inference imports exist.
     data = args.solutions.read_bytes()
     if int(digest(data), 16) != int(GOLD_SHA256, 16):
