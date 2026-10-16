@@ -1,0 +1,32 @@
+{
+  "completion_context": {
+    "authorization": "CPU-only continuation. Previous incremental B GPU authorization consumed; no new GPU authority.",
+    "experiment_queue": "C:/w/arc2-governor-thin/orchestration/owner_requests/SCORE_OPTIMIZATION_QUEUE_PROGRESS_V3.json",
+    "next_action": "Claim once on COMPLETE, failure or UNKNOWN. Ingest CPU-only frozen Base24/V7 observed search anatomy, verify all 89 output checkpoints and RESULT hashes. Report survivor-conditioned observed-prefix differences, missing historical frontier telemetry, TTT parameterization confounds, and remaining evidence requirements. Update bound owner experiment queue honestly. Do not reload models, launch GPU, regenerate, retrain or retune on Eval60. Preserve partial checkpoints on failure. Never terminal-close an incomplete owner queue. Register any long CPU followup to director and end turn WAIT_REMOTE without polling.",
+    "output_root": "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/cpu_observed_search_v1_2ca05caf",
+    "research_branch": "codex/v7-ttt24-aug8-r1024-eval60-v1",
+    "research_checkout": "C:/w/v7ttt24"
+  },
+  "completion_recipient": "director",
+  "deadline_utc": "2026-10-16T09:15:31.750313+00:00",
+  "generation_rerun": false,
+  "gpu_used": false,
+  "job_id": "V7_EVAL60_CPU_OBSERVED_SEARCH_V1_2ca05caf",
+  "max_wall_seconds": 1800,
+  "model_loaded": false,
+  "output_root": "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/cpu_observed_search_v1_2ca05caf",
+  "pipeline_status_path": "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/cpu_observed_search_v1_2ca05caf/PIPELINE_STATE.json",
+  "preflight": "26 tests PASS on Windows and actual Pod runtime; clean exact-source checkout; no active duplicate",
+  "primary_process": {
+    "boot_id": "1218e1c6-b7a5-4f6b-9215-a30c4165e147",
+    "cmdline_sha256": "258609fa4602754ddbbc3a684518a55956e535f8ac5a624b1e2a13a0df2c0995",
+    "pid": 161535,
+    "role": "bounded_cpu_observed_search_wrapper",
+    "start_ticks": "1506772242"
+  },
+  "source_commit": "2ca05caf76f7998f25f12eb6e383ac62622da602",
+  "ssh_target": "g9620ys5vilaxx-64412079@ssh.runpod.io",
+  "stage": "CPU_ONLY_FROZEN_SEARCH_ANATOMY",
+  "started_utc": "2026-10-16T08:45:01.750313+00:00",
+  "terminal_receipt": "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/cpu_observed_search_v1_2ca05caf/TERMINAL_RECEIPT.json"
+}
