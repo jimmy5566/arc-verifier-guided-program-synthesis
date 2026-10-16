@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "freeze_id": "V7_EVAL60_CURRENT_ALGORITHM_AND_REUSE_FREEZE_V1",
+  "frozen_before_oracle_score": true,
+  "execution_source_commit": "18d31ccf4c9a7e8d4bc7b53743a73ea563dc46a0",
+  "source_file_sha256": {
+    "scripts/run_v7_ttt24_eval60_b_selector.py": "a673c6148a241b5815b248c003ca7385c9dc9ede17a279a8d11e1d9e1e4e2980",
+    "scripts/run_exact_b_selector_phase3_r1024_v1.py": "c9fa413631c9ced13895b5918004ef167f0ec00f4551fb6f4d375f91da5c5488",
+    "scripts/run_v7_eval60_b_freeze_recovery.py": "c7ab208f8a6b764392dabbd69b5c82f130e1d6e55b850fd07b7437f738fcef67",
+    "src/inference/nvarc_native.py": "b1da3a1644e4bd176c64fb45bf30ce94362a0b479c32507755f009e69f18af87",
+    "src/inference/hf_peft_backend.py": "ff0a1601d7b4e5098071d089d1724dab295e00a13775abd176bc6ce79a0957cf",
+    "src/inference/nvarc_turbodfs_dynamic_ready.py": "ce3c3c10898bddcff075c47781646def3c4c63bba2455e9cd81a21d537221ee3",
+    "scripts/run_v7_ttt24_aug8_r1024_eval60.py": "6d267d5ae0ac48d315aaa61d21caaa3ec51a42012f7d7f321b93f3d0565aaf5f",
+    "configs/runtime/FASTEST_CURRENT_READY_V1.json": "1444b18981abcae9fbdd482c920c3686f64aaeb9725b8b0dc2602062a679a084"
+  },
+  "scope": "Freeze existing runtime algorithm and evidence reuse; not a new submission, model promotion, training or generation run",
+  "generation": {
+    "cohort": "Historical Eval60 60 tasks / 89 outputs",
+    "foundation_adapter_sha256": "1639bf6665ccfbb99cf547f59fcd581663c95b6bad770ae7846fee90f66be1c3",
+    "ttt": "Fresh task-specific TTT24 on frozen V7; never Base task adapters",
+    "AUG8": [
+      "identity",
+      "flip_ud",
+      "transpose",
+      "anti_transpose",
+      "rot90",
+      "rot180",
+      "rot270",
+      "flip_lr"
+    ],
+    "regret": 4,
+    "max_expanded_nodes": 1024,
+    "snapshots": [
+      128,
+      256,
+      512,
+      1024
+    ],
+    "max_new_tokens": 931,
+    "EOS": 15,
+    "candidate_cap": 32,
+    "frontier_floor": 1,
+    "fairness_max_wait": 3,
+    "execution": "FASTEST_CURRENT_READY_V1; exact-compatible READY dynamic lanes, root-aware 8 or 4+4 and safety profile fallback; do not reinterpret as universal B8/B16",
+    "artifact_authority": "Generation archive's CONTRACT, identities and additive execution amendments; current Git SHA is not retroactively the original generation SHA"
+  },
+  "selector": {
+    "name": "HISTORICAL_B_AUG8",
+    "formula": "support_count - mean(mean_token_nll over eight frozen views)",
+    "ties": "Canonical view order, completion index, expanded nodes, candidate ID, grid key",
+    "sources": "Separate Greedy and DFS pools; Top2 per output",
+    "context_window": 16384,
+    "requested_batch_size": 8,
+    "numerical_condition": "Retain established runtime/batch contract; no hot patch or inference change to running job"
+  },
+  "reuse": {
+    "implemented": "Exact SHA-bound complete shard reuse; stable-identity adapter reuse; retain active immutable task adapter",
+    "first_priority": "Reuse completed B shards only with exact candidate set/index, task adapter, model, tokenizer, context, view and payload identities",
+    "source_generation_scores": "Retain token_logprob, cumulative_score=NLL, ancestry and full_arc_logprobs. Extract source-view features on CPU; never relabel as all-view B scores.",
+    "B_reuse_gate": "Generated probabilities require matching prompt/token/EOS/model/normalization and matched numerical parity before replacing teacher-forced B values; presently NOT_VALIDATED, so no silent substitution",
+    "missing_scores": "Missing is UNKNOWN, not zero and not inferable from another view. No bulk GPU backfill/re-generation under this reuse task.",
+    "retention": "Do not delete or rewrite source pools, parent failed jobs, partial shards or node traces."
+  },
+  "oracle_only_scope": {
+    "owner_request": "Owner explicitly requests ORC now from frozen pools",
+    "boundary": "CPU scorer verifies all consumed candidate/cohort/contract hashes and freezes input inventory before designated Eval60 Gold. B algorithm is immutable, runs separately and receives no Gold or oracle feedback.",
+    "not_claimed": [
+      "Top1",
+      "Top2",
+      "Pass@2",
+      "independent validation",
+      "Kaggle LB"
+    ]
+  },
+  "active_job": "V7_EVAL60_B_FREEZE_FINAL_WINDOW_V3_18d31ccf",
+  "active_job_handling": "Do not hot edit active checkout, auto-rearm, rerun generation, or reset 2026-10-16T04:07:04Z owner deadline. Original bounded job remains under Supervisor."
+}
