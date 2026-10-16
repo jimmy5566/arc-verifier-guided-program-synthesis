@@ -1,0 +1,22 @@
+{
+  "GPU_seconds": 0,
+  "artifacts": {
+    "PORTFOLIO_ATTEMPTS_FROZEN.json": {
+      "bytes": 1056199,
+      "mtime_utc": "2026-10-16T04:35:00.034726+00:00",
+      "sha256": "bac6bd5e3bdbf3d68d0ce58039b3ab55006afba29a02994c00396bec61ae2e19"
+    },
+    "RESULT.json": {
+      "bytes": 5823,
+      "mtime_utc": "2026-10-16T04:35:00.334166+00:00",
+      "sha256": "c591343483e413a8172150086a5723614b21f2d9536188d143ca6c009eadcb84"
+    }
+  },
+  "execution_source_commit": "8d98d969316b8ec9d1355a5b784584ef964b923a",
+  "model_loaded": false,
+  "new_generation": false,
+  "original_B_completed": false,
+  "remote_root": "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/cpu_portfolio_completion_8d98d969",
+  "status": "COMPLETE_CPU_ONLY",
+  "tests": "15 passed on Pod"
+}

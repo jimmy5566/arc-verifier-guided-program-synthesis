@@ -1,0 +1,60 @@
+{
+  "status": "CPU_REUSE_COMPLETE_ORIGINAL_B_BLOCKED_BY_OWNER_GPU_STOP",
+  "owner_request": "Continue completing selector using reusable data",
+  "CPU_completed": [
+    "Full 89-output source-NLL and support-NLL ranking replay for Base24, Base48 and V7",
+    "102 complete cross-view B score shards reused across 51 output pairs",
+    "One fixed non-tuned three-source truncated-rank fusion test on 89 outputs",
+    "Historical S2 pre-Gold hashes and result hashes verified; frozen 35-output attempts replayed against designated solutions",
+    "Historical 35-output cohort verified to contain all Base24/Base48 candidate-oracle hits in the same 89-output cohort",
+    "Original 65034-request scoring inventory reconciled against verified complete cache identities"
+  ],
+  "results": {
+    "historical_Base24_Base48_S2_Top2": 27,
+    "new_fixed_three_source_RRF_Top2": 24,
+    "same_denominator_outputs": 89,
+    "three_source_vs_historical_S2": {"FIX": 1, "HARM": 4, "net": -3},
+    "three_source_vs_Base24_SUPPORT_NLL": {"FIX": 0, "HARM": 1, "net": -1},
+    "V7_SUPPORT_NLL_Top2": 25,
+    "cached_B_with_explicit_fallback_Top2": 23,
+    "three_source_candidate_oracle_unchanged": 36
+  },
+  "historical_S2_scope": {
+    "ranked_and_scored_output_count": 35,
+    "cohort_selection": "POSTFREEZE_GOLD_DERIVED_ORACLE_HIT_DIAGNOSTIC",
+    "score_equivalent_full89_extension": "27 correct outputs, plus 54 Base candidate-oracle negatives that cannot become selection successes",
+    "full89_frozen_S2_attempt_coverage": false,
+    "independent_validation_or_official_LB": false
+  },
+  "decision": {
+    "new_three_source_fusion": "REJECT",
+    "best_reverified_historical_selector_evidence": "Retain historical S2 as the exposed-development reference, not a newly promoted production selector",
+    "checkpoint_promotion": "DO_NOT_PROMOTE",
+    "no_max_over_prototypes_validation_claim": true,
+    "no_more_Gold_tuned_CPU_selector_sweeps": true
+  },
+  "original_B_gap": {
+    "expected_requests": 65034,
+    "cached_requests": 39771,
+    "missing_requests": 25263,
+    "missing_source_units": 76,
+    "missing_output_pairs": 38,
+    "no_complete_cached_unit_for_these_outputs": true,
+    "potential_distinct_missing_logical_keys": 20792,
+    "logical_keys_are_verified_token_identity": false,
+    "source_NLL_is_not_missing_cross_view_likelihood": true,
+    "original_B_full89": "NOT_COMPLETE"
+  },
+  "required_authority_for_original_B_completion": "Owner must explicitly restore bounded incremental GPU likelihood scoring and additional GPU time after the expired 8-hour window. Existing cached requests must remain reused; no generation, TTT, full-adapter rehash, or bulk rescore is required or authorized by this CPU continuation.",
+  "execution": {
+    "GPU_seconds": 0,
+    "new_training_or_generation": false,
+    "model_loaded": false,
+    "tests": "15 passed locally and on Pod",
+    "source_commit": "8d98d969316b8ec9d1355a5b784584ef964b923a",
+    "result_sha256": "c591343483e413a8172150086a5723614b21f2d9536188d143ca6c009eadcb84",
+    "frozen_attempts_sha256": "bac6bd5e3bdbf3d68d0ce58039b3ab55006afba29a02994c00396bec61ae2e19",
+    "remote_output": "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/cpu_portfolio_completion_8d98d969"
+  },
+  "preservation": "All original generation, archives, B shards, failed attempts and frozen algorithms preserved. No Governor rearm, Controller dispatch, official submission or public release."
+}
