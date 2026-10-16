@@ -2,6 +2,11 @@
 
 ## Active owner goal continuation
 
+Owner has since stopped GPU scoring. Before any continuation, read
+`orchestration/owner_requests/OWNER_STOP_GPU_SCORING_CPU_REUSE_ONLY_20261016.json`.
+This supersedes older GPU rearming payloads: preserve the controlled stop and
+continue CPU-only reuse; do not launch GPU scoring or repeat the completed ORC.
+
 For `DIRECTOR_TASK`, read the latest direct owner assignment at
 `orchestration/owner_requests/SCORE_OPTIMIZATION_DIRECTOR_GOAL_V2.json`.
 It supersedes the older read-only/Controller implementation split for this

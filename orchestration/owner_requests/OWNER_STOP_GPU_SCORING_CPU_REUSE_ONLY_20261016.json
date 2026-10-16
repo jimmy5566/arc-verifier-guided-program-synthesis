@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "owner_direction": "Stop GPU scoring now. Prefer reuse of existing data first.",
+  "supersedes": "GPU scoring continuation/rearming in SCORE_OPTIMIZATION_DIRECTOR_GOAL_V2 and older completion_context payloads",
+  "scope": "CPU-only score/evidence reuse. No GPU likelihood backfill, new candidate generation, model loading, training, Gold-path teacher forcing, or automatic scoring rearm unless owner explicitly authorizes it again.",
+  "stopped_job": "V7_EVAL60_B_FREEZE_FINAL_WINDOW_V3_18d31ccf",
+  "stop_verified": "Bound parent and child identities checked; SIGTERM sent to child process group; wrapper published FAILED/B_FREEZE_EXIT_-15 at 2026-10-16T03:42:27.379018+00:00; no scorer or GPU compute process remains.",
+  "scientific_classification": "OWNER_CONTROLLED_STOP, not a model failure or fresh authorization request",
+  "preserve": "Frozen generation/archive, partial B shards, probability/NLL traces, prior failure evidence and all hashes",
+  "current_evidence": "Research checkout C:/w/v7ttt24; ORACLE_ONLY_SCORECARD_20261016.json and REUSE_VALIDATION_AND_ORACLE_HANDOFF_V1.json under experiments/v7_ttt24_aug8_r1024_eval60_v1. ORC already scored; do not repeat it.",
+  "next": "Ingest final controlled-stop receipt once, preserve and push it, then continue only bounded CPU reuse/indexing. Never infer GPU permission from old queue or deadline. Do not promote or submit."
+}
