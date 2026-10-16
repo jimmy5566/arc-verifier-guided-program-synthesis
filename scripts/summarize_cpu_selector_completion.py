@@ -48,6 +48,11 @@ def summarize(scorecard, frozen):
                         for key, value in full.items()},
             'paired_vs_BASE24_SOURCE_NLL': {key: paired(baseline, value['Top2_hit_output_ids'], ids)
                                            for key, value in full.items() if key != 'BASE24_NLL'},
+            'matched_rule_comparisons': {
+                'V7_vs_BASE24_SUPPORT_NLL': paired(full['BASE24_SUPPORT_NLL']['Top2_hit_output_ids'],
+                                                 full['V7_SUPPORT_NLL']['Top2_hit_output_ids'], ids),
+                'HYBRID_vs_V7_SUPPORT_NLL': paired(full['V7_SUPPORT_NLL']['Top2_hit_output_ids'],
+                                                 full['V7_B_WITH_SOURCE_SUPPORT_NLL_FALLBACK']['Top2_hit_output_ids'], ids)},
             'full_historical_B_status': 'INCOMPLETE_51_OF_89_OUTPUT_PAIRS',
             'hybrid_definition': '51 cached unchanged V7 DFS B outputs; 38 historical source SUPPORT_NLL fallbacks',
             'gold_tuned_selector': False, 'GPU_seconds_this_completion': 0, 'promotion': 'DO_NOT_PROMOTE',
