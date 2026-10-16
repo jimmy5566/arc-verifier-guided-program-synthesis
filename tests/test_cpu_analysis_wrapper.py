@@ -47,3 +47,12 @@ def test_failure_receipt_and_wall_bound(monkeypatch, tmp_path):
     monkeypatch.setattr(sys, 'argv', ['wrapper', '--output', str(tmp_path/'bad'), '--max-wall-seconds', '1801'])
     with pytest.raises(RuntimeError, match='1800'):
         wrapper.main()
+
+
+def test_diagnostic_worker_cannot_run_gpu_path_in_cpu_wrapper(monkeypatch,tmp_path):
+    out=tmp_path/'reject_gpu_path'
+    monkeypatch.setattr(sys,'argv',['wrapper','--output',str(out),'--worker-module','scripts.run_v7_ttt24_eval60_gold_path_diagnostic'])
+    monkeypatch.setattr(subprocess,'check_output',lambda *a,**kw:'a'*40)
+    monkeypatch.setattr(subprocess,'Popen',lambda *a,**kw:pytest.fail('must not spawn model path'))
+    assert wrapper.main()==1
+    assert json.loads((out/'PIPELINE_STATE.json').read_text())['reason']=='CPU_WRAPPER_REQUIRES_PREFLIGHT_ONLY'

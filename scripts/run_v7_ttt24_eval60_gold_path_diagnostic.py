@@ -7,6 +7,7 @@ import csv
 import gzip
 import hashlib
 import json
+import math
 import os
 import sys
 from collections import Counter
@@ -19,7 +20,7 @@ sys.path[:0] = [str(ROOT), str(ROOT / "src")]
 
 from arc.io import load_dataset
 from inference.hf_peft_backend import load_hf_peft_inference
-from inference.nvarc_native import NVARCNativeProvider, native_messages, serialize_grid
+from inference.nvarc_native import NVARCNativeProvider, native_messages, serialize_grid, checkpoint_native_tokenizer
 from inference.nvarc_native_augmentation import NativeAugmentation
 from scripts.run_exact_b_selector_phase3_r1024_v1 import (
     SCORING_VIEWS,
@@ -45,6 +46,105 @@ LEGAL_ARC_TOKENS = tuple(range(11)) + (15,)
 
 def safe_id(output_id: str) -> str:
     return output_id.replace(":", "_")
+
+
+def observed_output(args: argparse.Namespace, mode: str, output_id: str) -> dict[str, Any] | None:
+    """Read compact, SHA-bound distributions; never reread weights or full trees."""
+    root = getattr(args, 'observed_cache', None)
+    if root is None:
+        return None
+    raw = (root/'RESULT.json').read_bytes()
+    if hashlib.sha256(raw).hexdigest() != args.observed_cache_sha256:
+        raise RuntimeError('OBSERVED_CACHE_RESULT_HASH_MISMATCH')
+    manifest = json.loads(raw)['checkpoint_manifest'][output_id]
+    relative = Path(manifest['file'])
+    if relative.is_absolute() or '..' in relative.parts:
+        raise RuntimeError('UNSAFE_OBSERVED_CHECKPOINT')
+    raw = (root/relative).read_bytes()
+    if hashlib.sha256(raw).hexdigest() != manifest['sha256']:
+        raise RuntimeError('OBSERVED_CHECKPOINT_HASH_MISMATCH')
+    payload = json.loads(gzip.decompress(raw))
+    if payload['output_id'] != output_id:
+        raise RuntimeError('OBSERVED_CHECKPOINT_OUTPUT_MISMATCH')
+    archive = args.base_archive if mode == 'base' else args.v7_archive
+    files = read_json(archive/'manifests/ARCHIVE_HASHES.json')['files']
+    source = payload['input_hashes'][mode]
+    index_name = 'tables/candidate_index/'+safe_id(output_id)+'.jsonl.gz'
+    if (files.get(source['raw_source']) != source['sha256']
+            or files.get(index_name) != source['candidate_index_sha256']):
+        raise RuntimeError('OBSERVED_SOURCE_ARCHIVE_MISMATCH')
+    return payload['modes'][mode]
+
+
+def cached_gold_view(data: dict[str, Any] | None, view: str, gold_grid: Any) -> tuple[list[dict[str, Any]], dict[str, Any]] | None:
+    if data is None:
+        return None
+    aug = 'geom='+view+'__color=id__order=canonical'
+    cell = data['cells'][aug]
+    tokens = tuple(10 if c == '\n' else int(c) for c in serialize_grid(gold_grid))+(15,)
+    if cell['gold_length_including_eos'] != len(tokens):
+        raise RuntimeError('OBSERVED_GOLD_LENGTH_MISMATCH')
+    observations = {r['position']:r for r in cell['probabilities']}
+    if len(observations) != len(cell['probabilities']):
+        raise RuntimeError('DUPLICATE_OBSERVED_POSITION')
+    if any(p < 0 or p >= len(tokens) for p in observations):
+        raise RuntimeError('OBSERVED_POSITION_OUT_OF_RANGE')
+    if any(p not in observations or not observations[p]['complete_legal_probabilities'] for p in range(len(tokens))):
+        return None
+    rows = []; nll = regret = 0.0
+    for position, token in enumerate(tokens):
+        item = observations[position]; lp = float(item['gold_logprob']); gap = float(item['gap_to_best_legal'])
+        rank = item['rank_among_12_legal_tokens']
+        if not math.isfinite(lp) or not math.isfinite(gap) or lp > 1e-6 or gap < 0 or not isinstance(rank,int) or not 1 <= rank <= 12:
+            raise RuntimeError('INVALID_OBSERVED_DISTRIBUTION')
+        nll -= lp; regret += gap
+        rows.append({'gold_position':position,'gold_token_id':token,'gold_token_logprob':lp,
+                     'gold_token_local_rank':rank,'best_legal_token_id':None,
+                     'best_legal_token_logprob':lp+gap,'gold_gap_from_best':gap,
+                     'cumulative_gold_nll':nll,'cumulative_gold_regret':regret,
+                     'measurement_source':'FROZEN_OBSERVED_DISTRIBUTIONS'})
+    return rows, {'prefix_tokens':cell['root_length'],'gold_tokens_including_eos':len(rows),
+                  'mean_gold_token_logprob':fmean(r['gold_token_logprob'] for r in rows),
+                  'mean_gold_token_rank':fmean(r['gold_token_local_rank'] for r in rows),
+                  'cumulative_gold_nll':nll,'cumulative_gold_regret':regret,
+                  'measurement_source':'FROZEN_OBSERVED_DISTRIBUTIONS'}
+
+
+def validate_cached_prompt(args: argparse.Namespace, data: dict[str, Any], view: str, messages: list[dict[str,str]]) -> None:
+    aug = 'geom='+view+'__color=id__order=canonical'
+    tokenizer = args._cache_tokenizer
+    rendered = tokenizer.apply_chat_template(messages,add_generation_prompt=True,tokenize=False)
+    ids = tokenizer.apply_chat_template(messages,add_generation_prompt=True,tokenize=True)
+    if isinstance(ids,dict): ids = ids['input_ids']
+    if ids and isinstance(ids[0],list): ids = ids[0]
+    if (hashlib.sha256(rendered.encode()).hexdigest() != data['prompt_hashes'].get(aug)
+            or len(ids) != data['cells'][aug]['root_length']
+            or args._cache_tokenizer_identity != data['tokenizer_identity']):
+        raise RuntimeError('OBSERVED_PROMPT_OR_TOKENIZER_IDENTITY_MISMATCH')
+
+
+def preflight_observed_cache(args: argparse.Namespace, outputs: list[str], tasks: dict[str,Any]) -> dict[str,Any]:
+    if getattr(args,'observed_cache',None) is None:
+        raise RuntimeError('CPU_CACHE_PREFLIGHT_REQUIRES_OBSERVED_CACHE')
+    args._cache_tokenizer,args._cache_tokenizer_identity = checkpoint_native_tokenizer(args.model_path,args.native_config)
+    counts = {mode:{'reusable_complete_cells':0,'cells_needing_forward':0} for mode in ('base','v7')}
+    for output_id in outputs:
+        task_id,index = oid_parts(output_id)
+        observed = {mode:observed_output(args,mode,output_id) for mode in counts}
+        for view_name in SCORING_VIEWS:
+            transformed = NativeAugmentation(geometry=view_name).transform_task(tasks[task_id])
+            messages = native_messages(transformed,index)
+            aug = 'geom='+view_name+'__color=id__order=canonical'
+            for mode,data in observed.items():
+                validate_cached_prompt(args,data,view_name,messages)
+                cell = data['cells'][aug]
+                full = {row['position'] for row in cell['probabilities'] if row['complete_legal_probabilities']}
+                complete = full == set(range(cell['gold_length_including_eos']))
+                counts[mode]['reusable_complete_cells' if complete else 'cells_needing_forward'] += 1
+    return {'status':'PASS','scope':'CPU source/cache/prompt/tokenizer preflight only; NOT GPU authorization or full scientific result',
+            'output_count':len(outputs),'view_cells':len(outputs)*len(SCORING_VIEWS)*2,'counts':counts,
+            'observed_cache_sha256':args.observed_cache_sha256,'model_loaded':False,'GPU_used':False,
+            'targets_opened':False,'weight_rehash':False,'full_raw_archive_reread':False}
 
 
 def verify_b_freeze(path: Path, outputs: list[str]) -> dict[str, Any]:
@@ -143,36 +243,47 @@ def score_gold_view(model: Any, tokenizer: Any, messages: list[dict[str, str]], 
 
 def score_mode(args: argparse.Namespace, mode: str, outputs: list[str], tasks: dict[str, Any], gold: dict[str, Any], adapters: dict[str, Any]) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     import gc
-    import torch
 
     mode_root = args.output / "TEACHER_FORCED_SHARDS" / mode
     mode_root.mkdir(parents=True, exist_ok=True)
-    first_task = oid_parts(outputs[0])[0]
-    model, provider, identity = load_mode(args, mode, Path(adapters["tasks"][first_task]["path"]))
+    model = provider = identity = None
     token_rows: list[dict[str, Any]] = []; summaries: list[dict[str, Any]] = []
     try:
         active_task = None
         for output_id in outputs:
             task_id, output_index = oid_parts(output_id)
-            if task_id != active_task:
-                activate(model, mode, Path(adapters["tasks"][task_id]["path"])); active_task = task_id
             shard_path = mode_root / f"{safe_id(output_id)}.json.gz"
             if shard_path.is_file():
                 with gzip.open(shard_path, "rt", encoding="utf-8") as handle:
                     shard = json.load(handle)
                 if (shard.get("status") != "COMPLETE" or shard.get("gold_sha256") != EXPECTED_GOLD_SHA256 or
-                        shard.get("adapter_model_sha256") != adapters["tasks"][task_id]["adapter_model_sha256"]):
+                        shard.get("adapter_model_sha256") != adapters["tasks"][task_id]["adapter_model_sha256"] or
+                        shard.get('observed_cache_sha256') != getattr(args,'observed_cache_sha256',None)):
                     raise RuntimeError(f"INVALID_EXISTING_GOLD_PATH_SHARD:{mode}:{output_id}")
             else:
                 per_token: list[dict[str, Any]] = []; per_view: list[dict[str, Any]] = []
+                observed = observed_output(args, mode, output_id)
                 for view_name in SCORING_VIEWS:
                     view = NativeAugmentation(geometry=view_name)
                     transformed_task = view.transform_task(tasks[task_id])
                     transformed_gold = view.transform_grid(gold[output_id]).astype(int).tolist()
-                    rows, summary = score_gold_view(
-                        model, provider.tokenizer, native_messages(transformed_task, output_index), transformed_gold,
-                        context_window=args.context_window,
-                    )
+                    if observed is not None:
+                        validate_cached_prompt(args,observed,view_name,native_messages(transformed_task,output_index))
+                    cached = cached_gold_view(observed, view_name, transformed_gold)
+                    if cached is not None:
+                        rows, summary = cached
+                    else:
+                        if model is None:
+                            model, provider, identity = load_mode(args, mode, Path(adapters['tasks'][task_id]['path']))
+                            active_task = task_id
+                        elif task_id != active_task:
+                            activate(model, mode, Path(adapters['tasks'][task_id]['path'])); active_task = task_id
+                        rows, summary = score_gold_view(
+                            model, provider.tokenizer, native_messages(transformed_task, output_index), transformed_gold,
+                            context_window=args.context_window,
+                        )
+                        rows = [{**row,'measurement_source':'NEW_TEACHER_FORCED_FORWARD'} for row in rows]
+                        summary = {**summary,'measurement_source':'NEW_TEACHER_FORCED_FORWARD'}
                     per_token.extend({"mode": mode, "task_id": task_id, "output_id": output_id,
                                       "view": view_name, **row} for row in rows)
                     per_view.append({"mode": mode, "task_id": task_id, "output_id": output_id,
@@ -183,13 +294,18 @@ def score_mode(args: argparse.Namespace, mode: str, outputs: list[str], tasks: d
                     "gold_sha256": EXPECTED_GOLD_SHA256,
                     "adapter_model_sha256": adapters["tasks"][task_id]["adapter_model_sha256"],
                     "runtime_identity": identity, "per_token": per_token, "per_view": per_view,
+                    "observed_cache_sha256": getattr(args,'observed_cache_sha256',None),
                 }
                 write_json_gz(shard_path, shard)
             token_rows.extend(shard["per_token"]); summaries.extend(shard["per_view"])
             print(canonical({"event": "GOLD_PATH_OUTPUT_COMPLETE", "mode": mode, "output_id": output_id}), flush=True)
     finally:
+        loaded = model is not None
         del provider, model
-        gc.collect(); torch.cuda.empty_cache()
+        gc.collect()
+        if loaded:
+            import torch
+            torch.cuda.empty_cache()
     return token_rows, summaries
 
 
@@ -283,10 +399,24 @@ def main() -> None:
                  "native_config", "output"):
         parser.add_argument("--" + name.replace("_", "-"), required=True, type=Path)
     parser.add_argument("--context-window", type=int, default=16384)
+    parser.add_argument('--observed-cache',type=Path)
+    parser.add_argument('--observed-cache-sha256')
+    parser.add_argument('--cpu-cache-preflight-only',action='store_true',help='Tokenizer and cache checks only; never load weights, targets or GPU')
     args = parser.parse_args(); args.output.mkdir(parents=True, exist_ok=True)
+    if bool(args.observed_cache) != bool(args.observed_cache_sha256):
+        raise RuntimeError('OBSERVED_CACHE_REQUIRES_EXACT_RESULT_HASH')
     outputs = validate_archive(args.v7_archive, 24)
     if validate_archive(args.base_archive, 24) != outputs:
         raise RuntimeError("BASE_V7_ARCHIVE_COHORT_MISMATCH")
+    tasks = load_dataset(args.challenge)
+    cache_preflight = preflight_observed_cache(args,outputs,tasks) if args.observed_cache else None
+    if args.cpu_cache_preflight_only:
+        if cache_preflight is None: raise RuntimeError('CPU_CACHE_PREFLIGHT_REQUIRES_OBSERVED_CACHE')
+        destination = args.output/'CPU_CACHE_PREFLIGHT.json'
+        if destination.exists(): raise RuntimeError('CPU_PREFLIGHT_RECEIPT_ALREADY_EXISTS')
+        write_json(destination,cache_preflight)
+        print(json.dumps(cache_preflight,sort_keys=True))
+        return
     if not archive_payload_hashes_valid(args.v7_archive) or not archive_payload_hashes_valid(args.base_archive):
         raise RuntimeError("ARCHIVE_PAYLOAD_HASH_FAILURE")
     task_ids = sorted({oid_parts(output_id)[0] for output_id in outputs})
@@ -298,6 +428,8 @@ def main() -> None:
         "base_archive_verified": True, "b_freeze": verify_b_freeze(args.b_freeze, outputs),
         "v7_adapter_manifest": v7_adapters["manifest_sha256"],
         "base_adapter_manifest": base_adapters["manifest_sha256"], "output_count": 89, "task_count": 60,
+        "observed_cache_sha256": args.observed_cache_sha256,
+        "cache_preflight":cache_preflight,
     }
     write_json(args.output / "POSTFREEZE_GATE.json", gate)
 
@@ -305,7 +437,6 @@ def main() -> None:
     # identity above has been frozen and verified.
     gold, provenance = load_gold_compact(args.solutions, outputs, EXPECTED_GOLD_SHA256)
     write_json(args.output / "GOLD_PROVENANCE.json", provenance)
-    tasks = load_dataset(args.challenge)
     all_tokens: list[dict[str, Any]] = []; all_views: list[dict[str, Any]] = []
     for mode, adapters in (("base_ttt24", base_adapters), ("v7_ttt24", v7_adapters)):
         token_rows, view_rows = score_mode(args, "v7" if mode == "v7_ttt24" else "base", outputs, tasks, gold, adapters)
@@ -321,6 +452,8 @@ def main() -> None:
         "schema": "ARC2_EVAL60_GOLD_PATH_DIAGNOSTIC_SUMMARY_V1", "status": "COMPLETE",
         "classification": "NONBLIND_DIAGNOSTIC", "output_count": 89, "task_count": 60,
         "teacher_forced_views_per_mode": len(SCORING_VIEWS) * 89,
+        "view_measurement_sources": dict(Counter(row['measurement_source'] for row in all_views)),
+        "comparison_scope": "Frozen systems with different TTT parameterizations; not a causal V7-initialization comparison",
         "model_preference": {
             mode: {
                 "mean_cumulative_gold_nll": fmean(row["cumulative_gold_nll"] for row in all_views if row["comparison_mode"] == mode),
