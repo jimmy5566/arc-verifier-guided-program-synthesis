@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "authorization_id": "GOLD_PATH_MISSING_ONLY_20261016_OWNER_DEFAULT_V1",
+  "status": "OWNER_AUTHORIZED",
+  "owner_reply": "默认授权",
+  "recorded_utc": "2026-10-16T10:51:31Z",
+  "stage": "POSTFREEZE_GOLD_PATH_MISSING_ONLY",
+  "resource": "One existing RTX 3090; Base24 and V7+TTT24 loaded sequentially",
+  "hard_wall_seconds": 3600,
+  "max_new_view_forwards": 1428,
+  "ordinary_path": "1241 missing views and at most four deterministic calibration forwards; reuse complete frozen observations and completed search analysis.",
+  "fallback": "If numerical calibration fails, use coherent fresh teacher-forcing for the affected system within the same wall/forward cap, reusing calibration forwards. No tolerance relaxation or budget extension.",
+  "classification": "POSTFREEZE_NONBLIND_EXPOSED_EVAL60_DIAGNOSTIC",
+  "authorized_inputs": "Previously frozen historical Eval60 60 tasks / 89 outputs, exact Base24 and V7 task adapters, designated Eval60 solutions only after existing candidate and B freeze verification.",
+  "no": ["training", "TTT", "candidate generation", "B rescoring", "selector tuning", "unrelated targets", "Gold/dGold/FINAL_AUDIT expansion", "official submission or version", "public research release", "checkpoint promotion"],
+  "activation": "A single consumption receipt and immutable launch deadline are created at this job launch. Runtime manifest pins exact pushed source, output, process identity and Director callback. Do not reset deadline or reconsume an earlier grant.",
+  "source_changes": "Only bounded-launch, missing-only compute accounting and reuse of already completed SHA-bound search evidence; no alteration of frozen models, candidates, scores, scientific estimands or calibration limits.",
+  "CPU_readiness": "54 prior tests pass locally and on actual Pod; four added launch/budget tests pass locally and must pass on Pod before launch. No new scientific review loop.",
+  "completion": "Governor/Supervisor returns success, failure or UNKNOWN to this Director. Preserve partials; no chat polling or automatic GPU rerun. Report and preserve existing results even if the diagnostic cannot complete within the cap."
+}

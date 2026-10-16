@@ -231,14 +231,17 @@ def base_adapter_preflight(root: Path, manifest_path: Path, tasks: list[str]) ->
 
 
 def load_mode(args: argparse.Namespace, mode: str, first_adapter: Path) -> tuple[Any, NVARCNativeProvider, dict[str, Any]]:
+    verified = getattr(args, '_verified_adapters', {}).get(mode, {}).get(str(first_adapter))
     model, tokenizer, identity = load_hf_peft_inference(
         model_path=args.model_path,
         adapter_path=first_adapter,
         foundation_adapter_path=args.foundation_adapter if mode == "v7" else None,
-        device="cuda:0", native_config_dir=args.native_config,
+        device="cuda:0", native_config_dir=args.native_config, frozen_adapter_identity=verified,
     )
     if mode == "v7" and (identity.get("foundation_adapter") or {}).get("adapter_sha256") != EXPECTED_V7_SHA256:
         raise RuntimeError("V7_FOUNDATION_IDENTITY_MISMATCH")
+    if verified is not None:
+        identity['adapter_identity_verification'] = 'verified_by_current_gold_path_adapter_preflight'
     provider = NVARCNativeProvider(model_path=args.model_path, tokenizer_config_dir=args.native_config, device="cuda:0")
     provider.model, provider.tokenizer = model, tokenizer
     return model, provider, identity
@@ -292,6 +295,17 @@ def score_gold_view(model: Any, tokenizer: Any, messages: list[dict[str, str]], 
     return rows, summary
 
 
+def bounded_gold_forward(args: argparse.Namespace, model: Any, tokenizer: Any, messages: Any, grid: Any):
+    count = getattr(args, '_new_view_forwards', 0)
+    maximum = getattr(args, 'max_new_view_forwards', 1428)
+    if count >= maximum:
+        raise RuntimeError('AUTHORIZED_VIEW_FORWARD_CAP_EXHAUSTED')
+    args._new_view_forwards = count + 1
+    write_json(args.output/'FORWARD_BUDGET.json', {'attempted_new_view_forwards':count+1,
+        'maximum':maximum, 'failed_attempts_consume_cap':True})
+    return score_gold_view(model, tokenizer, messages, grid, context_window=args.context_window)
+
+
 def score_mode(args: argparse.Namespace, mode: str, outputs: list[str], tasks: dict[str, Any], gold: dict[str, Any], adapters: dict[str, Any]) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     import gc
 
@@ -330,7 +344,7 @@ def score_mode(args: argparse.Namespace, mode: str, outputs: list[str], tasks: d
                 model,provider,identity = load_mode(args,mode,Path(adapters['tasks'][task_id]['path']));active_task=task_id
             elif task_id != active_task:
                 activate(model,mode,Path(adapters['tasks'][task_id]['path']));active_task=task_id
-            rows,summary = score_gold_view(model,provider.tokenizer,messages,grid,context_window=args.context_window)
+            rows,summary = bounded_gold_forward(args,model,provider.tokenizer,messages,grid)
             rows = [{**row,'measurement_source':'NEW_TEACHER_FORCED_FORWARD'} for row in rows]
             summary = {**summary,'measurement_source':'NEW_TEACHER_FORCED_FORWARD'}
             calibrated[(output_id,view_name)] = (rows,summary)
@@ -373,10 +387,8 @@ def score_mode(args: argparse.Namespace, mode: str, outputs: list[str], tasks: d
                             active_task = task_id
                         elif task_id != active_task:
                             activate(model, mode, Path(adapters['tasks'][task_id]['path'])); active_task = task_id
-                        rows, summary = score_gold_view(
-                            model, provider.tokenizer, native_messages(transformed_task, output_index), transformed_gold,
-                            context_window=args.context_window,
-                        )
+                        rows, summary = bounded_gold_forward(args,
+                            model, provider.tokenizer, native_messages(transformed_task, output_index), transformed_gold)
                         rows = [{**row,'measurement_source':'NEW_TEACHER_FORCED_FORWARD'} for row in rows]
                         summary = {**summary,'measurement_source':'NEW_TEACHER_FORCED_FORWARD'}
                     per_token.extend({"mode": mode, "task_id": task_id, "output_id": output_id,
@@ -498,7 +510,13 @@ def main() -> None:
     parser.add_argument('--observed-cache',type=Path)
     parser.add_argument('--observed-cache-sha256')
     parser.add_argument('--cpu-cache-preflight-only',action='store_true',help='Tokenizer and cache checks only; never load weights, targets or GPU')
+    parser.add_argument('--reuse-observed-search',action='store_true',help='Reuse SHA-bound completed search analysis; do not reread unused raw trees')
+    parser.add_argument('--max-new-view-forwards',type=int,default=1428)
     args = parser.parse_args(); args.output.mkdir(parents=True, exist_ok=True)
+    if not 1 <= args.max_new_view_forwards <= 1428:
+        raise RuntimeError('VIEW_FORWARD_BOUND_INVALID')
+    budget_path = args.output/'FORWARD_BUDGET.json'
+    args._new_view_forwards = read_json(budget_path)['attempted_new_view_forwards'] if budget_path.exists() else 0
     if bool(args.observed_cache) != bool(args.observed_cache_sha256):
         raise RuntimeError('OBSERVED_CACHE_REQUIRES_EXACT_RESULT_HASH')
     outputs = validate_archive(args.v7_archive, 24)
@@ -513,11 +531,23 @@ def main() -> None:
         write_json(destination,cache_preflight)
         print(json.dumps(cache_preflight,sort_keys=True))
         return
-    if not archive_payload_hashes_valid(args.v7_archive) or not archive_payload_hashes_valid(args.base_archive):
+    if args.reuse_observed_search:
+        if cache_preflight is None:
+            raise RuntimeError('SEARCH_REUSE_REQUIRES_VERIFIED_OBSERVED_CACHE')
+        # No raw tree is consumed by this missing-only stage. The checked
+        # compact analysis binds raw-source/index hashes to archive ledgers.
+        search_reuse = {'status':'REUSED_SHA_BOUND_OBSERVED_SEARCH',
+            'result_sha256':args.observed_cache_sha256,
+            'raw_tree_reverification':'NOT_RUN_NOT_CONSUMED',
+            'result':str(args.observed_cache/'RESULT.json')}
+    elif not archive_payload_hashes_valid(args.v7_archive) or not archive_payload_hashes_valid(args.base_archive):
         raise RuntimeError("ARCHIVE_PAYLOAD_HASH_FAILURE")
     task_ids = sorted({oid_parts(output_id)[0] for output_id in outputs})
     v7_adapters = adapter_preflight(args.v7_training, args.v7_adapter_root, task_ids, reuse_archive=args.v7_archive)
     base_adapters = base_adapter_preflight(args.base_adapter_root, args.base_archive / "ADAPTER_MANIFEST.csv", task_ids)
+    args._verified_adapters = {mode:{row['path']:{'adapter_sha256':row['adapter_model_sha256'],
+        'adapter_config_sha256':row['adapter_config_sha256']} for row in value['tasks'].values()}
+        for mode,value in (('base',base_adapters),('v7',v7_adapters))}
     gate = {
         "schema": "ARC2_EVAL60_GOLD_PATH_POSTFREEZE_GATE_V1", "status": "PASS",
         "classification": "NONBLIND_DIAGNOSTIC", "v7_archive_verified": True,
@@ -526,6 +556,7 @@ def main() -> None:
         "base_adapter_manifest": base_adapters["manifest_sha256"], "output_count": 89, "task_count": 60,
         "observed_cache_sha256": args.observed_cache_sha256,
         "cache_preflight":cache_preflight,
+        "archive_verification_mode":"REUSED_FROZEN_LEDGER_AND_BOUND_ANALYSIS" if args.reuse_observed_search else "FULL_ARCHIVE_SHA256",
     }
     write_json(args.output / "POSTFREEZE_GATE.json", gate)
 
@@ -541,9 +572,17 @@ def main() -> None:
     write_csv_gz(args.output / "GOLD_TOKEN_PREFERENCE.csv.gz", all_tokens, list(all_tokens[0]))
     write_csv_gz(args.output / "GOLD_VIEW_SUMMARY.csv.gz", all_views, list(all_views[0]))
 
-    search_rows = search_anatomy(args.base_archive, outputs, gold, "base_ttt24")
-    search_rows.extend(search_anatomy(args.v7_archive, outputs, gold, "v7_ttt24"))
-    write_csv_gz(args.output / "GOLD_SEARCH_ANATOMY.csv.gz", search_rows, list(search_rows[0]))
+    if args.reuse_observed_search:
+        write_json(args.output/'SEARCH_ANATOMY_REUSE.json',search_reuse)
+        observed_summary = read_json(args.observed_cache/'RESULT.json')
+        search_state_counts = {mode+'_ttt24':value['first_halt_states']
+            for mode,value in observed_summary['models'].items()}
+    else:
+        search_rows = search_anatomy(args.base_archive, outputs, gold, "base_ttt24")
+        search_rows.extend(search_anatomy(args.v7_archive, outputs, gold, "v7_ttt24"))
+        write_csv_gz(args.output / "GOLD_SEARCH_ANATOMY.csv.gz", search_rows, list(search_rows[0]))
+        search_state_counts = {mode:dict(Counter(row['search_state'] for row in search_rows if row['mode']==mode))
+            for mode in ('base_ttt24','v7_ttt24')}
     summary = {
         "schema": "ARC2_EVAL60_GOLD_PATH_DIAGNOSTIC_SUMMARY_V1", "status": "COMPLETE",
         "classification": "NONBLIND_DIAGNOSTIC", "output_count": 89, "task_count": 60,
@@ -558,10 +597,9 @@ def main() -> None:
                 "mean_gold_token_rank": fmean(row["mean_gold_token_rank"] for row in all_views if row["comparison_mode"] == mode),
             } for mode in ("base_ttt24", "v7_ttt24")
         },
-        "search_state_counts": {
-            mode: dict(Counter(row["search_state"] for row in search_rows if row["mode"] == mode))
-            for mode in ("base_ttt24", "v7_ttt24")
-        },
+        "search_state_counts": search_state_counts,
+        "search_state_count_estimand":"FIRST_HALT_PER_CELL_FROM_COMPLETED_ANALYSIS" if args.reuse_observed_search else "PER_GOLD_PREFIX_OBSERVED_STATE",
+        "new_view_forward_attempts":args._new_view_forwards,
         "historical_base_frontier_order_limitation": "UNAVAILABLE_WHERE_HISTORICAL_TRACE_LACKS_DIAGNOSTIC_EVENTS",
     }
     write_json(args.output / "SUMMARY.json", summary)
