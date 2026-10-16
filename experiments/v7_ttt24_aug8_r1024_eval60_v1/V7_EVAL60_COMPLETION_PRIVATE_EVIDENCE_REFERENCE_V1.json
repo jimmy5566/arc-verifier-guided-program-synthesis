@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "status": "CURRENT_EVAL60_RESEARCH_CYCLE_COMPLETE_WITH_LIMITATIONS",
+  "execution_source_commit": "4ee619bf01f535373fb26b8a9e36c63956f20c58",
+  "tested_implementation_commit": "179ca8a5c30202e85e52024b0ebf4f46c6ad226e",
+  "private_repository": "jimmy5566/arc2-scientific-artifacts",
+  "visibility_verified": "PRIVATE",
+  "private_branch": "research/v7-eval60-observed-search-v1",
+  "private_commit": "8e9edd96c47c3f86af13f59049e2fedaa8d6b19d",
+  "private_report": "eval60/v7_ttt24_observed_search_v1/V7_EVAL60_COMPLETE_SCIENTIFIC_REVIEW_V1.json",
+  "private_report_sha256": "10500ebb69d8b4bbad6ded2da43955d6cfd06e076b45d41f64e9fb3e0aaf152f",
+  "full_diagnostic_export": "eval60/v7_ttt24_observed_search_v1/GOLD_PATH_FULL89_VERIFIED_EXPORT_V1.json.zlib.b64",
+  "decoded_export_sha256": "3700c1deff372c4b75b407922914ec4e3a0c1624acea8ebeca598c6a15f3c898",
+  "remote_pipeline_sha256": "906b5c9f585c2d9bded287accdaef9959735f7e9eb50002cd7151100d79bd732",
+  "terminal_receipt_sha256": "e31e184dbc6f97cdf19158fd5fb1bc686a16b97a03a70a36a6911504ef86f92f",
+  "scope": "All required stages of this descriptive frozen Eval60 cycle are complete; not all future ARC2 experiments. Independent promotion validation remains optional future work, not performed.",
+  "limitations": "Exposed development cohort and differing frozen TTT parameterizations; original archive provenance limitations preserved. No independent ARC/LB improvement, baseline promotion, official submission or public research release is claimed.",
+  "publication_boundary": "Detailed new scientific results and audit exports remain private. Large raw candidates,node traces,adapters and Gold-token tables remain outside ordinary Git on recorded mounted storage with exact manifests. This public file is only an evidence locator."
+}
