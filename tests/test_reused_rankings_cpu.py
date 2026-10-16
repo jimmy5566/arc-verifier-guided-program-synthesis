@@ -56,3 +56,40 @@ def test_cpu_wrapper_and_scorer_do_not_import_gpu_or_model_packages():
         modules = [node.module for node in ast.walk(tree) if isinstance(node, ast.ImportFrom)]
         modules += [alias.name for node in ast.walk(tree) if isinstance(node, ast.Import) for alias in node.names]
         assert not any(module and module.split('.')[0] in {'torch', 'transformers', 'peft'} for module in modules)
+
+
+def test_source_rankings_checkpoint_resume_and_stale_identity(tmp_path, monkeypatch):
+    from scripts import score_reused_rankings_cpu as module
+    from scripts.score_v7_frozen_oracle_only import write, digest
+    root = tmp_path / 'archive'
+    for sub in ('manifests', 'tables/node_index', 'tables/candidate_index'):
+        (root / sub).mkdir(parents=True, exist_ok=True)
+    hashes = {}
+    def asset(name, data):
+        raw = data if isinstance(data, bytes) else json.dumps(data).encode()
+        (root / name).write_bytes(raw)
+        hashes[name] = digest(raw)
+    asset('CONTRACT.json', {'ttt_depth': 24, 'gold_loaded': False})
+    asset('SOURCE_COMPLETENESS_AUDIT.json', {'status': 'PASS'})
+    ids = [str(n) + ':o0' for n in range(89)]
+    asset('RUN_COHORT.json', {'outputs': [{'output_id': oid} for oid in ids]})
+    for oid in ids:
+        name = oid.replace(':', '_') + '.jsonl.gz'
+        asset('tables/candidate_index/' + name, gzip.compress(json.dumps({
+            'checkpoint': 1024, 'canonical_grid': [[3]], 'output_id': oid, 'depth': 24,
+            'augmentation_id': AUG8[0], 'terminal_node_id': 3, 'nodes_expanded_so_far': 5}).encode()))
+        asset('tables/node_index/' + name, gzip.compress(json.dumps({
+            'augmentation_id': AUG8[0], 'node': {'node_id': 3, 'cumulative_score': 0.3}}).encode()))
+    write(root / 'manifests/ARCHIVE_HASHES.json', {'status': 'PASS', 'files': hashes})
+    write(root / 'manifests/ARCHIVE_HASH_VERIFICATION.json', {'status': 'PASS'})
+    checkpoint = tmp_path / 'checkpoints'
+    first = module.source_rankings(root, 24, checkpoint)
+    assert len(first[1]) == 89 and first[1][ids[0]]['NLL'] == [[[3]]]
+    def forbidden(*args):
+        raise AssertionError('Checkpoint reuse must not reread node archives')
+    monkeypatch.setattr(module, 'terminal_scores', forbidden)
+    assert module.source_rankings(root, 24, checkpoint) == first
+    hashes['tables/node_index/0_o0.jsonl.gz'] = 'changed'
+    write(root / 'manifests/ARCHIVE_HASHES.json', {'status': 'PASS', 'files': hashes})
+    with pytest.raises(RuntimeError, match='RANKING_CHECKPOINT_IDENTITY_MISMATCH'):
+        module.source_rankings(root, 24, checkpoint)

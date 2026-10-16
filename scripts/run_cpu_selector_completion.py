@@ -21,6 +21,7 @@ def main():
     args.output.mkdir(parents=True, exist_ok=False)
     source = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
     state = {'status': 'RUNNING', 'stage': 'CPU_SELECTOR_REUSE', 'source_commit': source,
+             'execution_source_commit': source,
              'started_utc': datetime.now(timezone.utc).isoformat(), 'gpu_used': False,
              'model_loaded': False, 'generation_rerun': False, 'training_rerun': False,
              'owner_scope': 'Latest owner CPU-only reuse continuation; not a reset of expired GPU window',
