@@ -208,6 +208,31 @@ def load_or_reuse_shard(output: Path, previous: Path | None, output_id: str,
                                 shard['request_token_lengths']), True
 
 
+def required_reuse_units(path: Path | None, expected_sha256: str | None) -> dict:
+    if path is None and expected_sha256 is None:
+        return {}
+    if path is None or not expected_sha256 or sha256(path) != expected_sha256:
+        raise RuntimeError('REQUIRED_REUSE_INDEX_HASH_MISMATCH')
+    result = {}
+    for item in read_json(path)['index'].values():
+        identity = item['identity']
+        key = (identity['output_id'], int(identity['depth']))
+        if key in result:
+            raise RuntimeError('REQUIRED_REUSE_DUPLICATE_UNIT')
+        result[key] = identity
+    return result
+
+
+def forbid_cached_recompute(expected: dict, shard: dict | None, required: dict) -> None:
+    key = (expected['output_id'], int(expected['depth']))
+    if key not in required:
+        return
+    if expected != required[key]:
+        raise RuntimeError('REQUIRED_REUSE_SCIENTIFIC_IDENTITY_MISMATCH:' + str(key))
+    if shard is None:
+        raise RuntimeError('CACHED_UNIT_RECOMPUTE_FORBIDDEN:' + str(key))
+
+
 def score_output(
     model: Any,
     provider: NVARCNativeProvider,
@@ -283,10 +308,15 @@ def main() -> None:
         parser.add_argument("--" + name.replace("_", "-"), required=True, type=Path)
     parser.add_argument("--batch-size", type=int, default=8)
     parser.add_argument('--reuse-shards-from', type=Path)
+    parser.add_argument('--required-reuse-index', type=Path)
+    parser.add_argument('--required-reuse-index-sha256')
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
+    required = required_reuse_units(args.required_reuse_index, args.required_reuse_index_sha256)
 
     outputs = validate_archive(args.archive, 24)
+    if set(required) - {(oid, depth) for oid in outputs for depth in (0, 24)}:
+        raise RuntimeError('REQUIRED_REUSE_OUTSIDE_FROZEN_COHORT')
     archive = archive_contract(args.archive, 24, outputs)
     task_ids = sorted({oid_parts(output_id)[0] for output_id in outputs})
     adapters = adapter_preflight(args.training, args.adapter_root, task_ids, reuse_archive=args.archive)
@@ -347,6 +377,7 @@ def main() -> None:
                     "scoring_views": list(SCORING_VIEWS),
                 }
                 shard, reused = load_or_reuse_shard(args.output, args.reuse_shards_from, output_id, depth, expected)
+                forbid_cached_recompute(expected, shard, required)
                 if reused:
                     reused_units.append({'output_id': output_id, 'depth': depth,
                                          'payload_sha256': shard['payload_sha256']})

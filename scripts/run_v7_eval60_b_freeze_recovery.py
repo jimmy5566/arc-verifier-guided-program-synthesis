@@ -22,6 +22,9 @@ def command_for(args: argparse.Namespace) -> list[str]:
     command += ['--output', str(args.output / 'b_selector'), '--batch-size', '8']
     if getattr(args, 'reuse_shards_from', None) is not None:
         command += ['--reuse-shards-from', str(args.reuse_shards_from)]
+    for name in ('required_reuse_index', 'required_reuse_index_sha256'):
+        if getattr(args, name, None) is not None:
+            command += ['--' + name.replace('_', '-'), str(getattr(args, name))]
     return command
 
 
@@ -32,6 +35,8 @@ def main() -> int:
     parser.add_argument('--deadline-utc', required=True)
     parser.add_argument('--max-wall-seconds', type=int, default=14400)
     parser.add_argument('--reuse-shards-from', type=Path)
+    parser.add_argument('--required-reuse-index', type=Path)
+    parser.add_argument('--required-reuse-index-sha256')
     args = parser.parse_args()
     budget = remaining_seconds(args.deadline_utc, args.max_wall_seconds)
     if budget <= 40:

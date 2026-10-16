@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "status": "OWNER_AUTHORIZED_SINGLE_BOUNDED_INCREMENTAL_CONTINUATION",
+  "owner_reply": "授权",
+  "owner_reply_context": "Permission requested to restore only missing original-B GPU likelihood scoring, reuse all cached requests, and set a new bounded GPU time limit",
+  "scope_override": "Supersedes OWNER_STOP_GPU_SCORING_CPU_REUSE_ONLY_20261016 only for this incremental original-B completion job; all other GPU work remains stopped",
+  "new_job_id": "V7_EVAL60_B_INCREMENTAL_V4_20261016_ea1840",
+  "maximum_job_wall_seconds": 21600,
+  "dedicated_window": "Starts once at this fresh job launch. This is a new explicitly authorized bounded scoring window, not a reset or extension of the old 8-hour experiment receipt.",
+  "output_root": "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/b_freeze_incremental_v4_20261016_ea1840",
+  "reuse_index_sha256": "b701e8e8f951196494e36064dd09a2b15ce51d162a7ad43acb3be9a1fecc8016",
+  "required_cache_units": 102,
+  "cached_likelihood_requests": 39771,
+  "missing_likelihood_requests": 25263,
+  "missing_output_pairs": 38,
+  "expected_complete_output_pairs": 89,
+  "expected_source_units": 178,
+  "mandatory_cache_rule": "If a previously verified cached unit cannot be reused under its exact scientific identity, fail closed rather than recompute it",
+  "science_unchanged": {
+    "selector": "Original support_count minus mean eight-view token NLL, original stable ties",
+    "requested_batch_size": 8,
+    "context_window": 16384,
+    "fallback": "Existing recorded CUDA OOM halving only",
+    "V7_adapter_sha256": "1639bf6665ccfbb99cf547f59fcd581663c95b6bad770ae7846fee90f66be1c3",
+    "frozen_generation_source": "cde188b600600c17cf5c9419db1cfd8cd4898f74",
+    "archive_repair_source": "cbf1c1f35628a6d2d5eaa1c20ba66c96d17a63ce"
+  },
+  "permitted": ["Load the exact existing model and task adapters for missing likelihood requests", "Verify cache receipts and reuse adapter hash records when metadata is stable", "Freeze complete B attempts", "Perform CPU post-freeze scorecard and paired comparisons after completion"],
+  "forbidden": ["TTT or training", "New candidate generation", "Recompute verified complete cache units", "Selector tuning", "Gold-conditioned scoring or selection", "Gold-path GPU teacher forcing", "Automatic model promotion", "Official submission or release", "Automatic GPU retry or deadline reset"],
+  "exposure_limitation": "Eval60 and ORC results are already exposed. Scorer remains target-isolated, but this continuation is descriptive development evidence, not a fresh blind or independent evaluation.",
+  "timeout": "Preserve partial shards and return to Director on COMPLETE, failure, or UNKNOWN; do not silently abandon the owner task",
+  "monitoring": "Register exact PID/start_ticks/boot_id/cmdline/source with completion_recipient=director, WAIT_REMOTE, then end the chat turn without polling"
+}

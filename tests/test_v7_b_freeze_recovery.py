@@ -110,3 +110,27 @@ def test_consecutive_same_task_does_not_reload_weights(tmp_path):
         assert loader.call_count == 1
         b.activate_task(model, tmp_path / 'task2')
         assert loader.call_count == 2
+
+
+def test_verified_cached_unit_may_never_fall_back_to_gpu_recompute():
+    expected = {'output_id': 'task:o0', 'depth': 24, 'adapter_model_sha256': 'frozen'}
+    required = {('task:o0', 24): dict(expected)}
+    with pytest.raises(RuntimeError, match='CACHED_UNIT_RECOMPUTE_FORBIDDEN'):
+        b.forbid_cached_recompute(expected, None, required)
+    with pytest.raises(RuntimeError, match='REQUIRED_REUSE_SCIENTIFIC_IDENTITY_MISMATCH'):
+        b.forbid_cached_recompute(dict(expected, adapter_model_sha256='changed'), {}, required)
+    b.forbid_cached_recompute(expected, {'status': 'COMPLETE'}, required)
+    b.forbid_cached_recompute({'output_id': 'missing:o0', 'depth': 24}, None, required)
+
+
+def test_required_index_is_hash_bound_and_duplicate_units_rejected(tmp_path):
+    index = tmp_path / 'index.json'
+    value = {'identity': {'output_id': 'task:o0', 'depth': 24}}
+    write(index, {'index': {'a': value}})
+    sha = b.sha256(index)
+    assert ('task:o0', 24) in b.required_reuse_units(index, sha)
+    with pytest.raises(RuntimeError, match='REQUIRED_REUSE_INDEX_HASH_MISMATCH'):
+        b.required_reuse_units(index, 'wrong')
+    write(index, {'index': {'a': value, 'b': value}})
+    with pytest.raises(RuntimeError, match='REQUIRED_REUSE_DUPLICATE_UNIT'):
+        b.required_reuse_units(index, b.sha256(index))
