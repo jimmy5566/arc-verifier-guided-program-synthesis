@@ -1,0 +1,13 @@
+{
+  "scope": "One fixed CPU-only continuation using frozen source rankings; no GPU or inference",
+  "comparison": "Three-source equal-weight reciprocal-rank fusion of existing SUPPORT_NLL Top2 lists",
+  "sources": ["Base TTT24", "Base TTT48", "V7 TTT24"],
+  "rrf_constant": 60,
+  "candidate_input_limit": "Already frozen Top2 per source, at most six distinct grids per output",
+  "tie_break": "RRF score descending, source support descending, Base24 rank ascending, canonical grid key ascending",
+  "tuning": "No parameter sweep, no output-specific overrides, no Gold-based source choice",
+  "historical_comparator": "Replay exact frozen S2 attempts, verify their ledgers and original Gold-derived 35-output scope. Only extend the score denominator to 89 if the other 54 outputs are confirmed candidate-oracle negatives for both Base sources; do not claim full-89 S2 attempt coverage.",
+  "scoring": "Freeze new attempts before designated post-freeze scoring; task-cluster paired uncertainty; exposed development only",
+  "B_completion_audit": "Count missing scoring inventory requests against verified complete cache units; logical dedup estimates are not exact token equivalence or newly available likelihoods",
+  "prohibited": ["GPU scoring", "model loading", "generation", "training", "checkpoint promotion", "official submission", "resetting the expired GPU window"]
+}
