@@ -75,3 +75,38 @@ def test_worker_command_cannot_generate_train_or_accept_gold(tmp_path):
     assert command[1].endswith('run_v7_ttt24_eval60_b_selector.py')
     assert command[-2:] == ['--batch-size', '8']
     assert '--solutions' not in command
+
+
+def test_recovery_copies_only_identity_matched_immutable_shards(tmp_path):
+    from scripts.run_exact_b_selector_phase3_r1024_v1 import write_complete_shard, shard_paths, SCORING_VIEWS
+    old, new = tmp_path / 'old', tmp_path / 'new'
+    expected = {k: 'fixture' for k in ('candidate_set_sha256', 'candidate_index_sha256',
+        'adapter_model_sha256', 'model_identity', 'tokenizer_identity')}
+    expected.update(output_id='task:o0', depth=24, scoring_context_window=16384, scoring_views=list(SCORING_VIEWS))
+    write_complete_shard(old, 'task:o0', 24, expected,
+                         [{'original_log_likelihood': -0.2, 'mean_view_nll': 0.2}],
+                         [{} for _ in SCORING_VIEWS], [])
+    file, sidecar = shard_paths(old, 'task:o0', 24)
+    before = file.read_bytes(), sidecar.read_bytes()
+    payload, reused = b.load_or_reuse_shard(new, old, 'task:o0', 24, expected)
+    assert reused and payload['status'] == 'COMPLETE'
+    assert before == (file.read_bytes(), sidecar.read_bytes())
+    wrong = dict(expected, adapter_model_sha256='wrong')
+    assert b.load_or_reuse_shard(tmp_path / 'other', old, 'task:o0', 24, wrong) == (None, False)
+
+
+def test_consecutive_same_task_does_not_reload_weights(tmp_path):
+    import sys
+    from types import SimpleNamespace
+    from unittest.mock import Mock
+    loader = Mock(return_value={})
+    setter = Mock(return_value=SimpleNamespace(unexpected_keys=[]))
+    model = SimpleNamespace(base_model=SimpleNamespace(set_adapter=Mock()),
+                            parameters=lambda: [], eval=Mock())
+    with patch.dict(sys.modules, {'peft': SimpleNamespace(set_peft_model_state_dict=setter),
+                                 'safetensors.torch': SimpleNamespace(load_file=loader)}):
+        b.activate_task(model, tmp_path / 'task1')
+        b.activate_task(model, tmp_path / 'task1')
+        assert loader.call_count == 1
+        b.activate_task(model, tmp_path / 'task2')
+        assert loader.call_count == 2

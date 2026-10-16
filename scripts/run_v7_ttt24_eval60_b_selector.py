@@ -175,6 +175,10 @@ def load_model(args: argparse.Namespace, first_adapter: Path) -> tuple[Any, NVAR
 
 
 def activate_task(model: Any, adapter_path: Path) -> None:
+    # Immutable task weights, inference-only model: consecutive source pools
+    # and outputs of one task must not reread the same 1GB adapter from FUSE.
+    if getattr(model, '_arc2_active_task_adapter', None) == str(adapter_path):
+        return
     from peft import set_peft_model_state_dict
     from safetensors.torch import load_file
 
@@ -186,6 +190,22 @@ def activate_task(model: Any, adapter_path: Path) -> None:
     for parameter in model.parameters():
         parameter.requires_grad = False
     model.eval()
+    model._arc2_active_task_adapter = str(adapter_path)
+
+
+def load_or_reuse_shard(output: Path, previous: Path | None, output_id: str,
+                       depth: int, expected: dict[str, Any]) -> tuple[dict[str, Any] | None, bool]:
+    shard = load_complete_shard(output, output_id, depth, expected)
+    if shard is not None or previous is None:
+        return shard, False
+    shard = load_complete_shard(previous, output_id, depth, expected)
+    if shard is None:
+        return None, False
+    # Preserve the interrupted directory unchanged; publish verified payloads
+    # in the isolated recovery directory under their identical scientific keys.
+    return write_complete_shard(output, output_id, depth, expected,
+                                shard['source_candidates'], shard['view_likelihood_rows'],
+                                shard['request_token_lengths']), True
 
 
 def score_output(
@@ -262,6 +282,7 @@ def main() -> None:
     for name in ("archive", "training", "adapter_root", "model_path", "foundation_adapter", "challenge", "native_config", "output"):
         parser.add_argument("--" + name.replace("_", "-"), required=True, type=Path)
     parser.add_argument("--batch-size", type=int, default=8)
+    parser.add_argument('--reuse-shards-from', type=Path)
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
 
@@ -309,6 +330,7 @@ def main() -> None:
     rankings: dict[str, dict[str, Any]] = {"dfs": {}, "greedy": {}}
     attempts: dict[str, dict[str, Any]] = {"dfs": {}, "greedy": {}}
     fallback_count = 0
+    reused_units = []
     try:
         for output_id in outputs:
             task_id, _index = oid_parts(output_id)
@@ -324,7 +346,10 @@ def main() -> None:
                     "scoring_context_window": HISTORICAL_CONTEXT_WINDOW,
                     "scoring_views": list(SCORING_VIEWS),
                 }
-                shard = load_complete_shard(args.output, output_id, depth, expected)
+                shard, reused = load_or_reuse_shard(args.output, args.reuse_shards_from, output_id, depth, expected)
+                if reused:
+                    reused_units.append({'output_id': output_id, 'depth': depth,
+                                         'payload_sha256': shard['payload_sha256']})
                 if shard is None:
                     scored, details, used = score_output(
                         model, provider, tasks[task_id], output_id, depth, candidates, adapter,
@@ -356,6 +381,10 @@ def main() -> None:
     if any(len(rankings[label]) != 89 or len(attempts[label]) != 89 for label in ("dfs", "greedy")) or len(details_all) != len(scored_all) * len(SCORING_VIEWS):
         raise RuntimeError("V7_B_COMPLETENESS_FAIL")
     write_jsonl_gz(args.output / "B_VIEW_LIKELIHOOD.jsonl.gz", details_all)
+    write_json(args.output / 'SHARD_REUSE_RECEIPT.json', {
+        'status': 'PASS', 'source': str(args.reuse_shards_from) if args.reuse_shards_from else None,
+        'source_modified': False, 'reused_count': len(reused_units), 'units': reused_units,
+        'guard': 'Exact candidate, adapter, model, tokenizer, context, views and payload hashes'})
     write_jsonl_gz(args.output / "B_SOURCE_CANDIDATES.jsonl.gz", scored_all)
     write_json(args.output / "B_SOURCE_RANKINGS.json", rankings)
     write_json(args.output / "B_ATTEMPTS_FROZEN.json", attempts)

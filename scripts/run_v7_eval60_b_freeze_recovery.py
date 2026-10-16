@@ -19,7 +19,10 @@ def command_for(args: argparse.Namespace) -> list[str]:
     command = [sys.executable, str(ROOT / 'scripts/run_v7_ttt24_eval60_b_selector.py')]
     for name in ('archive', 'training', 'adapter_root', 'model_path', 'foundation_adapter', 'challenge', 'native_config'):
         command.extend(['--' + name.replace('_', '-'), str(getattr(args, name))])
-    return command + ['--output', str(args.output / 'b_selector'), '--batch-size', '8']
+    command += ['--output', str(args.output / 'b_selector'), '--batch-size', '8']
+    if getattr(args, 'reuse_shards_from', None) is not None:
+        command += ['--reuse-shards-from', str(args.reuse_shards_from)]
+    return command
 
 
 def main() -> int:
@@ -28,6 +31,7 @@ def main() -> int:
         parser.add_argument('--' + name.replace('_', '-'), type=Path, required=True)
     parser.add_argument('--deadline-utc', required=True)
     parser.add_argument('--max-wall-seconds', type=int, default=14400)
+    parser.add_argument('--reuse-shards-from', type=Path)
     args = parser.parse_args()
     budget = remaining_seconds(args.deadline_utc, args.max_wall_seconds)
     if budget <= 40:
