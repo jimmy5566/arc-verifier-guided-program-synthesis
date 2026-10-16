@@ -447,7 +447,7 @@ def main() -> None:
     if not archive_payload_hashes_valid(args.v7_archive) or not archive_payload_hashes_valid(args.base_archive):
         raise RuntimeError("ARCHIVE_PAYLOAD_HASH_FAILURE")
     task_ids = sorted({oid_parts(output_id)[0] for output_id in outputs})
-    v7_adapters = adapter_preflight(args.v7_training, args.v7_adapter_root, task_ids)
+    v7_adapters = adapter_preflight(args.v7_training, args.v7_adapter_root, task_ids, reuse_archive=args.v7_archive)
     base_adapters = base_adapter_preflight(args.base_adapter_root, args.base_archive / "ADAPTER_MANIFEST.csv", task_ids)
     gate = {
         "schema": "ARC2_EVAL60_GOLD_PATH_POSTFREEZE_GATE_V1", "status": "PASS",
