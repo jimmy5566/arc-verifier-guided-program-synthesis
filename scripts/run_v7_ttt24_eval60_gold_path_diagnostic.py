@@ -306,6 +306,43 @@ def bounded_gold_forward(args: argparse.Namespace, model: Any, tokenizer: Any, m
     return score_gold_view(model, tokenizer, messages, grid, context_window=args.context_window)
 
 
+def diagnostic_reuse_path(args: argparse.Namespace, relative: str) -> Path | None:
+    root = getattr(args,'reuse_diagnostic',None)
+    if root is None: return None
+    index = getattr(args,'_reuse_manifest',None)
+    if index is None:
+        path=root.parent/'CONTROLLED_STOP_CPU_SUMMARY.json'
+        if sha256(path)!=args.reuse_summary_sha256:
+            raise RuntimeError('DIAGNOSTIC_REUSE_SUMMARY_HASH_MISMATCH')
+        index=read_json(path);args._reuse_manifest=index
+    key='diagnostic/'+relative
+    expected=(index['shard_manifest'].get(key) or {}).get('sha256')
+    if relative.endswith('/CACHE_CALIBRATION.json'):
+        expected=index['calibrations'].get(relative.split('/')[1],{}).get('receipt_sha256')
+    if expected is None: return None
+    path=root/relative
+    if sha256(path)!=expected: raise RuntimeError('DIAGNOSTIC_REUSE_FILE_HASH_MISMATCH')
+    return path
+
+
+def completed_base_adapter_reuse(args, outputs, task_ids):
+    if not getattr(args,'reuse_diagnostic',None): return None
+    if any(diagnostic_reuse_path(args,'TEACHER_FORCED_SHARDS/base/'+safe_id(oid)+'.json.gz') is None for oid in outputs):
+        return None
+    prior_gate=args.reuse_diagnostic/'POSTFREEZE_GATE.json'
+    manifest_sha=sha256(args.base_archive/'ADAPTER_MANIFEST.csv')
+    if (sha256(prior_gate)!=args._reuse_manifest['postfreeze_gate_sha256']
+            or read_json(prior_gate)['base_adapter_manifest']!=manifest_sha):
+        raise RuntimeError('REUSED_BASE_ADAPTER_MANIFEST_IDENTITY_MISMATCH')
+    rows=list(csv.DictReader((args.base_archive/'ADAPTER_MANIFEST.csv').open(encoding='utf-8',newline='')))
+    expected={str(r['task_id']):r for r in rows if int(r['depth'])==24}
+    return {'status':'PASS','verification_mode':'REUSED_COMPLETE_FROZEN_OUTPUTS_NO_MODEL_OR_WEIGHTS_READ',
+        'manifest_sha256':manifest_sha,
+        'tasks':{task:{'path':str(args.base_adapter_root/task/'depth_024'),
+            'adapter_model_sha256':expected[task]['adapter_model_sha256'],
+            'adapter_config_sha256':expected[task]['adapter_config_sha256']} for task in task_ids}}
+
+
 def score_mode(args: argparse.Namespace, mode: str, outputs: list[str], tasks: dict[str, Any], gold: dict[str, Any], adapters: dict[str, Any]) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     import gc
 
@@ -318,6 +355,8 @@ def score_mode(args: argparse.Namespace, mode: str, outputs: list[str], tasks: d
         calibrated = {}; calibration_checks = []
         calibration_targets = getattr(args,'_calibration_targets',{}).get(mode,[])
         calibration_path = mode_root/'CACHE_CALIBRATION.json'
+        if not calibration_path.exists():
+            calibration_path = diagnostic_reuse_path(args,'TEACHER_FORCED_SHARDS/'+mode+'/CACHE_CALIBRATION.json') or calibration_path
         calibration_identity = {'mode':mode,'targets':calibration_targets,'limits':CACHE_CALIBRATION_LIMITS,
             'context_window':args.context_window,'gold_sha256':EXPECTED_GOLD_SHA256,
             'observed_cache_sha256':getattr(args,'observed_cache_sha256',None),
@@ -359,6 +398,8 @@ def score_mode(args: argparse.Namespace, mode: str, outputs: list[str], tasks: d
         for output_id in outputs:
             task_id, output_index = oid_parts(output_id)
             shard_path = mode_root / f"{safe_id(output_id)}.json.gz"
+            if not shard_path.exists():
+                shard_path = diagnostic_reuse_path(args,'TEACHER_FORCED_SHARDS/'+mode+'/'+safe_id(output_id)+'.json.gz') or shard_path
             if shard_path.is_file():
                 with gzip.open(shard_path, "rt", encoding="utf-8") as handle:
                     shard = json.load(handle)
@@ -512,9 +553,13 @@ def main() -> None:
     parser.add_argument('--cpu-cache-preflight-only',action='store_true',help='Tokenizer and cache checks only; never load weights, targets or GPU')
     parser.add_argument('--reuse-observed-search',action='store_true',help='Reuse SHA-bound completed search analysis; do not reread unused raw trees')
     parser.add_argument('--max-new-view-forwards',type=int,default=1428)
+    parser.add_argument('--reuse-diagnostic',type=Path)
+    parser.add_argument('--reuse-summary-sha256')
     args = parser.parse_args(); args.output.mkdir(parents=True, exist_ok=True)
     if not 1 <= args.max_new_view_forwards <= 1428:
         raise RuntimeError('VIEW_FORWARD_BOUND_INVALID')
+    if bool(args.reuse_diagnostic)!=bool(args.reuse_summary_sha256):
+        raise RuntimeError('DIAGNOSTIC_REUSE_REQUIRES_EXACT_SUMMARY_HASH')
     budget_path = args.output/'FORWARD_BUDGET.json'
     args._new_view_forwards = read_json(budget_path)['attempted_new_view_forwards'] if budget_path.exists() else 0
     if bool(args.observed_cache) != bool(args.observed_cache_sha256):
@@ -544,7 +589,9 @@ def main() -> None:
         raise RuntimeError("ARCHIVE_PAYLOAD_HASH_FAILURE")
     task_ids = sorted({oid_parts(output_id)[0] for output_id in outputs})
     v7_adapters = adapter_preflight(args.v7_training, args.v7_adapter_root, task_ids, reuse_archive=args.v7_archive)
-    base_adapters = base_adapter_preflight(args.base_adapter_root, args.base_archive / "ADAPTER_MANIFEST.csv", task_ids)
+    base_adapters = completed_base_adapter_reuse(args,outputs,task_ids)
+    if base_adapters is None:
+        base_adapters = base_adapter_preflight(args.base_adapter_root, args.base_archive / "ADAPTER_MANIFEST.csv", task_ids)
     args._verified_adapters = {mode:{row['path']:{'adapter_sha256':row['adapter_model_sha256'],
         'adapter_config_sha256':row['adapter_config_sha256']} for row in value['tasks'].values()}
         for mode,value in (('base',base_adapters),('v7',v7_adapters))}
@@ -556,6 +603,9 @@ def main() -> None:
         "base_adapter_manifest": base_adapters["manifest_sha256"], "output_count": 89, "task_count": 60,
         "observed_cache_sha256": args.observed_cache_sha256,
         "cache_preflight":cache_preflight,
+        "reused_diagnostic":str(args.reuse_diagnostic) if args.reuse_diagnostic else None,
+        "reused_diagnostic_summary_sha256":args.reuse_summary_sha256,
+        "base_adapter_verification_mode":base_adapters.get('verification_mode','FULL_SHA256'),
         "archive_verification_mode":"REUSED_FROZEN_LEDGER_AND_BOUND_ANALYSIS" if args.reuse_observed_search else "FULL_ARCHIVE_SHA256",
     }
     write_json(args.output / "POSTFREEZE_GATE.json", gate)

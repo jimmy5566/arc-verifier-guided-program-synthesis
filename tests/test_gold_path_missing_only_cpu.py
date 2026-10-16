@@ -32,6 +32,27 @@ def args_for(tmp_path):
         _cache_tokenizer=Tokenizer(),_cache_tokenizer_identity={'native':True})
 
 
+def test_prior_diagnostic_reuses_complete_shard_and_calibration_without_model(monkeypatch,tmp_path):
+    data=cache_data();route_fixture(monkeypatch,data)
+    args=args_for(tmp_path);adapters={'tasks':{'a':{'path':'unused','adapter_model_sha256':'adapter'}}}
+    monkeypatch.setattr(d,'load_mode',lambda *a:pytest.fail('complete reuse cannot load weights'))
+    d.score_mode(args,'base',['a:o0'],{'a':object()},{'a:o0':[[1]]},adapters)
+    previous=args.output
+    # Reuse manifests are relative to the old wrapper root, always diagnostic/.
+    shard=previous/'TEACHER_FORCED_SHARDS/base/a_o0.json.gz'
+    calibration=previous/'TEACHER_FORCED_SHARDS/base/CACHE_CALIBRATION.json'
+    manifest={'shard_manifest':{'diagnostic/TEACHER_FORCED_SHARDS/base/a_o0.json.gz':{'sha256':d.sha256(shard)}},
+        'calibrations':{'base':{'receipt_sha256':d.sha256(calibration)}}}
+    summary=previous.parent/'CONTROLLED_STOP_CPU_SUMMARY.json';summary.write_text(json.dumps(manifest))
+    args.reuse_diagnostic=previous;args.reuse_summary_sha256=d.sha256(summary);args.output=tmp_path/'new'
+    tokens,views=d.score_mode(args,'base',['a:o0'],{'a':object()},{'a:o0':[[1]]},adapters)
+    assert len(tokens)==16 and len(views)==8
+    assert not (args.output/'TEACHER_FORCED_SHARDS/base/a_o0.json.gz').exists()
+    shard.write_bytes(b'corrupt')
+    with pytest.raises(RuntimeError,match='FILE_HASH_MISMATCH'):
+        d.diagnostic_reuse_path(args,'TEACHER_FORCED_SHARDS/base/a_o0.json.gz')
+
+
 def route_fixture(monkeypatch,data):
     class View:
         def __init__(self,geometry):pass
