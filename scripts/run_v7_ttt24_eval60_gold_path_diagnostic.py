@@ -38,7 +38,7 @@ from scripts.run_exact_b_selector_phase3_r1024_v1 import (
 from scripts.run_v7_ttt24_eval60_b_selector import EXPECTED_V7_SHA256, activate_task, adapter_preflight
 from scripts.score_phase3_eval60_union_v1 import validate_archive
 from scripts.score_v7_ttt24_eval60_postfreeze import EXPECTED_GOLD_SHA256, archive_payload_hashes_valid, load_gold_compact
-from scripts.analyze_frozen_eval60_search_cpu import frontier_wait_seconds
+from scripts.analyze_frozen_eval60_search_cpu import frontier_wait_seconds, task_interval
 
 
 LEGAL_ARC_TOKENS = tuple(range(11)) + (15,)
@@ -145,6 +145,33 @@ def preflight_observed_cache(args: argparse.Namespace, outputs: list[str], tasks
             'output_count':len(outputs),'view_cells':len(outputs)*len(SCORING_VIEWS)*2,'counts':counts,
             'observed_cache_sha256':args.observed_cache_sha256,'model_loaded':False,'GPU_used':False,
             'targets_opened':False,'weight_rehash':False,'full_raw_archive_reread':False}
+
+
+def paired_model_preference(all_views: list[dict[str,Any]], outputs: list[str]) -> dict[str,Any]:
+    """Match each view, average outputs, then cluster uncertainty by task."""
+    indexed = {}
+    for row in all_views:
+        key = (row['comparison_mode'],row['output_id'],row['view'])
+        if key in indexed: raise RuntimeError('DUPLICATE_PREFERENCE_VIEW')
+        indexed[key] = row
+    modes = ('base_ttt24','v7_ttt24')
+    required = {(mode,oid,view) for mode in modes for oid in outputs for view in SCORING_VIEWS}
+    if set(indexed) != required: raise RuntimeError('INCOMPLETE_PAIRED_PREFERENCE_COHORT')
+    fields = ('cumulative_gold_nll','cumulative_gold_regret','mean_gold_token_rank')
+    differences = {field:[] for field in fields}
+    for oid in outputs:
+        within = {field:[] for field in fields}
+        for view in SCORING_VIEWS:
+            a,b = (indexed[(mode,oid,view)] for mode in modes)
+            if any(a[field] != b[field] for field in ('prefix_tokens','gold_tokens_including_eos')):
+                raise RuntimeError('PAIRED_PREFERENCE_TOKEN_LENGTH_MISMATCH')
+            for field in fields:
+                before,after = float(a[field]),float(b[field])
+                if not math.isfinite(before) or not math.isfinite(after): raise RuntimeError('NONFINITE_PREFERENCE')
+                within[field].append(after-before)
+        for field in fields: differences[field].append((oid,fmean(within[field])))
+    scope = 'Complete matched AUG8 output means, clustered by canonical task; NONBLIND frozen-system diagnostic, not pure V7 causality'
+    return {field:{**task_interval(rows),'scope':scope,'lower_is_better_for_V7':True} for field,rows in differences.items()}
 
 
 def verify_b_freeze(path: Path, outputs: list[str]) -> dict[str, Any]:
@@ -453,6 +480,7 @@ def main() -> None:
         "classification": "NONBLIND_DIAGNOSTIC", "output_count": 89, "task_count": 60,
         "teacher_forced_views_per_mode": len(SCORING_VIEWS) * 89,
         "view_measurement_sources": dict(Counter(row['measurement_source'] for row in all_views)),
+        "paired_V7_minus_Base_task_cluster_intervals":paired_model_preference(all_views,outputs),
         "comparison_scope": "Frozen systems with different TTT parameterizations; not a causal V7-initialization comparison",
         "model_preference": {
             mode: {

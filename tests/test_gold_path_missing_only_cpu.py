@@ -117,3 +117,21 @@ def test_cpu_preflight_uses_production_reader_no_models_or_targets(monkeypatch,t
     assert report['status']=='PASS' and report['view_cells']==16
     assert report['counts']['base']=={'reusable_complete_cells':8,'cells_needing_forward':0}
     assert report['model_loaded'] is False and report['GPU_used'] is False and report['targets_opened'] is False
+
+
+def test_full_paired_summary_requires_all_views_and_clusters_task():
+    rows=[]
+    for oid,delta in [('a:o0',0),('a:o1',2),('b:o0',3)]:
+        for mode in ('base_ttt24','v7_ttt24'):
+            for view in d.SCORING_VIEWS:
+                value=10+(delta if mode=='v7_ttt24' else 0)
+                rows.append({'comparison_mode':mode,'output_id':oid,'view':view,'prefix_tokens':3,
+                             'gold_tokens_including_eos':2,'cumulative_gold_nll':value,
+                             'cumulative_gold_regret':value,'mean_gold_token_rank':value})
+    summary=d.paired_model_preference(rows,['a:o0','a:o1','b:o0'])
+    assert summary['cumulative_gold_nll']['tasks']==2
+    assert summary['cumulative_gold_nll']['mean_task_delta']==2
+    with pytest.raises(RuntimeError,match='INCOMPLETE'):
+        d.paired_model_preference(rows[:-1],['a:o0','a:o1','b:o0'])
+    with pytest.raises(RuntimeError,match='DUPLICATE'):
+        d.paired_model_preference(rows+[rows[0]],['a:o0','a:o1','b:o0'])
