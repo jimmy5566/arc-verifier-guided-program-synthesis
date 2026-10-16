@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "owner_task": "Continue scoring by reusing existing data, CPU only; do not restore GPU scoring",
+  "status": "PARTIAL_B_SCORES_OBTAINED_FROM_FROZEN_DATA",
+  "source_commit": "3903ac6cb475317bddda27151d0a5b26731f64e6",
+  "remote_output": "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/cpu_cached_B_only_3903ac6c",
+  "scorecard": "CPU_REUSED_B_PARTIAL_SCORECARD.json",
+  "scorecard_sha256": "233da76e89b0d7f223416b10d264a7bc6def270c8181d4c22c69ed1472cd48e2",
+  "frozen_rankings_sha256": "474eb4942fba48ed40123ce21ca12d9d014507fad63e00bd9da87a315c29dbff",
+  "used_existing_B_units": 102,
+  "matched_outputs": 51,
+  "missing_B_outputs": 38,
+  "unchanged_B_formula": "support_count - mean eight-view token NLL; exact historical stable tie-break",
+  "Greedy": {
+    "Top1": 14,
+    "Top2": 16,
+    "task_all_outputs_Top2": 9,
+    "fully_observed_tasks_in_panel": 34
+  },
+  "DFS": {
+    "Top1": 14,
+    "Top2": 15,
+    "task_all_outputs_Top2": 9,
+    "fully_observed_tasks_in_panel": 34
+  },
+  "paired_DFS_vs_Greedy": {
+    "shared": 14,
+    "FIX": [
+      "20270e3b:o1"
+    ],
+    "HARM": [
+      "142ca369:o0",
+      "b6f77b65:o0"
+    ],
+    "net": -1,
+    "top2_sets_union": 17,
+    "union_caveat": "17 is union of two Top2 hit sets, not a feasible fixed two-attempt score"
+  },
+  "candidate_ranking_loss": {
+    "DFS_ORC_in_matched_51": 19,
+    "DFS_B_Top2": 15,
+    "missed_correct_outputs": [
+      "142ca369:o0",
+      "97d7923e:o0",
+      "b5ca7ac4:o0",
+      "b6f77b65:o0"
+    ],
+    "conversion": 0.7894736842105263,
+    "full_89_DFS_B_Top2_possible_range": [
+      15,
+      26
+    ],
+    "range_derivation": "Existing full V7 DFS ORC=30, matched panel ORC=19, unmatched ORC=11. Already frozen B Top2=15 on 51, remaining 38 have at most 11 possible hits; no missing score treated as failure."
+  },
+  "validity": {
+    "cohort": "Nonrandom runtime-completed subset of exposed Eval60",
+    "not_full_89_score": true,
+    "not_independent_validation": true,
+    "not_competition_LB": true,
+    "no_checkpoint_promotion": true,
+    "no_Gold_tuned_selector": true
+  },
+  "full_source_NLL_attempt": {
+    "status": "NO_COMPLETE_RESULT",
+    "bounded_seconds": 180,
+    "reason": "Large frozen node-archive read did not yield a completed scorecard within bound; no GPU or model inference. Preserve partial directory, do not repeat the full read blindly."
+  },
+  "efficiency": {
+    "GPU_seconds": 0,
+    "tests": "8 tests for initial scorer, then 5 tests for cached-only single-read concurrency; real CPU score run completed",
+    "weights_read": 0,
+    "source_nodes_reread_for_cached_B": 0,
+    "CPU_reuse": "Read each complete shard once with 8 CPU I/O workers, preserve exact identities and freeze rankings before designated target access"
+  },
+  "historical_comparison_scope": {
+    "old_B_diagnostic": "35 post-freeze Gold-derived ORC-hit outputs /27 tasks; 70 D24/D48 units",
+    "evidence": "scripts/run_exact_b_selector_phase3_r1024_v1.py source_score_cohort and analysis/eval60_phase3_r1024_exact_b_selector_v8/PRE_GOLD_FREEZE.json",
+    "current_B_plan": "89 outputs /178 Greedy+DFS units, stopped by owner at 102 units",
+    "warning": "Do not compare historical 35-cohort timing or accuracy directly with current full-89 plan or runtime subset."
+  },
+  "next_CPU_only": "Use the four ranked-miss outputs and frozen B feature rows to audit why existing B loses source coverage; prefer reading small cached rows or existing historical score artifacts over rereading full node archives. Any new selector variant remains exposed-development analysis and needs independent validation before promotion. No GPU backfill, training, generation, deadline reset or submission."
+}
