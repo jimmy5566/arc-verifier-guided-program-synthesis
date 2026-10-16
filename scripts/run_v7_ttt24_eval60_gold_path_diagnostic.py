@@ -42,6 +42,8 @@ from scripts.analyze_frozen_eval60_search_cpu import frontier_wait_seconds, task
 
 
 LEGAL_ARC_TOKENS = tuple(range(11)) + (15,)
+CACHE_CALIBRATION_LIMITS = {'absolute_mean_logprob_delta':0.001,'max_absolute_logprob_delta':0.25,
+                          'mean_absolute_legal_rank_delta':0.05}
 
 
 def safe_id(output_id: str) -> str:
@@ -128,6 +130,7 @@ def preflight_observed_cache(args: argparse.Namespace, outputs: list[str], tasks
         raise RuntimeError('CPU_CACHE_PREFLIGHT_REQUIRES_OBSERVED_CACHE')
     args._cache_tokenizer,args._cache_tokenizer_identity = checkpoint_native_tokenizer(args.model_path,args.native_config)
     counts = {mode:{'reusable_complete_cells':0,'cells_needing_forward':0} for mode in ('base','v7')}
+    candidates = {mode:[] for mode in counts}
     for output_id in outputs:
         task_id,index = oid_parts(output_id)
         observed = {mode:observed_output(args,mode,output_id) for mode in counts}
@@ -141,10 +144,31 @@ def preflight_observed_cache(args: argparse.Namespace, outputs: list[str], tasks
                 full = {row['position'] for row in cell['probabilities'] if row['complete_legal_probabilities']}
                 complete = full == set(range(cell['gold_length_including_eos']))
                 counts[mode]['reusable_complete_cells' if complete else 'cells_needing_forward'] += 1
+                if complete: candidates[mode].append((cell['root_length'],output_id,view_name))
+    args._calibration_targets = {}
+    for mode,values in candidates.items():
+        ordered = sorted(values)
+        chosen = [ordered[0],ordered[-1]] if ordered and counts[mode]['cells_needing_forward'] else []
+        args._calibration_targets[mode] = [{'output_id':oid,'view':view} for _,oid,view in dict.fromkeys(chosen)]
     return {'status':'PASS','scope':'CPU source/cache/prompt/tokenizer preflight only; NOT GPU authorization or full scientific result',
             'output_count':len(outputs),'view_cells':len(outputs)*len(SCORING_VIEWS)*2,'counts':counts,
             'observed_cache_sha256':args.observed_cache_sha256,'model_loaded':False,'GPU_used':False,
-            'targets_opened':False,'weight_rehash':False,'full_raw_archive_reread':False}
+            'targets_opened':False,'weight_rehash':False,'full_raw_archive_reread':False,
+            'calibration_views':args._calibration_targets,'calibration_limits':CACHE_CALIBRATION_LIMITS}
+
+
+def compare_cached_calibration(cached: list[dict[str,Any]], fresh: list[dict[str,Any]]) -> dict[str,Any]:
+    if not cached or [(r['gold_position'],r['gold_token_id']) for r in cached] != [(r['gold_position'],r['gold_token_id']) for r in fresh]:
+        raise RuntimeError('CALIBRATION_TOKEN_ALIGNMENT_MISMATCH')
+    deltas = [b['gold_token_logprob']-a['gold_token_logprob'] for a,b in zip(cached,fresh)]
+    ranks = [abs(b['gold_token_local_rank']-a['gold_token_local_rank']) for a,b in zip(cached,fresh)]
+    metrics = {'absolute_mean_logprob_delta':abs(fmean(deltas)),
+               'max_absolute_logprob_delta':max(abs(x) for x in deltas),
+               'mean_absolute_legal_rank_delta':fmean(ranks)}
+    if not all(math.isfinite(v) for v in metrics.values()): raise RuntimeError('NONFINITE_CALIBRATION')
+    return {'cache_reuse_allowed':all(metrics[k]<=limit for k,limit in CACHE_CALIBRATION_LIMITS.items()),
+            'metrics':metrics,'limits':CACHE_CALIBRATION_LIMITS,
+            'failure_action':'Use fresh teacher-forcing for the entire affected frozen system, within the same authorized wall/forward cap; never loosen tolerances.'}
 
 
 def paired_model_preference(all_views: list[dict[str,Any]], outputs: list[str]) -> dict[str,Any]:
@@ -277,6 +301,47 @@ def score_mode(args: argparse.Namespace, mode: str, outputs: list[str], tasks: d
     token_rows: list[dict[str, Any]] = []; summaries: list[dict[str, Any]] = []
     try:
         active_task = None
+        calibrated = {}; calibration_checks = []
+        calibration_targets = getattr(args,'_calibration_targets',{}).get(mode,[])
+        calibration_path = mode_root/'CACHE_CALIBRATION.json'
+        calibration_identity = {'mode':mode,'targets':calibration_targets,'limits':CACHE_CALIBRATION_LIMITS,
+            'context_window':args.context_window,'gold_sha256':EXPECTED_GOLD_SHA256,
+            'observed_cache_sha256':getattr(args,'observed_cache_sha256',None),
+            'adapters':{oid_parts(r['output_id'])[0]:adapters['tasks'][oid_parts(r['output_id'])[0]]['adapter_model_sha256'] for r in calibration_targets}}
+        if calibration_path.exists():
+            saved = read_json(calibration_path)
+            unsigned = {key:value for key,value in saved.items() if key!='payload_sha256'}
+            if saved.get('payload_sha256')!=sha_value(unsigned) or saved.get('identity')!=calibration_identity:
+                raise RuntimeError('CALIBRATION_RECEIPT_IDENTITY_MISMATCH')
+            calibration_checks = saved['checks']
+            calibrated = {(r['output_id'],r['view']):(r['rows'],r['summary']) for r in saved['fresh_records']}
+            if set(calibrated)!={(r['output_id'],r['view']) for r in calibration_targets}:
+                raise RuntimeError('CALIBRATION_RECEIPT_COMPLETENESS_MISMATCH')
+        for item in ([] if calibration_path.exists() else calibration_targets):
+            output_id,view_name = item['output_id'],item['view']; task_id,index = oid_parts(output_id)
+            view = NativeAugmentation(geometry=view_name)
+            messages = native_messages(view.transform_task(tasks[task_id]),index)
+            grid = view.transform_grid(gold[output_id]).astype(int).tolist()
+            observed = observed_output(args,mode,output_id)
+            validate_cached_prompt(args,observed,view_name,messages)
+            cached = cached_gold_view(observed,view_name,grid)
+            if cached is None: raise RuntimeError('CALIBRATION_CELL_NOT_COMPLETE')
+            if model is None:
+                model,provider,identity = load_mode(args,mode,Path(adapters['tasks'][task_id]['path']));active_task=task_id
+            elif task_id != active_task:
+                activate(model,mode,Path(adapters['tasks'][task_id]['path']));active_task=task_id
+            rows,summary = score_gold_view(model,provider.tokenizer,messages,grid,context_window=args.context_window)
+            rows = [{**row,'measurement_source':'NEW_TEACHER_FORCED_FORWARD'} for row in rows]
+            summary = {**summary,'measurement_source':'NEW_TEACHER_FORCED_FORWARD'}
+            calibrated[(output_id,view_name)] = (rows,summary)
+            calibration_checks.append({**item,**compare_cached_calibration(cached[0],rows)})
+        cache_reuse_allowed = all(row['cache_reuse_allowed'] for row in calibration_checks)
+        if not calibration_path.exists():
+            receipt = {'identity':calibration_identity,'checks':calibration_checks,
+                'cache_reuse_allowed':cache_reuse_allowed,
+                'fresh_records':[{'output_id':oid,'view':view,'rows':rows,'summary':summary} for (oid,view),(rows,summary) in calibrated.items()],
+                'scope':'Numerical reuse validation, not a model-performance acceptance gate'}
+            write_json(calibration_path,{**receipt,'payload_sha256':sha_value(receipt)})
         for output_id in outputs:
             task_id, output_index = oid_parts(output_id)
             shard_path = mode_root / f"{safe_id(output_id)}.json.gz"
@@ -285,7 +350,8 @@ def score_mode(args: argparse.Namespace, mode: str, outputs: list[str], tasks: d
                     shard = json.load(handle)
                 if (shard.get("status") != "COMPLETE" or shard.get("gold_sha256") != EXPECTED_GOLD_SHA256 or
                         shard.get("adapter_model_sha256") != adapters["tasks"][task_id]["adapter_model_sha256"] or
-                        shard.get('observed_cache_sha256') != getattr(args,'observed_cache_sha256',None)):
+                        shard.get('observed_cache_sha256') != getattr(args,'observed_cache_sha256',None) or
+                        shard.get('cache_reuse_allowed',True) != cache_reuse_allowed):
                     raise RuntimeError(f"INVALID_EXISTING_GOLD_PATH_SHARD:{mode}:{output_id}")
             else:
                 per_token: list[dict[str, Any]] = []; per_view: list[dict[str, Any]] = []
@@ -296,8 +362,10 @@ def score_mode(args: argparse.Namespace, mode: str, outputs: list[str], tasks: d
                     transformed_gold = view.transform_grid(gold[output_id]).astype(int).tolist()
                     if observed is not None:
                         validate_cached_prompt(args,observed,view_name,native_messages(transformed_task,output_index))
-                    cached = cached_gold_view(observed, view_name, transformed_gold)
-                    if cached is not None:
+                    cached = cached_gold_view(observed, view_name, transformed_gold) if cache_reuse_allowed else None
+                    if (output_id,view_name) in calibrated:
+                        rows,summary = calibrated[(output_id,view_name)]
+                    elif cached is not None:
                         rows, summary = cached
                     else:
                         if model is None:
@@ -322,6 +390,7 @@ def score_mode(args: argparse.Namespace, mode: str, outputs: list[str], tasks: d
                     "adapter_model_sha256": adapters["tasks"][task_id]["adapter_model_sha256"],
                     "runtime_identity": identity, "per_token": per_token, "per_view": per_view,
                     "observed_cache_sha256": getattr(args,'observed_cache_sha256',None),
+                    "cache_reuse_allowed":cache_reuse_allowed,
                 }
                 write_json_gz(shard_path, shard)
             token_rows.extend(shard["per_token"]); summaries.extend(shard["per_view"])

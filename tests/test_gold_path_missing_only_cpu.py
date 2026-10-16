@@ -135,3 +135,34 @@ def test_full_paired_summary_requires_all_views_and_clusters_task():
         d.paired_model_preference(rows[:-1],['a:o0','a:o1','b:o0'])
     with pytest.raises(RuntimeError,match='DUPLICATE'):
         d.paired_model_preference(rows+[rows[0]],['a:o0','a:o1','b:o0'])
+
+
+def test_cache_calibration_accepts_identical_and_rejects_material_drift():
+    rows,_=d.cached_gold_view(cache_data(),'identity',[[1]])
+    assert d.compare_cached_calibration(rows,rows)['cache_reuse_allowed'] is True
+    changed=copy.deepcopy(rows);changed[0]['gold_token_logprob']-=.1
+    assert d.compare_cached_calibration(rows,changed)['cache_reuse_allowed'] is False
+    changed[0]['gold_token_id']=9
+    with pytest.raises(RuntimeError,match='TOKEN_ALIGNMENT'):d.compare_cached_calibration(rows,changed)
+
+
+def test_material_calibration_drift_uses_fresh_mode_and_keeps_calibration_forward(monkeypatch,tmp_path):
+    data=cache_data();full=d.cached_gold_view(data,'identity',[[1]])
+    route_fixture(monkeypatch,data);calls=[]
+    monkeypatch.setattr(d,'load_mode',lambda *a:(object(),SimpleNamespace(tokenizer=object()),{}))
+    monkeypatch.setattr(d,'activate',lambda *a:None)
+    def fresh(*a,**kw):
+        calls.append('forward');rows,summary=copy.deepcopy(full)
+        for row in rows:row['gold_token_logprob']-=.1
+        return rows,summary
+    monkeypatch.setattr(d,'score_gold_view',fresh)
+    monkeypatch.setitem(sys.modules,'torch',SimpleNamespace(cuda=SimpleNamespace(empty_cache=lambda:None)))
+    args=args_for(tmp_path);args._calibration_targets={'base':[{'output_id':'a:o0','view':'identity'}]}
+    _,views=d.score_mode(args,'base',['a:o0'],{'a':object()},{'a:o0':[[1]]},
+                        {'tasks':{'a':{'path':'unused','adapter_model_sha256':'adapter'}}})
+    assert len(calls)==8  # One calibration forward is reused, not run a ninth time.
+    assert all(v['measurement_source']=='NEW_TEACHER_FORCED_FORWARD' for v in views)
+    monkeypatch.setattr(d,'load_mode',lambda *a:pytest.fail('resume must reuse calibration and completed shard'))
+    d.score_mode(args,'base',['a:o0'],{'a':object()},{'a:o0':[[1]]},
+                 {'tasks':{'a':{'path':'unused','adapter_model_sha256':'adapter'}}})
+    assert len(calls)==8
