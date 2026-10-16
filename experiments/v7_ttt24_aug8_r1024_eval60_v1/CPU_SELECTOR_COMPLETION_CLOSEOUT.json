@@ -1,0 +1,66 @@
+{
+  "status": "COMPLETE_CPU_REUSE_SELECTOR_ALTERNATIVES",
+  "owner_correction": "Stopping GPU scoring did not authorize abandoning CPU selector completion",
+  "cohort": {"tasks": 60, "outputs": 89},
+  "execution_source_commit": "658a8dfbad2502bd035b3a592c874a6a709dc1fd",
+  "summary_source_commit": "ac8265d86f562be97780d24a16a82cd58a449c2e",
+  "remote_root": "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/cpu_selector_completion_658a8dfb",
+  "scorecard": "CPU_FULL_COHORT_SELECTOR_SCORECARD.json",
+  "scorecard_sha256": "09e2c2f2ae1cee0c9eb0db4ff7817875fadc269fcec64036a22ca277812e46a5",
+  "evidence_bundle": "CPU_SELECTOR_COMPLETION_EVIDENCE.json",
+  "evidence_bundle_sha256": "e22acdab21b487ea5fa1da39cdd71167535a2d158f073760963c6ddabb00a300",
+  "ranked_attempts_sha256": "161defb944b5c238319abc7810b567d6b956a2bdbf556a27221a1aaef3c222c2",
+  "ranked_attempts_bytes": 10896785,
+  "source_probability_reuse": "267 archive/output terminal-score extractions, all hash verified; 102 complete cross-view B shards reused without new inference",
+  "CPU_output_checkpoints": 267,
+  "runtime": {
+    "started_utc": "2026-10-16T04:16:54.580042+00:00",
+    "ended_utc": "2026-10-16T04:18:42.403092+00:00",
+    "CPU_job_wall_seconds": 107.82305,
+    "new_GPU_seconds": 0,
+    "model_loading": false,
+    "training_or_generation_rerun": false,
+    "active_CPU_selector_processes_after_completion": []
+  },
+  "full_cohort_Top2": {
+    "Base_TTT24_source_NLL": 23,
+    "Base_TTT48_source_NLL": 21,
+    "V7_TTT24_source_NLL": 23,
+    "Base_TTT24_SUPPORT_NLL": 25,
+    "Base_TTT48_SUPPORT_NLL": 23,
+    "V7_TTT24_SUPPORT_NLL": 25,
+    "fixed_Base24_V7_two_attempt_portfolio": 22,
+    "V7_cached_B_with_explicit_SOURCE_SUPPORT_NLL_fallback": 23
+  },
+  "matched_SUPPORT_NLL_V7_vs_Base24": {
+    "FIX": 3,
+    "HARM": 3,
+    "net": 0,
+    "paired_60_task_cluster_bootstrap_95pct_output_rate_delta": [-0.056818181818181816, 0.053763440860215055],
+    "interpretation": "No observed net output gain; not evidence of equivalence or independent transfer"
+  },
+  "hybrid_vs_V7_SUPPORT_NLL": {
+    "FIX": 0,
+    "HARM": 2,
+    "net": -2,
+    "harm_output_ids": ["142ca369:o0", "b6f77b65:o0"],
+    "interpretation": "Reusing cached B did not improve this fixed fallback selector on exposed Eval60"
+  },
+  "historical_B_exact_status": {
+    "status": "PARTIAL_51_OF_89_OUTPUT_PAIRS",
+    "missing_outputs": 38,
+    "GPU_backfill": "NOT_RUN_OWNER_STOP_PRESERVED",
+    "warning": "Source path NLL does not provide unobserved eight-view conditional likelihood. Full historical B remains incomplete; the explicitly named hybrid is not represented as equivalent."
+  },
+  "scientific_decision": {
+    "checkpoint_promotion": "DO_NOT_PROMOTE",
+    "scope": "Exposed Eval60 descriptive fixed-pool selection, not Kaggle LB or independent confirmation",
+    "do_not_select_maximum_as_independent_gain": true,
+    "official_submission": "NOT_RUN",
+    "Gold_path_GPU_diagnostic": "NOT_RUN_OWNER_STOP_PRESERVED",
+    "candidate_oracle_unchanged": {"V7": 30, "Base24": 31, "Base48": 30, "three_source_union": 36},
+    "next": "Use preserved candidate features and paired misses for CPU-only diagnosis. Independent validation is required before selector promotion. No automatic GPU backfill or new generation."
+  },
+  "tests": "11 CPU tests pass locally and on Pod for execution/analysis package; includes terminal-score view identity, conflicting scores, immutable checkpoint resume, stale identity rejection, B formula and task-cluster pairing",
+  "workflow": "No detached job remains; GPU pause and original expired window are unchanged. No Controller scheduling or Governor rearm was performed."
+}

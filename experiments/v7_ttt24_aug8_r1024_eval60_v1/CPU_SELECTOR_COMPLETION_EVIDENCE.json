@@ -1,0 +1,356 @@
+{
+  "CPU_output_checkpoints": 267,
+  "active_CPU_selector_processes": [],
+  "artifacts": {
+    "PIPELINE_STATE.json": {
+      "bytes": 761,
+      "sha256": "9007b963c783533891a7181ab0d169998d64fd45bba6f2957fdaae5548b632ab"
+    },
+    "SELECTOR_COMPLETION_REPORT.json": {
+      "bytes": 7567,
+      "sha256": "84c48e7f81c00e4ef46d3f8ad23cf5948dddfa4f003a13f6f7090a43b1241416"
+    },
+    "SELECTOR_COMPLETION_REPORT_V2.json": {
+      "bytes": 9219,
+      "sha256": "eaddb69d898b61afa72b566ff48ab026aeb37d4e7bf1f7b5edd2b1b21f946c04"
+    },
+    "rankings/CPU_RANKINGS_FROZEN.json": {
+      "bytes": 10896785,
+      "sha256": "161defb944b5c238319abc7810b567d6b956a2bdbf556a27221a1aaef3c222c2"
+    },
+    "rankings/CPU_REUSED_SCORECARD.json": {
+      "bytes": 14403,
+      "sha256": "09e2c2f2ae1cee0c9eb0db4ff7817875fadc269fcec64036a22ca277812e46a5"
+    }
+  },
+  "pipeline": {
+    "child_pid": 157372,
+    "ended_utc": "2026-10-16T04:18:42.403092+00:00",
+    "generation_rerun": false,
+    "gpu_used": false,
+    "model_loaded": false,
+    "owner_scope": "Latest owner CPU-only reuse continuation; not a reset of expired GPU window",
+    "partial_output_preserved_on_failure": true,
+    "scorecard": "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/cpu_selector_completion_658a8dfb/rankings/CPU_REUSED_SCORECARD.json",
+    "scorecard_sha256": "09e2c2f2ae1cee0c9eb0db4ff7817875fadc269fcec64036a22ca277812e46a5",
+    "source_commit": "658a8dfbad2502bd035b3a592c874a6a709dc1fd",
+    "stage": "CPU_SELECTOR_REUSE",
+    "started_utc": "2026-10-16T04:16:54.580042+00:00",
+    "status": "COMPLETE",
+    "training_rerun": false,
+    "wall_limit_seconds": 1800
+  },
+  "remote_root": "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/cpu_selector_completion_658a8dfb",
+  "report": {
+    "GPU_seconds_this_completion": 0,
+    "full_historical_B_status": "INCOMPLETE_51_OF_89_OUTPUT_PAIRS",
+    "gold_tuned_selector": false,
+    "hybrid_definition": "51 cached unchanged V7 DFS B outputs; 38 historical source SUPPORT_NLL fallbacks",
+    "limitations": [
+      "Eval60 already exposed",
+      "Methods are not all historical B",
+      "No missing cross-view probability has been invented",
+      "No official submission or independent validation",
+      "No maximum-over-methods score is a validated selector gain"
+    ],
+    "matched_rule_comparisons": {
+      "HYBRID_vs_V7_SUPPORT_NLL": {
+        "FIX": 0,
+        "FIX_output_ids": [],
+        "HARM": 2,
+        "HARM_output_ids": [
+          "142ca369:o0",
+          "b6f77b65:o0"
+        ],
+        "bootstrap_draws": 10000,
+        "bootstrap_tasks": 60,
+        "net_outputs": -2,
+        "paired_output_rate_delta": -0.02247191011235955,
+        "reference_Top2": 25,
+        "reference_task_mean_test_exact_Pass2": 0.2694444444444445,
+        "scope": "Exposed Eval60 frozen-pool descriptive comparison; not official competition score or independent validation",
+        "seed": 20261016,
+        "task_cluster_bootstrap_95pct_delta": [
+          -0.05555555555555555,
+          0.0
+        ],
+        "treatment_Top2": 23,
+        "treatment_task_mean_test_exact_Pass2": 0.2555555555555556
+      },
+      "V7_vs_BASE24_SUPPORT_NLL": {
+        "FIX": 3,
+        "FIX_output_ids": [
+          "142ca369:o0",
+          "20270e3b:o1",
+          "8e5c0c38:o1"
+        ],
+        "HARM": 3,
+        "HARM_output_ids": [
+          "4a21e3da:o1",
+          "78332cb0:o1",
+          "7b0280bc:o0"
+        ],
+        "bootstrap_draws": 10000,
+        "bootstrap_tasks": 60,
+        "net_outputs": 0,
+        "paired_output_rate_delta": 0.0,
+        "reference_Top2": 25,
+        "reference_task_mean_test_exact_Pass2": 0.2777777777777778,
+        "scope": "Exposed Eval60 frozen-pool descriptive comparison; not official competition score or independent validation",
+        "seed": 20261016,
+        "task_cluster_bootstrap_95pct_delta": [
+          -0.056818181818181816,
+          0.053763440860215055
+        ],
+        "treatment_Top2": 25,
+        "treatment_task_mean_test_exact_Pass2": 0.2694444444444445
+      }
+    },
+    "metrics": {
+      "BASE24_NLL": {
+        "Top1": 16,
+        "Top2": 23,
+        "task_all_outputs_Top2": 13
+      },
+      "BASE24_SUPPORT_NLL": {
+        "Top1": 19,
+        "Top2": 25,
+        "task_all_outputs_Top2": 14
+      },
+      "BASE48_NLL": {
+        "Top1": 16,
+        "Top2": 21,
+        "task_all_outputs_Top2": 11
+      },
+      "BASE48_SUPPORT_NLL": {
+        "Top1": 15,
+        "Top2": 23,
+        "task_all_outputs_Top2": 13
+      },
+      "FIXED_BASE24_V7_PORTFOLIO": {
+        "Top1": 16,
+        "Top2": 22,
+        "task_all_outputs_Top2": 12
+      },
+      "V7_B_WITH_SOURCE_SUPPORT_NLL_FALLBACK": {
+        "Top1": 20,
+        "Top2": 23,
+        "task_all_outputs_Top2": 13
+      },
+      "V7_NLL": {
+        "Top1": 16,
+        "Top2": 23,
+        "task_all_outputs_Top2": 12
+      },
+      "V7_SUPPORT_NLL": {
+        "Top1": 20,
+        "Top2": 25,
+        "task_all_outputs_Top2": 13
+      }
+    },
+    "outputs": 89,
+    "paired_vs_BASE24_SOURCE_NLL": {
+      "BASE24_SUPPORT_NLL": {
+        "FIX": 3,
+        "FIX_output_ids": [
+          "4a21e3da:o1",
+          "78332cb0:o0",
+          "78332cb0:o1"
+        ],
+        "HARM": 1,
+        "HARM_output_ids": [
+          "20270e3b:o1"
+        ],
+        "bootstrap_draws": 10000,
+        "bootstrap_tasks": 60,
+        "net_outputs": 2,
+        "paired_output_rate_delta": 0.02247191011235955,
+        "reference_Top2": 23,
+        "reference_task_mean_test_exact_Pass2": 0.2611111111111111,
+        "scope": "Exposed Eval60 frozen-pool descriptive comparison; not official competition score or independent validation",
+        "seed": 20261016,
+        "task_cluster_bootstrap_95pct_delta": [
+          -0.022988505747126436,
+          0.08235294117647059
+        ],
+        "treatment_Top2": 25,
+        "treatment_task_mean_test_exact_Pass2": 0.2777777777777778
+      },
+      "BASE48_NLL": {
+        "FIX": 4,
+        "FIX_output_ids": [
+          "4a21e3da:o1",
+          "53fb4810:o0",
+          "58490d8a:o0",
+          "b5ca7ac4:o0"
+        ],
+        "HARM": 6,
+        "HARM_output_ids": [
+          "20270e3b:o1",
+          "2d0172a1:o0",
+          "31f7f899:o0",
+          "7b0280bc:o0",
+          "c7f57c3e:o0",
+          "de809cff:o0"
+        ],
+        "bootstrap_draws": 10000,
+        "bootstrap_tasks": 60,
+        "net_outputs": -2,
+        "paired_output_rate_delta": -0.02247191011235955,
+        "reference_Top2": 23,
+        "reference_task_mean_test_exact_Pass2": 0.2611111111111111,
+        "scope": "Exposed Eval60 frozen-pool descriptive comparison; not official competition score or independent validation",
+        "seed": 20261016,
+        "task_cluster_bootstrap_95pct_delta": [
+          -0.09302325581395349,
+          0.046511627906976744
+        ],
+        "treatment_Top2": 21,
+        "treatment_task_mean_test_exact_Pass2": 0.2361111111111111
+      },
+      "BASE48_SUPPORT_NLL": {
+        "FIX": 5,
+        "FIX_output_ids": [
+          "4a21e3da:o1",
+          "53fb4810:o0",
+          "78332cb0:o0",
+          "78332cb0:o1",
+          "b5ca7ac4:o0"
+        ],
+        "HARM": 5,
+        "HARM_output_ids": [
+          "20270e3b:o1",
+          "7b0280bc:o0",
+          "b6f77b65:o0",
+          "c7f57c3e:o0",
+          "de809cff:o0"
+        ],
+        "bootstrap_draws": 10000,
+        "bootstrap_tasks": 60,
+        "net_outputs": 0,
+        "paired_output_rate_delta": 0.0,
+        "reference_Top2": 23,
+        "reference_task_mean_test_exact_Pass2": 0.2611111111111111,
+        "scope": "Exposed Eval60 frozen-pool descriptive comparison; not official competition score or independent validation",
+        "seed": 20261016,
+        "task_cluster_bootstrap_95pct_delta": [
+          -0.07317073170731707,
+          0.07954545454545454
+        ],
+        "treatment_Top2": 23,
+        "treatment_task_mean_test_exact_Pass2": 0.2555555555555556
+      },
+      "FIXED_BASE24_V7_PORTFOLIO": {
+        "FIX": 2,
+        "FIX_output_ids": [
+          "142ca369:o0",
+          "8e5c0c38:o1"
+        ],
+        "HARM": 3,
+        "HARM_output_ids": [
+          "20270e3b:o1",
+          "31f7f899:o0",
+          "7b0280bc:o0"
+        ],
+        "bootstrap_draws": 10000,
+        "bootstrap_tasks": 60,
+        "net_outputs": -1,
+        "paired_output_rate_delta": -0.011235955056179775,
+        "reference_Top2": 23,
+        "reference_task_mean_test_exact_Pass2": 0.2611111111111111,
+        "scope": "Exposed Eval60 frozen-pool descriptive comparison; not official competition score or independent validation",
+        "seed": 20261016,
+        "task_cluster_bootstrap_95pct_delta": [
+          -0.06172839506172839,
+          0.03488372093023256
+        ],
+        "treatment_Top2": 22,
+        "treatment_task_mean_test_exact_Pass2": 0.2361111111111111
+      },
+      "V7_B_WITH_SOURCE_SUPPORT_NLL_FALLBACK": {
+        "FIX": 2,
+        "FIX_output_ids": [
+          "78332cb0:o0",
+          "8e5c0c38:o1"
+        ],
+        "HARM": 2,
+        "HARM_output_ids": [
+          "7b0280bc:o0",
+          "b6f77b65:o0"
+        ],
+        "bootstrap_draws": 10000,
+        "bootstrap_tasks": 60,
+        "net_outputs": 0,
+        "paired_output_rate_delta": 0.0,
+        "reference_Top2": 23,
+        "reference_task_mean_test_exact_Pass2": 0.2611111111111111,
+        "scope": "Exposed Eval60 frozen-pool descriptive comparison; not official competition score or independent validation",
+        "seed": 20261016,
+        "task_cluster_bootstrap_95pct_delta": [
+          -0.044444444444444446,
+          0.0449438202247191
+        ],
+        "treatment_Top2": 23,
+        "treatment_task_mean_test_exact_Pass2": 0.2555555555555556
+      },
+      "V7_NLL": {
+        "FIX": 3,
+        "FIX_output_ids": [
+          "142ca369:o0",
+          "78332cb0:o0",
+          "8e5c0c38:o1"
+        ],
+        "HARM": 3,
+        "HARM_output_ids": [
+          "20270e3b:o1",
+          "31f7f899:o0",
+          "7b0280bc:o0"
+        ],
+        "bootstrap_draws": 10000,
+        "bootstrap_tasks": 60,
+        "net_outputs": 0,
+        "paired_output_rate_delta": 0.0,
+        "reference_Top2": 23,
+        "reference_task_mean_test_exact_Pass2": 0.2611111111111111,
+        "scope": "Exposed Eval60 frozen-pool descriptive comparison; not official competition score or independent validation",
+        "seed": 20261016,
+        "task_cluster_bootstrap_95pct_delta": [
+          -0.056179775280898875,
+          0.053763440860215055
+        ],
+        "treatment_Top2": 23,
+        "treatment_task_mean_test_exact_Pass2": 0.24444444444444444
+      },
+      "V7_SUPPORT_NLL": {
+        "FIX": 3,
+        "FIX_output_ids": [
+          "142ca369:o0",
+          "78332cb0:o0",
+          "8e5c0c38:o1"
+        ],
+        "HARM": 1,
+        "HARM_output_ids": [
+          "7b0280bc:o0"
+        ],
+        "bootstrap_draws": 10000,
+        "bootstrap_tasks": 60,
+        "net_outputs": 2,
+        "paired_output_rate_delta": 0.02247191011235955,
+        "reference_Top2": 23,
+        "reference_task_mean_test_exact_Pass2": 0.2611111111111111,
+        "scope": "Exposed Eval60 frozen-pool descriptive comparison; not official competition score or independent validation",
+        "seed": 20261016,
+        "task_cluster_bootstrap_95pct_delta": [
+          -0.02197802197802198,
+          0.06666666666666667
+        ],
+        "treatment_Top2": 25,
+        "treatment_task_mean_test_exact_Pass2": 0.2694444444444445
+      }
+    },
+    "promotion": "DO_NOT_PROMOTE",
+    "status": "COMPLETE_CPU_SELECTOR_ALTERNATIVES",
+    "tasks": 60
+  },
+  "summary_source_commit": "ac8265d86f562be97780d24a16a82cd58a449c2e"
+}
