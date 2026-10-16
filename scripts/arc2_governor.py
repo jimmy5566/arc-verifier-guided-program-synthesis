@@ -29,7 +29,7 @@ DECISIONS = {"CONTINUE_CONTROLLER", "CONTINUE_DIRECTOR", "REQUIRE_CHANGES", "PAU
 LIVE_KEYS = {
     "schema_version", "revision", "disposition", "stage", "next_action",
     "controller_target", "director_target", "pending_events", "active_event", "review",
-    "remote_job", "last_transition", "pause_reason", "terminal_reason", "updated_at",
+    "remote_job", "last_transition", "pause_reason", "terminal_reason", "updated_at", "experiment_queue_path",
 }
 
 
@@ -108,6 +108,13 @@ def load(path: Path) -> dict[str, Any]:
 
 
 def save(path: Path, state: dict[str, Any], transition: str) -> None:
+    # A completed stage is not a completed owner queue. Mechanical check only:
+    # Director owns item status/evidence; Governor never interprets science.
+    if state.get('disposition') == 'TERMINAL' and state.get('experiment_queue_path'):
+        issue, queue = experiment_queue_terminal_issue(state['experiment_queue_path'])
+        if issue:
+            state.update(disposition='PAUSED', terminal_reason=None, pause_reason=issue,
+                         next_action=queue.get('next_action') or 'READ_PENDING_EXPERIMENT_QUEUE')
     compacted = compact_state(state)
     state.clear()
     state.update(compacted)
@@ -117,6 +124,20 @@ def save(path: Path, state: dict[str, Any], transition: str) -> None:
     atomic(path, state)
     append_ledger(path, {"transition": transition, "revision": state["revision"],
                          "disposition": state["disposition"], "stage": state["stage"]})
+
+
+def experiment_queue_terminal_issue(value: str) -> tuple[str | None, dict]:
+    try:
+        queue = json.loads(resolve_artifact(value).read_text(encoding='utf-8-sig'))
+        items = queue['items']
+        if not isinstance(items, list) or not items or any(not isinstance(item, dict) for item in items):
+            return 'EXPERIMENT_QUEUE_UNVERIFIED', queue
+        required = [item for item in items if item.get('required', True)]
+        if not required or any(item.get('status') != 'COMPLETE' for item in required):
+            return 'EXPERIMENT_QUEUE_INCOMPLETE', queue
+        return None, queue
+    except (OSError, ValueError, KeyError, TypeError, RuntimeError):
+        return 'EXPERIMENT_QUEUE_UNVERIFIED', {}
 
 
 def migrate_legacy(path: Path) -> dict[str, Any]:
@@ -862,6 +883,16 @@ def register_remote_job(state_path: Path, value: str) -> None:
     save(state_path, state, f'REMOTE_JOB_REGISTERED:{remote["job_id"]}')
 
 
+@state_mutation
+def bind_experiment_queue(state_path: Path, value: str) -> None:
+    issue, _ = experiment_queue_terminal_issue(value)
+    if issue == 'EXPERIMENT_QUEUE_UNVERIFIED':
+        raise RuntimeError(issue)
+    state = load(state_path)
+    state['experiment_queue_path'] = str(resolve_artifact(value))
+    save(state_path, state, 'OWNER_EXPERIMENT_QUEUE_BOUND')
+
+
 def delivery_alerts(state: dict[str, Any], state_path: Path) -> list[str]:
     """One durable alert per incident, no repeated Agent wake or state churn."""
     alerts = []
@@ -931,6 +962,7 @@ def main() -> int:
     parser.add_argument("--complete-event")
     parser.add_argument("--resume-paused-remote-job")
     parser.add_argument('--register-remote-job', help='Monitor an existing immutable job; does not launch it')
+    parser.add_argument('--bind-experiment-queue', help='Bind owner queue; TERMINAL requires all required items COMPLETE')
     parser.add_argument("--replace-stale-wait-remote-job")
     parser.add_argument("--failure-receipt")
     parser.add_argument("--next-disposition", choices=sorted(DISPOSITIONS))
@@ -954,7 +986,7 @@ def main() -> int:
     modes = sum(bool(value) for value in (args.migrate_legacy, args.repair_recursive_reviews, args.claim_event,
                                           args.resume_claimed_event, args.complete_event,
                                           args.resume_paused_remote_job, args.replace_stale_wait_remote_job,
-                                          args.register_remote_job))
+                                          args.register_remote_job, args.bind_experiment_queue))
     if modes > 1:
         parser.error("migration, claim, and completion are mutually exclusive")
     if args.migrate_legacy:
@@ -977,6 +1009,9 @@ def main() -> int:
         return 0
     if args.register_remote_job:
         register_remote_job(args.state, args.register_remote_job)
+        return 0
+    if args.bind_experiment_queue:
+        bind_experiment_queue(args.state, args.bind_experiment_queue)
         return 0
     if args.replace_stale_wait_remote_job:
         if not args.failure_receipt:

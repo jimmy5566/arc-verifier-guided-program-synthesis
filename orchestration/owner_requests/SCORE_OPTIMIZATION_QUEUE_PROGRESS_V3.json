@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "owner_direction": "Continue the experiment queue. TERMINAL is allowed only after all required queue items are COMPLETE, not after a stage completion.",
+  "execution_owner": "Director, as explicitly assigned by owner; no new agents or automatic Controller dispatch",
+  "next_action": "DIRECTOR_CONTINUES_CPU_ONLY_FROZEN_SEARCH_AND_OBSERVED_GOLD_PREFIX_ANALYSIS",
+  "GPU_authorization": "No new GPU work. Incremental original-B authorization was consumed. Fresh teacher-forcing or candidate validation needs its own authorization.",
+  "items": [
+    {"id": "P0_V7_EVAL60_FREEZE_AND_SCORE", "required": true, "status": "COMPLETE", "evidence": "C:/w/v7ttt24/experiments/v7_ttt24_aug8_r1024_eval60_v1/FINAL_B_DIRECTOR_CLOSEOUT.json", "limitations": "Inherited partial model-runtime provenance; exposed Eval60 only"},
+    {"id": "P2_CACHED_SELECTOR_COMPARISON", "required": true, "status": "COMPLETE", "evidence": "C:/w/v7ttt24/experiments/v7_ttt24_aug8_r1024_eval60_v1/CPU_THREE_SOURCE_PORTFOLIO_RESULT.json", "outcome": "Fixed RRF rejected; original B completed; historical S2 remains development reference"},
+    {"id": "P1_FROZEN_SEARCH_AND_OBSERVED_PREFIX_ANALYSIS", "required": true, "status": "IN_PROGRESS_CPU_ONLY", "scope": "Existing Base24/V7 nodes, probabilities and frontier records; characterize missing telemetry and survivor bias"},
+    {"id": "P1_MATCHED_GOLD_PATH_MODEL_PREFERENCE", "required": true, "status": "PENDING_EVIDENCE_ASSESSMENT", "scope": "Assess prompt and observed-prefix comparability first. Unobserved prefixes stay UNKNOWN; no GPU teacher-forcing."},
+    {"id": "P2_INDEPENDENT_PORTFOLIO_SELECTOR_VALIDATION", "required": true, "status": "NOT_RUN", "scope": "Prospectively freeze a rule and independent cohort; new GPU work needs authorization."},
+    {"id": "P2_NEXT_SELECTED_OPTIMIZATION", "required": false, "status": "CONDITIONAL_NOT_SELECTED", "scope": "Select only if supported; no requirement to run every DFS/TTT/augmentation variant."}
+  ],
+  "completion_rule": "Director records scientific outcomes and evidence. Governor checks only that all required items are COMPLETE; pending or unknown never means completion.",
+  "waiting_rule": "WAIT_REMOTE for detached jobs; PAUSED for genuine authorization/budget/safety blockers. No chat polling or duplicate agent prompts."
+}

@@ -2,6 +2,13 @@
 
 ## Active owner goal continuation
 
+Latest owner direction: continue the entire experiment queue; never use
+TERMINAL for a stage-only finish. Read
+`orchestration/owner_requests/SCORE_OPTIMIZATION_QUEUE_PROGRESS_V3.json`.
+Director records evidence/status; Governor only checks all required items are
+COMPLETE. Use WAIT_REMOTE for detached work and PAUSED for real blockers.
+This does not authorize new GPU work or reuse a consumed launch.
+
 Owner has since stopped GPU scoring. Before any continuation, read
 `orchestration/owner_requests/OWNER_STOP_GPU_SCORING_CPU_REUSE_ONLY_20261016.json`.
 This supersedes older GPU rearming payloads: preserve the controlled stop and

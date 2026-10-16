@@ -76,6 +76,13 @@ monitoring only, not a replacement scientific launcher or authorization gate.
 
 ## State and provenance
 
+The active owner queue is bound with `--bind-experiment-queue QUEUE_JSON`.
+This adds only `experiment_queue_path` to live state. Director owns scientific
+status and evidence. Governor allows TERMINAL only when all required items
+are COMPLETE; otherwise a stage-only terminal becomes PAUSED without another
+review, producer-error prompt or dispatch. This never grants GPU permission
+or interrupts WAIT_REMOTE work. A completed stage is not the whole queue.
+
 The live schema is deliberately small and defined by
 `ARC2_WORKFLOW_STATE_TEMPLATE.json`. Event transitions append to
 `.arc2-local/orchestration/ARC2_EVENT_LEDGER.jsonl`. Before schema migration,
@@ -83,7 +90,7 @@ the legacy state is copied byte-for-byte to `state_backups/`; historical
 experiment artifacts are never rewritten.
 
 `orchestration/governor/Start-Arc2Governor.ps1` runs the sole persistent router.
-It stays alive across `PAUSED` and stage-level `TERMINAL` dispositions. Its
+It stays alive across `PAUSED` and queue-complete `TERMINAL` dispositions. Its
 watchdog emits at most one repair notification for a continuous process failure.
 `scripts/arc2_runner.py` and historical directive/acknowledgement state machines
 remain provenance only.
