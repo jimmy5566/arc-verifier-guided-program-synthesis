@@ -93,3 +93,14 @@ def test_source_rankings_checkpoint_resume_and_stale_identity(tmp_path, monkeypa
     write(root / 'manifests/ARCHIVE_HASHES.json', {'status': 'PASS', 'files': hashes})
     with pytest.raises(RuntimeError, match='RANKING_CHECKPOINT_IDENTITY_MISMATCH'):
         module.source_rankings(root, 24, checkpoint)
+
+
+def test_pairing_uses_sixty_task_clusters_and_full_eighty_nine_outputs():
+    from scripts.summarize_cpu_selector_completion import paired
+    ids = [str(n) + ':o0' for n in range(60)] + [str(n) + ':o1' for n in range(29)]
+    value = paired(['0:o0', '0:o1'], ['1:o0', '1:o1'], ids, draws=100)
+    assert value['FIX'] == value['HARM'] == 2 and value['net_outputs'] == 0
+    assert value['reference_task_mean_test_exact_Pass2'] == 1/60
+    assert value['bootstrap_tasks'] == 60
+    with pytest.raises(RuntimeError, match='NOT_EVAL60_89'):
+        paired([], [], ids[:-1], draws=100)
