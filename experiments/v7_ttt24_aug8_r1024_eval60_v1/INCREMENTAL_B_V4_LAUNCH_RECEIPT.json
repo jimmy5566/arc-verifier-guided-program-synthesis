@@ -1,0 +1,52 @@
+{
+  "status": "LAUNCHED_BOUND_WAIT_REMOTE",
+  "job_id": "V7_EVAL60_B_INCREMENTAL_V4_20261016_ea1840",
+  "execution_source_commit": "adb743d9e34232008d71de68b599670f718366b8",
+  "owner_authorization": "OWNER_INCREMENTAL_B_GPU_AUTHORIZATION_V4.json",
+  "owner_authorization_sha256": "0db1bc35ac90d746f4e6af29a4a75ddbc8abcc001fdb289a17c8490ab5d165b2",
+  "started_utc": "2026-10-16T04:43:44.561575+00:00",
+  "deadline_utc": "2026-10-16T10:43:44.561575+00:00",
+  "maximum_owner_window_seconds": 21600,
+  "effective_wrapper_bound_seconds": 20999,
+  "original_8h_deadline_reset": false,
+  "primary_process": {
+    "boot_id": "1218e1c6-b7a5-4f6b-9215-a30c4165e147",
+    "cmdline_sha256": "827f56a14eb677502d1a90ad643bffc4cd30db70a33e56685cfe545d24f4f1a3",
+    "pid": 157811,
+    "role": "incremental_B_freeze_wrapper",
+    "start_ticks": "1505324521"
+  },
+  "child_pid_at_launch_verification": 157813,
+  "launch_state_sha256": "7185cf925505e9c2fdebaa35cf61bd4b152c1cdb1b54105c197420635a7c46a8",
+  "observed_pipeline_status": "RUNNING",
+  "preflight": {
+    "tests": "12 passed locally and on Pod",
+    "verified_complete_cache_units": 102,
+    "required_cache_identity_guard": true,
+    "full_adapter_weight_rehash": false,
+    "changed_small_configuration_rehashed": "8e5c0c38/adapter_config.json",
+    "no_duplicate_B_process_before_launch": true,
+    "root_free_space_at_preflight": "15 GiB of 50 GiB",
+    "GPU": "RTX 3090; idle before launch"
+  },
+  "reuse": {
+    "cached_requests": 39771,
+    "missing_requests": 25263,
+    "outputs_with_missing_scores": 38,
+    "complete_cached_output_pairs": 51,
+    "requested_batch_size": 8,
+    "formula_changed": false
+  },
+  "workflow": {
+    "state": "WAIT_REMOTE",
+    "registration": "arc2_governor.py --register-remote-job",
+    "completion_recipient": "director",
+    "bound_process_probe": "PASS_PID_START_BOOT_COMMAND_SOURCE",
+    "governor_observed_job": "V7_EVAL60_B_INCREMENTAL_V4_20261016_ea1840",
+    "governor_pid": 34872,
+    "supervisor_pid": 1204,
+    "no_chat_polling": true
+  },
+  "scope": "Only original-B missing likelihood requests. No TTT, training, generation, Gold-path GPU scoring, promotion, submission or automatic rerun.",
+  "result": "PENDING_REMOTE_COMPLETION"
+}

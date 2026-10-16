@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "deadline_utc": "2026-10-16T10:43:44.561575+00:00",
+  "job_id": "V7_EVAL60_B_INCREMENTAL_V4_20261016_ea1840",
+  "max_wall_seconds": 21600,
+  "output_root": "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/b_freeze_incremental_v4_20261016_ea1840",
+  "primary_process": {
+    "boot_id": "1218e1c6-b7a5-4f6b-9215-a30c4165e147",
+    "cmdline_sha256": "827f56a14eb677502d1a90ad643bffc4cd30db70a33e56685cfe545d24f4f1a3",
+    "pid": 157811,
+    "role": "incremental_B_freeze_wrapper",
+    "start_ticks": "1505324521"
+  },
+  "source_commit": "adb743d9e34232008d71de68b599670f718366b8",
+  "started_utc": "2026-10-16T04:43:44.561575+00:00",
+  "stage": "V7_EVAL60_ORIGINAL_B_INCREMENTAL_COMPLETION",
+  "ssh_target": "g9620ys5vilaxx-64412079@ssh.runpod.io",
+  "terminal_receipt": "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/b_freeze_incremental_v4_20261016_ea1840/TERMINAL_RECEIPT.json",
+  "pipeline_status_path": "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/b_freeze_incremental_v4_20261016_ea1840/PIPELINE_STATE.json",
+  "completion_recipient": "director",
+  "generation_rerun": false,
+  "training_rerun": false,
+  "required_cache_units": 102,
+  "missing_requests_at_start": 25263,
+  "requested_batch_size": 8,
+  "owner_authorization": "C:/w/v7ttt24/experiments/v7_ttt24_aug8_r1024_eval60_v1/OWNER_INCREMENTAL_B_GPU_AUTHORIZATION_V4.json",
+  "owner_authorization_sha256": "0db1bc35ac90d746f4e6af29a4a75ddbc8abcc001fdb289a17c8490ab5d165b2",
+  "preflight": {
+    "tests": "12 passed locally and on Pod",
+    "existing_cache_units_verified": 102,
+    "adapters": "Reused hash records with stable metadata; only 8e5c0c38/adapter_config.json rehashed; no full adapter weight rehash",
+    "runtime": "RTX3090 idle, no duplicate B scorer before launch",
+    "science": "Original B score, tie-break, context and batch policy unchanged. Only mandatory cache guard added."
+  },
+  "completion_context": {
+    "owner_authorization": "C:/w/v7ttt24/experiments/v7_ttt24_aug8_r1024_eval60_v1/OWNER_INCREMENTAL_B_GPU_AUTHORIZATION_V4.json",
+    "owner_authorization_sha256": "0db1bc35ac90d746f4e6af29a4a75ddbc8abcc001fdb289a17c8490ab5d165b2",
+    "deadline_utc": "2026-10-16T10:43:44.561575+00:00",
+    "research_checkout": "C:/w/v7ttt24",
+    "research_branch": "codex/v7-ttt24-aug8-r1024-eval60-v1",
+    "archive_root": "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/archive_recovery_v1_cbf1c1f3/archive",
+    "b_freeze_root": "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/b_freeze_incremental_v4_20261016_ea1840/b_selector",
+    "previous_reuse_root": "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/b_freeze_recovery_v3_windowclose_18d31ccf/b_selector",
+    "CPU_evidence_directory": "C:/w/v7ttt24/experiments/v7_ttt24_aug8_r1024_eval60_v1",
+    "next_action": "Claim terminal Director continuation on COMPLETE, failure or UNKNOWN. Latest owner reply explicitly authorizes this one bounded missing-only original-B GPU continuation and supersedes the earlier GPU stop only for this job; read the bound OWNER_INCREMENTAL_B_GPU_AUTHORIZATION_V4.json, not an expired 8-hour queue. Do not reset this new six-hour deadline or reuse this launch. If COMPLETE, verify full 89-output/178-unit B PRE_GOLD_FREEZE and attempt hashes, confirm all 102 required cache units were reused, then perform CPU-only scoring of the frozen B attempts against designated Eval60 solutions and pair with cached Greedy, original source-score and historical S2 results. Reuse already completed ORC scorecard (30/89 V7;31/89 Base24;30/89 Base48;36/89 union); do not rescore archives, reload adapters, regenerate, retrain or run Gold-path GPU inference. Report output-level Top1/Top2, task-weighted exact score, FIX/HARM and task-cluster uncertainty. Eval60 is exposed development, not independent validation or LB. If failed/UNKNOWN, preserve partial evidence, diagnose once and report genuine blocker; no automatic GPU rerun. Commit and push intended small results. Never silently terminate this pending owner task. No official submission or release."
+  }
+}
