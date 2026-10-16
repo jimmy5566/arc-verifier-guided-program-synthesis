@@ -1,0 +1,336 @@
+{
+  "DFS_B_oracle_to_Top2": 0.8333333333333334,
+  "DFS_correct_candidate_not_selected_output_ids": [
+    "142ca369:o0",
+    "97d7923e:o0",
+    "b5ca7ac4:o0",
+    "b6f77b65:o0",
+    "d59b0160:o0"
+  ],
+  "GPU_continuation": {
+    "GPU_useful_seconds": "UNVERIFIED_NOT_IDENTICAL_TO_PROCESS_WALL",
+    "cached_requests": 39771,
+    "cached_source_units": 102,
+    "ended_utc": "2026-10-16T08:12:22.252476+00:00",
+    "new_requests": 25263,
+    "new_source_units": 76,
+    "oom_batch_fallbacks": 0,
+    "process_wall_seconds": 12516.896127,
+    "source_commit": "adb743d9e34232008d71de68b599670f718366b8",
+    "started_utc": "2026-10-16T04:43:45.356349+00:00"
+  },
+  "analysis_source_commit": "c1aec573673b4553127fe55e78fea322ce5d83ab",
+  "candidate_oracle_reused": {
+    "BASE_D24": 31,
+    "BASE_D24_D48_UNION": 35,
+    "BASE_D48": 30,
+    "V7": 30,
+    "V7_PLUS_BASE_UNION": 36
+  },
+  "decision": "DO_NOT_PROMOTE_FROM_EXPOSED_EVAL60",
+  "historical_S2_reference": {
+    "Top2": 27,
+    "Top2_hit_output_ids": [
+      "1818057f:o0",
+      "20270e3b:o1",
+      "2d0172a1:o0",
+      "2d0172a1:o1",
+      "31f7f899:o0",
+      "36a08778:o0",
+      "3a25b0d8:o0",
+      "3a25b0d8:o1",
+      "45a5af55:o0",
+      "4a21e3da:o1",
+      "4c3d4a41:o0",
+      "4c3d4a41:o1",
+      "53fb4810:o0",
+      "71e489b6:o0",
+      "71e489b6:o1",
+      "78332cb0:o0",
+      "78332cb0:o1",
+      "7b0280bc:o0",
+      "7ed72f31:o0",
+      "8e5c0c38:o0",
+      "8e5c0c38:o1",
+      "981571dc:o0",
+      "aa4ec2a5:o0",
+      "b6f77b65:o1",
+      "c7f57c3e:o0",
+      "db0c5428:o0",
+      "de809cff:o0"
+    ],
+    "frozen_attempts_replayed": true,
+    "full_cohort_denominator": 89,
+    "full_cohort_score_extension_basis": "All 54 unscored outputs have no correct Base24/Base48 candidate; not full-89 frozen S2 attempt coverage",
+    "official_LB": false,
+    "pregold_hashes_verified": true,
+    "scored_outputs": 35,
+    "selection_cohort": "POSTFREEZE_GOLD_DERIVED_ORACLE_HIT_DIAGNOSTIC"
+  },
+  "input_verification": {
+    "B_freeze_sha256": "9c0801008ebd58e26b4fa272691dff47b2bbe83a6fce7c63a33acb1f865fa8ca",
+    "B_ledger_sha256": "714977bd6060d321efef0c4915b2885a569c8223cb8a33e3935a7575d0f70116",
+    "GPU_used": false,
+    "ORC_rescored": false,
+    "archive_full_rehash": false,
+    "attempts_sha256": "e2f5b63ff14543407662cba79c7bfcded77a317ea5f01043bffcbef206aeecfc",
+    "cached_51_output_pair_attempt_parity": "PASS",
+    "complete_outputs": 89,
+    "complete_units": 178,
+    "required_cache_units_reused": 102,
+    "status": "VERIFIED_FROZEN_INPUTS"
+  },
+  "limitations": [
+    "Exposed Eval60 development, not independent validation or Kaggle LB",
+    "Historical S2 uses Base24+Base48 and a Gold-derived 35-output scoring cohort; score extension is not full-89 attempt coverage",
+    "No new model inference, generation, training, ORC archive scoring, or Gold-path forward in this CPU analysis"
+  ],
+  "metrics": {
+    "dfs": {
+      "Top1": 22,
+      "Top1_hit_output_ids": [
+        "1818057f:o0",
+        "2d0172a1:o0",
+        "2d0172a1:o1",
+        "31f7f899:o0",
+        "36a08778:o0",
+        "3a25b0d8:o0",
+        "3a25b0d8:o1",
+        "45a5af55:o0",
+        "4c3d4a41:o0",
+        "71e489b6:o0",
+        "71e489b6:o1",
+        "78332cb0:o0",
+        "7b0280bc:o0",
+        "7ed72f31:o0",
+        "8e5c0c38:o0",
+        "8e5c0c38:o1",
+        "981571dc:o0",
+        "aa4ec2a5:o0",
+        "b6f77b65:o1",
+        "c7f57c3e:o0",
+        "db0c5428:o0",
+        "de809cff:o0"
+      ],
+      "Top2": 25,
+      "Top2_hit_output_ids": [
+        "1818057f:o0",
+        "20270e3b:o1",
+        "2d0172a1:o0",
+        "2d0172a1:o1",
+        "31f7f899:o0",
+        "36a08778:o0",
+        "3a25b0d8:o0",
+        "3a25b0d8:o1",
+        "45a5af55:o0",
+        "4c3d4a41:o0",
+        "4c3d4a41:o1",
+        "53fb4810:o0",
+        "71e489b6:o0",
+        "71e489b6:o1",
+        "78332cb0:o0",
+        "7b0280bc:o0",
+        "7ed72f31:o0",
+        "8e5c0c38:o0",
+        "8e5c0c38:o1",
+        "981571dc:o0",
+        "aa4ec2a5:o0",
+        "b6f77b65:o1",
+        "c7f57c3e:o0",
+        "db0c5428:o0",
+        "de809cff:o0"
+      ],
+      "fully_observed_tasks_in_panel": 60,
+      "output_Top1_rate": 0.24719101123595505,
+      "output_Top2_rate": 0.2808988764044944,
+      "outputs_evaluated": 89,
+      "scope": "Frozen-pool exact selection on exposed Eval60, not competition LB",
+      "task_all_outputs_Top2": 15,
+      "task_bootstrap_95pct_Top1": [
+        0.15555555555555556,
+        0.3638888888888889
+      ],
+      "task_bootstrap_95pct_Top2": [
+        0.18333333333333332,
+        0.4027777777777778
+      ],
+      "task_mean_test_exact_Top1": 0.2555555555555556,
+      "task_mean_test_exact_Top2": 0.28888888888888886
+    },
+    "greedy": {
+      "Top1": 19,
+      "Top1_hit_output_ids": [
+        "1818057f:o0",
+        "2d0172a1:o0",
+        "2d0172a1:o1",
+        "31f7f899:o0",
+        "36a08778:o0",
+        "3a25b0d8:o0",
+        "3a25b0d8:o1",
+        "45a5af55:o0",
+        "4c3d4a41:o0",
+        "71e489b6:o0",
+        "71e489b6:o1",
+        "7ed72f31:o0",
+        "8e5c0c38:o0",
+        "981571dc:o0",
+        "aa4ec2a5:o0",
+        "b6f77b65:o1",
+        "c7f57c3e:o0",
+        "db0c5428:o0",
+        "de809cff:o0"
+      ],
+      "Top2": 26,
+      "Top2_hit_output_ids": [
+        "142ca369:o0",
+        "1818057f:o0",
+        "2d0172a1:o0",
+        "2d0172a1:o1",
+        "31f7f899:o0",
+        "36a08778:o0",
+        "3a25b0d8:o0",
+        "3a25b0d8:o1",
+        "45a5af55:o0",
+        "4c3d4a41:o0",
+        "4c3d4a41:o1",
+        "53fb4810:o0",
+        "71e489b6:o0",
+        "71e489b6:o1",
+        "78332cb0:o0",
+        "7b0280bc:o0",
+        "7ed72f31:o0",
+        "8e5c0c38:o0",
+        "8e5c0c38:o1",
+        "981571dc:o0",
+        "aa4ec2a5:o0",
+        "b6f77b65:o0",
+        "b6f77b65:o1",
+        "c7f57c3e:o0",
+        "db0c5428:o0",
+        "de809cff:o0"
+      ],
+      "fully_observed_tasks_in_panel": 60,
+      "output_Top1_rate": 0.21348314606741572,
+      "output_Top2_rate": 0.29213483146067415,
+      "outputs_evaluated": 89,
+      "scope": "Frozen-pool exact selection on exposed Eval60, not competition LB",
+      "task_all_outputs_Top2": 15,
+      "task_bootstrap_95pct_Top1": [
+        0.1277777777777778,
+        0.325
+      ],
+      "task_bootstrap_95pct_Top2": [
+        0.1861111111111111,
+        0.41111111111111115
+      ],
+      "task_mean_test_exact_Top1": 0.22222222222222224,
+      "task_mean_test_exact_Top2": 0.29444444444444445
+    }
+  },
+  "paired_contrasts": {
+    "DFS_B_vs_BASE24_SUPPORT_NLL": {
+      "FIX": 3,
+      "FIX_output_ids": [
+        "20270e3b:o1",
+        "53fb4810:o0",
+        "8e5c0c38:o1"
+      ],
+      "HARM": 3,
+      "HARM_output_ids": [
+        "4a21e3da:o1",
+        "78332cb0:o1",
+        "b6f77b65:o0"
+      ],
+      "bootstrap_draws": 10000,
+      "bootstrap_tasks": 60,
+      "net_outputs": 0,
+      "paired_output_rate_delta": 0.0,
+      "reference_Top2": 25,
+      "reference_task_mean_test_exact_Pass2": 0.2777777777777778,
+      "scope": "Exposed Eval60 frozen-pool descriptive comparison; not official competition score or independent validation",
+      "seed": 20261016,
+      "task_cluster_bootstrap_95pct_delta": [
+        -0.05434782608695652,
+        0.05555555555555555
+      ],
+      "treatment_Top2": 25,
+      "treatment_task_mean_test_exact_Pass2": 0.28888888888888886
+    },
+    "DFS_B_vs_GREEDY_B": {
+      "FIX": 1,
+      "FIX_output_ids": [
+        "20270e3b:o1"
+      ],
+      "HARM": 2,
+      "HARM_output_ids": [
+        "142ca369:o0",
+        "b6f77b65:o0"
+      ],
+      "bootstrap_draws": 10000,
+      "bootstrap_tasks": 60,
+      "net_outputs": -1,
+      "paired_output_rate_delta": -0.011235955056179775,
+      "reference_Top2": 26,
+      "reference_task_mean_test_exact_Pass2": 0.29444444444444445,
+      "scope": "Exposed Eval60 frozen-pool descriptive comparison; not official competition score or independent validation",
+      "seed": 20261016,
+      "task_cluster_bootstrap_95pct_delta": [
+        -0.05154639175257732,
+        0.023529411764705882
+      ],
+      "treatment_Top2": 25,
+      "treatment_task_mean_test_exact_Pass2": 0.28888888888888886
+    },
+    "DFS_B_vs_V7_SUPPORT_NLL": {
+      "FIX": 2,
+      "FIX_output_ids": [
+        "53fb4810:o0",
+        "7b0280bc:o0"
+      ],
+      "HARM": 2,
+      "HARM_output_ids": [
+        "142ca369:o0",
+        "b6f77b65:o0"
+      ],
+      "bootstrap_draws": 10000,
+      "bootstrap_tasks": 60,
+      "net_outputs": 0,
+      "paired_output_rate_delta": 0.0,
+      "reference_Top2": 25,
+      "reference_task_mean_test_exact_Pass2": 0.2694444444444445,
+      "scope": "Exposed Eval60 frozen-pool descriptive comparison; not official competition score or independent validation",
+      "seed": 20261016,
+      "task_cluster_bootstrap_95pct_delta": [
+        -0.04395604395604396,
+        0.04597701149425287
+      ],
+      "treatment_Top2": 25,
+      "treatment_task_mean_test_exact_Pass2": 0.28888888888888886
+    },
+    "DFS_B_vs_historical_S2_score_extension": {
+      "FIX": 0,
+      "FIX_output_ids": [],
+      "HARM": 2,
+      "HARM_output_ids": [
+        "4a21e3da:o1",
+        "78332cb0:o1"
+      ],
+      "bootstrap_draws": 10000,
+      "bootstrap_tasks": 60,
+      "net_outputs": -2,
+      "paired_output_rate_delta": -0.02247191011235955,
+      "reference_Top2": 27,
+      "reference_task_mean_test_exact_Pass2": 0.3055555555555555,
+      "scope": "Exposed Eval60 frozen-pool descriptive comparison; not official competition score or independent validation",
+      "seed": 20261016,
+      "task_cluster_bootstrap_95pct_delta": [
+        -0.056818181818181816,
+        0.0
+      ],
+      "treatment_Top2": 25,
+      "treatment_task_mean_test_exact_Pass2": 0.28888888888888886
+    }
+  },
+  "scored_at_utc": "2026-10-16T08:17:55.222212+00:00",
+  "status": "COMPLETE_FULL_89_B_POSTFREEZE_CPU_SCORE"
+}

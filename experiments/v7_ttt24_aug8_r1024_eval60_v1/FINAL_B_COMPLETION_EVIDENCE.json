@@ -1,0 +1,104 @@
+{
+  "CPU_input_verification": {
+    "B_freeze_sha256": "9c0801008ebd58e26b4fa272691dff47b2bbe83a6fce7c63a33acb1f865fa8ca",
+    "B_ledger_sha256": "714977bd6060d321efef0c4915b2885a569c8223cb8a33e3935a7575d0f70116",
+    "GPU_used": false,
+    "ORC_rescored": false,
+    "archive_full_rehash": false,
+    "attempts_sha256": "e2f5b63ff14543407662cba79c7bfcded77a317ea5f01043bffcbef206aeecfc",
+    "cached_51_output_pair_attempt_parity": "PASS",
+    "complete_outputs": 89,
+    "complete_units": 178,
+    "required_cache_units_reused": 102,
+    "status": "VERIFIED_FROZEN_INPUTS"
+  },
+  "GPU_observation": "0 %, 1 MiB, 24576 MiB",
+  "artifacts": {
+    "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/b_freeze_incremental_v4_20261016_ea1840/PIPELINE_STATE.json": {
+      "bytes": 2205,
+      "sha256": "984eed4d2e86218e2eb3f01bdc903529592525005104d59ee03b532f43013e5c"
+    },
+    "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/b_freeze_incremental_v4_20261016_ea1840/b_selector/B_ATTEMPTS_FROZEN.json": {
+      "bytes": 3491985,
+      "sha256": "e2f5b63ff14543407662cba79c7bfcded77a317ea5f01043bffcbef206aeecfc"
+    },
+    "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/b_freeze_incremental_v4_20261016_ea1840/b_selector/PRE_GOLD_FREEZE.json": {
+      "bytes": 86388,
+      "sha256": "9c0801008ebd58e26b4fa272691dff47b2bbe83a6fce7c63a33acb1f865fa8ca"
+    },
+    "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/b_freeze_incremental_v4_20261016_ea1840/b_selector/PRE_GOLD_HASHES.json": {
+      "bytes": 41502,
+      "sha256": "714977bd6060d321efef0c4915b2885a569c8223cb8a33e3935a7575d0f70116"
+    },
+    "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/b_freeze_incremental_v4_20261016_ea1840/b_selector/SHARD_REUSE_RECEIPT.json": {
+      "bytes": 16274,
+      "sha256": "bf7f78ecfc648b6e679e9755b62b1881cb85fc14c6c29a6885a51b15b7a6938b"
+    },
+    "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/b_score_full_v4_c1aec573/FINAL_B_SCORECARD.json": {
+      "bytes": 9867,
+      "sha256": "49154463a42c54a0dee7a95ab9052787b010d400c9adecbeeec718a9eb04e14a"
+    },
+    "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/b_score_full_v4_c1aec573/INPUT_VERIFICATION_BEFORE_TARGETS.json": {
+      "bytes": 525,
+      "sha256": "dcb7ae35ff1f34316ee2dc9c1186fb8f04cf512e702211b8d1d06ff86e43b58e"
+    }
+  },
+  "bound_worker_present": false,
+  "bound_wrapper_present": false,
+  "observed_utc": "2026-10-16T08:20:07.838789+00:00",
+  "original_archive_identity_limitations": {
+    "FINAL_FREEZE_RECEIPT.json": {
+      "adapter_manifest_status": "PASS",
+      "full_github_archive_status": "PENDING_GITHUB_TRANSFER",
+      "model_runtime_identity_status": "PARTIALLY_ESTABLISHED",
+      "source_generation_identity": "25fd3dd39df2f607e82a276a1dc09107389f800a"
+    }
+  },
+  "pipeline": {
+    "archive": "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/archive_recovery_v1_cbf1c1f3/archive",
+    "b_freeze": "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/b_freeze_incremental_v4_20261016_ea1840/b_selector",
+    "child_pid": 157813,
+    "command": [
+      "/root/arc-runtime-3090-gpu-benchmark-v1/env/3090-ampere-env-v2/bin/python",
+      "/root/arc2_cpu_selector_658a8dfb/scripts/run_v7_ttt24_eval60_b_selector.py",
+      "--archive",
+      "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/archive_recovery_v1_cbf1c1f3/archive",
+      "--training",
+      "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/training_v2",
+      "--adapter-root",
+      "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/adapters_v2",
+      "--model-path",
+      "/workspace/arc2/models/qwen3_4b_grids15_sft139",
+      "--foundation-adapter",
+      "/workspace/arc2/active_runs/reconstructed_foundation_v2_v2_009/checkpoints/tokens_2000000",
+      "--challenge",
+      "/workspace/arc2/benchmarks/arc-agi_evaluation_challenges.json",
+      "--native-config",
+      "/root/v7ttt24-driver/configs/nvarc_native_846d0198",
+      "--output",
+      "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/b_freeze_incremental_v4_20261016_ea1840/b_selector",
+      "--batch-size",
+      "8",
+      "--reuse-shards-from",
+      "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/b_freeze_recovery_v3_windowclose_18d31ccf/b_selector",
+      "--required-reuse-index",
+      "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/cpu_reuse_index_9e4f3d3e/REUSE_INDEX.json",
+      "--required-reuse-index-sha256",
+      "b701e8e8f951196494e36064dd09a2b15ce51d162a7ad43acb3be9a1fecc8016"
+    ],
+    "ended_utc": "2026-10-16T08:12:22.252476+00:00",
+    "execution_source_commit": "adb743d9e34232008d71de68b599670f718366b8",
+    "generation_rerun": false,
+    "gold_loaded": false,
+    "gpu_stage": true,
+    "owner_deadline_utc": "2026-10-16T10:43:44.561575+00:00",
+    "partial_output_preserved_on_failure": true,
+    "schema": "V7_EVAL60_B_FREEZE_RECOVERY_V1",
+    "stage": "b_selector",
+    "started_utc": "2026-10-16T04:43:45.356349+00:00",
+    "status": "COMPLETE",
+    "training_rerun": false,
+    "wall_limit_seconds": 20999
+  },
+  "status": "COMPLETE_AND_SCORED"
+}

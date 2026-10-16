@@ -1,0 +1,86 @@
+{
+  "decision": "TERMINAL",
+  "scope": "Completed bounded owner-authorized incremental original-B freeze and CPU scorecard only; not termination or completion of all ARC2 research",
+  "governor_event_id": "dd93db639935173057288395c4ad5a756b34f5527c7f1bca1dd981a34185325e",
+  "job_id": "V7_EVAL60_B_INCREMENTAL_V4_20261016_ea1840",
+  "status": "FULL_B_COMPLETED_SCORED_WITH_INHERITED_PROVENANCE_LIMITATIONS",
+  "owner_authorization_sha256": "0db1bc35ac90d746f4e6af29a4a75ddbc8abcc001fdb289a17c8490ab5d165b2",
+  "terminal_receipt_sha256": "89a7da4bd37a685bdb44806d84330b8a51d829df32a7569a942e784a9bc320af",
+  "execution_source_commit": "adb743d9e34232008d71de68b599670f718366b8",
+  "CPU_analysis_source_commit": "c1aec573673b4553127fe55e78fea322ce5d83ab",
+  "scorecard": "FINAL_B_FULL89_SCORECARD.json",
+  "scorecard_sha256": "49154463a42c54a0dee7a95ab9052787b010d400c9adecbeeec718a9eb04e14a",
+  "execution_evidence": "FINAL_B_COMPLETION_EVIDENCE.json",
+  "execution_evidence_sha256": "2b24bcdfc5f99f3dc761c15010af2a68470e14335658b19d9ad9949db2715c32",
+  "cohort": {"tasks": 60, "outputs": 89, "classification": "Exposed historical Eval60 development, not independent confirmation or Kaggle leaderboard"},
+  "completeness": {
+    "source_units": 178,
+    "views": "8/8",
+    "view_rows": 57808,
+    "source_candidates": 7226,
+    "required_old_cache_units_reused": 102,
+    "new_units": 76,
+    "cached_requests": 39771,
+    "new_requests": 25263,
+    "old_51_output_pair_attempts_unchanged": true,
+    "consumed_attempt_bytes_verified": true,
+    "original_B_missing_output_count": 0
+  },
+  "scores": {
+    "V7_TTT24_GREEDY_AUG8_B": {"Top1": 19, "Top2": 26, "task_mean_exact_Pass2": 0.29444444444444445, "task_all_outputs_Top2": 15},
+    "V7_TTT24_DFS_R1024_B": {"Top1": 22, "Top2": 25, "task_mean_exact_Pass2": 0.28888888888888886, "task_all_outputs_Top2": 15},
+    "historical_Base24_Base48_S2_reference": {"Top2_score_equivalent_full89": 27, "task_mean_exact_Pass2": 0.3055555555555555, "frozen_attempt_cohort": "Gold-derived 35 candidate-oracle-positive outputs; remaining 54 Base candidate-oracle negatives justify score-denominator extension, not full-89 attempt coverage"}
+  },
+  "paired_DFS_B_vs_GREEDY_B": {
+    "Top1_FIX": 3,
+    "Top1_HARM": 0,
+    "Top2_FIX": 1,
+    "Top2_HARM": 2,
+    "Top2_net": -1,
+    "task_cluster_bootstrap_95pct_output_rate_delta": [-0.05154639175257732, 0.023529411764705882],
+    "interpretation": "No established Top2 improvement; uncertainty includes both signs"
+  },
+  "paired_DFS_B_vs_historical_S2": {"FIX": 0, "HARM": 2, "net": -2, "scope": "Descriptive comparison of different source portfolios and ranking methods, not a matched causal model comparison"},
+  "observed_mechanism": {
+    "classification": "ESTABLISHED_FROZEN_POOL_SELECTION_LOSS",
+    "V7_DFS_ORC_reused": 30,
+    "V7_DFS_B_Top2": 25,
+    "conversion": 0.8333333333333334,
+    "correct_candidate_not_selected": ["142ca369:o0", "97d7923e:o0", "b5ca7ac4:o0", "b6f77b65:o0", "d59b0160:o0"],
+    "only_V7_addition_beyond_Base24_Base48_ORC": "d59b0160:o0",
+    "only_V7_addition_selected_by_DFS_B": false,
+    "Gold_path_model_preference": "UNKNOWN_NOT_MEASURED_NO_FORWARD_AUTHORIZATION",
+    "do_not_infer_intrinsic_model_probability_or_frontier_failure_from_ORC_and_Top2_alone": true
+  },
+  "candidate_oracle_unchanged_reused_not_rescored": {"Base24": 31, "Base48": 30, "V7": 30, "Base24_union_Base48": 35, "three_source_union": 36},
+  "next_highest_information_recommendation_not_executed": {
+    "experiment": "Prospectively fixed source-balanced Base S2 plus V7 Greedy candidate-portfolio validation using existing cached features; freeze a separate validation rule/cohort before promotion",
+    "evidence": "Historical S2 and V7 Greedy B Top2 hit sets share 24 outputs; V7 Greedy adds 142ca369:o0 and b6f77b65:o0 but loses three historical S2 hits",
+    "hit_set_union_upper_bound": 29,
+    "union_is_not_feasible_two_attempt_score": true,
+    "competing_hypothesis": "Simple source fusion can lose gains through correlated candidates and two-attempt competition; fixed three-source RRF already scored 24/89 and was rejected",
+    "priority": "Selector/portfolio validation before another full DFS generation or broader training",
+    "authorization": "No next GPU experiment, selector tuning, official submission or promotion authorized by this closeout"
+  },
+  "validity_and_limits": [
+    "B scoring remained target-isolated, but Eval60 targets/ORC were globally exposed before this continuation; do not claim a fresh blind experiment",
+    "Original archive FINAL_FREEZE_RECEIPT retains model_runtime_identity_status=PARTIALLY_ESTABLISHED and full_github_archive_status=PENDING_GITHUB_TRANSFER; these inherited provenance limitations are not repaired by successful scoring",
+    "Original source-generation contract SHA 25fd3dd39df2f607e82a276a1dc09107389f800a and restored generation SHA cde188b600600c17cf5c9419db1cfd8cd4898f74 remain distinct from archive repair and scorer SHAs",
+    "Scores are valid arithmetic for the frozen candidate/attempt artifacts, not proof of model equivalence, independent ARC generalization or competition improvement",
+    "All negative and interrupted historical artifacts are preserved"
+  ],
+  "efficiency": {
+    "incremental_scoring_process_wall_seconds": 12516.896127,
+    "actual_GPU_useful_seconds": "UNVERIFIED_NOT_MEASURED_SEPARATELY",
+    "oom_batch_fallback_count": 0,
+    "full_adapter_rehash": false,
+    "new_training_or_generation": false,
+    "CPU_tests": "22 passed locally and on Pod",
+    "GPU_after_completion": "0 percent utilization, 1 MiB allocated; bound parent and worker absent"
+  },
+  "model_promotion": "DO_NOT_PROMOTE",
+  "official_submission_or_release": "NOT_RUN",
+  "Gold_path_GPU_diagnostic": "NOT_RUN",
+  "authorization_consumed": true,
+  "automatic_GPU_rearm": false
+}
