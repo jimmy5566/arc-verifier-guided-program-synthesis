@@ -82,12 +82,21 @@ def main():
     for name in ('v7', 'd24', 'd48', 'reuse-index', 'solutions', 'output'):
         parser.add_argument('--' + name, type=Path, required=True)
     parser.add_argument('--reuse-index-sha256', required=True)
+    parser.add_argument('--cached-only', action='store_true',
+                        help='Score already-complete B units without rereading full source node archives')
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=False)
     if digest(args.reuse_index.read_bytes()) != args.reuse_index_sha256:
         raise RuntimeError('REUSE_INDEX_HASH_MISMATCH')
     all_rankings, inputs, outputs = {}, {}, None
-    for label, root, depth in [('V7', args.v7, 24), ('BASE24', args.d24, 24), ('BASE48', args.d48, 48)]:
+    if args.cached_only:
+        hashes = read(args.v7 / 'manifests/ARCHIVE_HASHES.json')['files']
+        cohort_bytes = checked(args.v7, 'RUN_COHORT.json', hashes)
+        outputs = [row['output_id'] for row in json.loads(cohort_bytes)['outputs']]
+        if len(outputs) != 89 or len(set(outputs)) != 89:
+            raise RuntimeError('COHORT_NOT_89')
+        inputs['cohort_sha256'] = digest(cohort_bytes)
+    for label, root, depth in ([] if args.cached_only else [('V7', args.v7, 24), ('BASE24', args.d24, 24), ('BASE48', args.d48, 48)]):
         ids, found, inputs[label] = source_rankings(root, depth)
         if outputs is not None and ids != outputs:
             raise RuntimeError('COHORT_MISMATCH')
@@ -108,7 +117,7 @@ def main():
     # Fixed portfolio, not fitted using targets: Base24 first, first different
     # V7 NLL candidate second; if unavailable, Base24 second. Never Oracle-rank.
     portfolio = {}
-    for oid in outputs:
+    for oid in ([] if args.cached_only else outputs):
         base, v7 = all_rankings['BASE24_NLL'][oid], all_rankings['V7_NLL'][oid]
         if not base:
             portfolio[oid] = v7[:2]
@@ -116,7 +125,8 @@ def main():
         second = next((grid for grid in v7 if canonical(grid) != canonical(base[0])),
                       base[1] if len(base) > 1 else base[0])
         portfolio[oid] = [base[0], second]
-    all_rankings['FIXED_BASE24_V7_PORTFOLIO'] = portfolio
+    if not args.cached_only:
+        all_rankings['FIXED_BASE24_V7_PORTFOLIO'] = portfolio
     write(args.output / 'CPU_RANKINGS_FROZEN.json', {'status': 'FROZEN', 'gpu_used': False,
           'source_input_hashes': inputs, 'reuse_index_sha256': args.reuse_index_sha256,
           'rankings': all_rankings, 'B_full_89_completed': False,
@@ -131,9 +141,10 @@ def main():
         gold[oid] = targets[task][int(index)]
     result = {name: metrics(values, gold) for name, values in all_rankings.items()}
     result['MATCHED_PANEL_COMPARISON'] = {name: metrics({oid: all_rankings[name][oid] for oid in matched}, gold)
-                                         for name in ['BASE24_NLL', 'BASE48_NLL', 'V7_NLL']}
+                                         for name in ['BASE24_NLL', 'BASE48_NLL', 'V7_NLL'] if name in all_rankings}
     result.update(status='COMPLETE_CPU_ONLY', gpu_used=False, generation_rerun=False,
                   B_missing_output_count=89-len(matched), independent_validation=False,
+                  full_source_NLL_status='NOT_RUN' if args.cached_only else 'COMPLETE',
                   frozen_rankings_sha256=digest((args.output / 'CPU_RANKINGS_FROZEN.json').read_bytes()))
     write(args.output / 'CPU_REUSED_SCORECARD.json', result)
     print(json.dumps({k: ({a:b for a,b in v.items() if not a.endswith('_ids')} if isinstance(v,dict) and k!='MATCHED_PANEL_COMPARISON' else v)
