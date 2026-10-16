@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "authorization_id": "GOLD_PATH_REMAINING46_20261016_OWNER_CONTINUE_V1",
+  "status": "OWNER_AUTHORIZED",
+  "owner_replies": ["默认授权", "为什么block了，为什么不继续推进/", "继续"],
+  "authorization_interpretation": "Owner reaffirms continuation after Director explicitly stated the bounded remaining46-output scope. Allocate this new30-minute continuation from that direction; do not reuse, rewrite or reset the earlier one-hour grant. Routine implementation continuation must not become another scientific review loop.",
+  "recorded_utc": "2026-10-16T14:30:47Z",
+  "stage": "POSTFREEZE_GOLD_PATH_MISSING_ONLY",
+  "resource": "Same existing RTX3090; frozen V7+TTT24 only for new forwards",
+  "hard_wall_seconds": 1800,
+  "max_new_view_forwards": 368,
+  "prior_attempted_forwards": 983,
+  "maximum_combined_attempts": 1351,
+  "reuse_diagnostic": "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/gold_path_missing_v1_93287e99/diagnostic",
+  "reuse_summary_sha256": "899c407fa58b1ce4552671f276ac13a2453f9cde7ae1db1cc98376f224d613c1",
+  "required_reuse": "All132 SHA-bound complete output shards and both calibration receipts. Base89 and V7 43 must not be recomputed. Completed Base model/weights need not be loaded or rehashed. Preserve983 prior attempted forwards, including uncommitted within-output work.",
+  "scientific_scope": "Complete the same full89-output post-freeze NONBLIND Gold-token diagnostic and paired canonical-task uncertainty. Frozen Base and V7 TTT parameterizations differ; do not claim pure V7-initialization causality or independent generalization.",
+  "no": ["training", "TTT", "candidate generation", "Base forwards", "repeat calibration", "B rescoring", "selector tuning", "unrelated targets", "official competition version or submission", "public research release", "model promotion"],
+  "activation": "Fresh isolated output and one consumption receipt; one immutable1800-second deadline created on launch. Prior stopped output, source, receipt and deadline remain unchanged. Record exact pushed source and exact process identity.",
+  "CPU_readiness": "Code179ca8a5 passed59 tests on actual Pod; real hash-bound reuse of all89 Base output shards and their prior verified adapter manifest passed with a deliberately nonexistent Base-weight path. Current commit only adds this authorization record.",
+  "completion": "Register completion_recipient=director. Supervisor/Governor returns COMPLETE, failure or UNKNOWN to the same Director. Preserve partials at cap, no chat polling; ingest and push final evidence rather than silently terminating the owner queue."
+}
