@@ -10,6 +10,7 @@ from scripts import run_cpu_selector_completion as wrapper
 @pytest.mark.parametrize('module, artifact', [
     ('scripts.score_reused_rankings_cpu', 'CPU_REUSED_SCORECARD.json'),
     ('scripts.analyze_frozen_eval60_search_cpu', 'RESULT.json'),
+    ('scripts.analyze_cached_gold_sequence_nll_cpu', 'RESULT.json'),
 ])
 def test_production_command_and_terminal_artifact(monkeypatch, tmp_path, module, artifact):
     out = tmp_path/'run'

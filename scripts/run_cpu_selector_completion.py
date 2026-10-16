@@ -14,7 +14,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--output', required=True, type=Path)
     parser.add_argument('--max-wall-seconds', type=int, default=1800)
-    parser.add_argument('--worker-module', choices=('scripts.score_reused_rankings_cpu', 'scripts.analyze_frozen_eval60_search_cpu'), default='scripts.score_reused_rankings_cpu')
+    parser.add_argument('--worker-module', choices=('scripts.score_reused_rankings_cpu', 'scripts.analyze_frozen_eval60_search_cpu', 'scripts.analyze_cached_gold_sequence_nll_cpu'), default='scripts.score_reused_rankings_cpu')
     parser.add_argument('scorer_args', nargs=argparse.REMAINDER)
     args = parser.parse_args()
     if not 1 <= args.max_wall_seconds <= 1800:
