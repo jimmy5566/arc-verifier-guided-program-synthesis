@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "job_id": "V7_EVAL60_B_FREEZE_RESUME_V2_18d31ccf",
+  "stage": "V7_EVAL60_TARGET_BLIND_B_FREEZE_RESUME",
+  "ssh_target": "g9620ys5vilaxx-64412079@ssh.runpod.io",
+  "output_root": "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/b_freeze_recovery_v2_18d31ccf",
+  "pipeline_status_path": "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/b_freeze_recovery_v2_18d31ccf/PIPELINE_STATE.json",
+  "terminal_receipt": "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/b_freeze_recovery_v2_18d31ccf/TERMINAL_RECEIPT.json",
+  "source_commit": "18d31ccf4c9a7e8d4bc7b53743a73ea563dc46a0",
+  "generation_source_commit": "cde188b600600c17cf5c9419db1cfd8cd4898f74",
+  "primary_process": {
+    "pid": 154413,
+    "role": "b_selector_resume_pipeline",
+    "start_ticks": "1503950965",
+    "boot_id": "1218e1c6-b7a5-4f6b-9215-a30c4165e147",
+    "cmdline_sha256": "99b12e28236a74c7a5c408440f73afe1e396887040ab527f0c1511faf917e8ae"
+  },
+  "completion_recipient": "director",
+  "deadline_utc": "2026-10-16T04:07:04Z",
+  "maximum_job_wall_seconds": 7200,
+  "closing_reserve_seconds": 600,
+  "preflight": {
+    "local_tests": "21 passed",
+    "runpod_tests": "21 passed",
+    "duplicate_job_check": "No prior B-selector or recovery process active before launch",
+    "scientific_change": false,
+    "engineering_changes": [
+      "Read and verify prior completed shards against exact candidate, adapter, tokenizer, model, context, view and payload identities; publish copies in fresh output without modifying parent.",
+      "Keep an already-active immutable task adapter in memory for consecutive inference source pools. No ranking, model, candidate, batch or numerical-contract change."
+    ]
+  },
+  "generation_rerun": false,
+  "training_rerun": false,
+  "gold_loaded_by_this_job": false,
+  "requested_batch_size": 8,
+  "partial_evidence_preserved_on_failure": true,
+  "completion_context": {
+    "owner_request": "C:/w/arc2-governor-thin/orchestration/owner_requests/SCORE_OPTIMIZATION_DIRECTOR_GOAL_V2.json",
+    "owner_request_sha256": "94cc6c61685f60767d02317e487f5a5f45043495fc51d769dd5c787d984dad11",
+    "window_receipt": "C:/Users/asus/Desktop/py/kaggle/ARC2/.arc2-local/orchestration/owner_windows/SCORE_OPTIMIZATION_8H_AFTER_EVAL60_V1.json",
+    "deadline_utc": "2026-10-16T04:07:04Z",
+    "research_checkout": "C:/w/v7ttt24",
+    "research_branch": "codex/v7-ttt24-aug8-r1024-eval60-v1",
+    "generation_root": "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/pipeline_v4/generation",
+    "archive_root": "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/archive_recovery_v1_cbf1c1f3/archive",
+    "next_action": "Claim continuation on success OR failure. If B COMPLETE, verify its PRE_GOLD_FREEZE before any designated Gold access, then prioritize bounded CPU post-freeze scorecard using existing score_v7_ttt24_eval60_postfreeze.py and listed historical archive paths. Afterwards run bounded matched NONBLIND Gold-path diagnostics only if remaining original window permits; no generation or TTT rerun. Preserve parent timeout and all partial shards, never reset original 04:07:04Z deadline. If timeout/failure, use exact status and remaining budget, report genuine budget exhaustion rather than silently closing owner work. Every long follow-up job must register completion_recipient=director and yield WAIT_REMOTE without polling.",
+    "b_freeze_root": "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/b_freeze_recovery_v2_18d31ccf/b_selector",
+    "historical_d24": "/workspace/arc2/query_only_isolated_worktree_2e5e113c43b5e09e851e417c3d4096a89152a5f9/artifacts/eval60_phase3_d24_aug8_r1024_archive_v1",
+    "historical_d48": "/workspace/arc2/artifacts/eval60_phase3_d48_aug8_r1024_archive_v1",
+    "base_adapter_root": "/workspace/arc2/active_runs/eval60_authoritative_greedy_v1/checkpoints",
+    "designated_postfreeze_solutions": "/workspace/arc2/benchmarks/arc-agi_evaluation_solutions.json"
+  },
+  "parent_controlled_stop": {
+    "job_id": "V7_EVAL60_B_FREEZE_RECOVERY_V1_50ddb6df",
+    "terminal_receipt_sha256": "4f8c6e999df410082825490c31814acf9d48868fb1a7503b76bc2dec262eadfd",
+    "reason": "BOUNDED_B_FREEZE_TIMEOUT_PARTIAL_PRESERVED",
+    "started_utc": "2026-10-15T20:51:14.107755+00:00",
+    "ended_utc": "2026-10-16T00:50:34.527079+00:00",
+    "completed_shard_files_present": 75,
+    "expected_source_units": 178,
+    "observed_oom_fallbacks": 0,
+    "full_B_freeze": "NOT_RUN",
+    "postfreeze_score": "NOT_RUN",
+    "gold_path": "NOT_RUN",
+    "parent_artifacts_unchanged": true,
+    "measured_gpu_seconds": "UNVERIFIED; process wall time is not GPU useful time"
+  },
+  "reuse_shards_from": "/workspace/arc2/research_runs/v7_ttt24_aug8_r1024_eval60_v1/b_freeze_recovery_v1_50ddb6df/b_selector"
+}
