@@ -155,6 +155,44 @@ def protect_remote_owner(state: dict, remote: dict, origin: dict | None = None) 
                 raise RuntimeError('SHARED_GPU_REQUIRES_ATOMIC_LOCK')
 
 
+def retire_completed_role_jobs(state: dict, remote: dict) -> list[dict]:
+    """Reconcile a terminal job re-registered after its terminal event import.
+
+    Only a completed same-role terminal handoff with an exact Supervisor
+    COMPLETE receipt and absent observed process can retire a stale entry.
+    Registry manifests and historical events remain immutable. Live/unknown
+    jobs still reach protect_remote_owner and fail closed.
+    """
+    retired = []
+    for job_id, previous in list(state['remote_jobs'].items()):
+        if previous == remote or remote_role(previous) != remote_role(remote):
+            continue
+        for item in state.get('pending_events', []):
+            payload = item.get('payload', {})
+            if (item.get('status') != 'COMPLETE' or
+                    payload.get('round_id') != job_id or
+                    payload.get('controller_role') != previous.get('controller_role') or
+                    payload.get('terminal_status') != 'COMPLETE' or
+                    not payload.get('bound_remote_job')):
+                continue
+            try:
+                path, digest = validate_bound_artifact(
+                    payload['terminal_receipt'], payload.get('terminal_receipt_sha256'))
+                receipt = json.loads(path.read_text(encoding='utf-8-sig'))
+            except (KeyError, RuntimeError, ValueError, OSError):
+                continue
+            if (receipt.get('job_id') != job_id or receipt.get('status') != 'COMPLETE' or
+                    receipt.get('execution_source_commit') != previous.get('source_commit') or
+                    receipt.get('receipt_origin') != 'LOCAL_SUPERVISOR_PIPELINE_OBSERVATION_V1' or
+                    receipt.get('observed_process_identity') != {}):
+                continue
+            state['remote_jobs'].pop(job_id)
+            retired.append({'job_id': job_id, 'completed_terminal_event': item['event_id'],
+                            'terminal_receipt_sha256': digest})
+            break
+    return retired
+
+
 def load(path: Path) -> dict[str, Any]:
     value = json.loads(path.read_text(encoding="utf-8-sig"))
     if value.get("schema_version") != 3:
@@ -1010,9 +1048,12 @@ def complete_event(state_path: Path, args: argparse.Namespace) -> None:
         if not args.remote_job_file:
             raise RuntimeError("REMOTE_JOB_FILE_REQUIRED")
         _, remote = _read_remote_job_manifest(args.remote_job_file)
+        retired = retire_completed_role_jobs(state, remote)
         protect_remote_owner(state, remote, item)
         persist_remote_binding(state_path, remote)
         state['remote_jobs'][remote['job_id']] = remote
+        if retired:
+            item['retired_completed_remote_jobs'] = retired
         sync_remote_display(state)
     if 'agent_routes' in state:
         if disposition in {'PAUSED', 'TERMINAL'}:
