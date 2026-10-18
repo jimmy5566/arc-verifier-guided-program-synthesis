@@ -147,6 +147,12 @@ def protect_remote_owner(state: dict, remote: dict, origin: dict | None = None) 
     for previous in state["remote_jobs"].values():
         if remote_role(previous) == remote_role(remote) and previous != remote:
             raise RuntimeError("ACTIVE_REMOTE_JOB_PROTECTED")
+        # A waiter is CPU-only and may be monitored concurrently. GPU workers
+        # serialize at the host-local inherited-FD lock, not per Agent role.
+        resource = remote.get('gpu_resource')
+        if resource and resource == previous.get('gpu_resource') and previous != remote:
+            if remote.get('gpu_lock_policy') != 'HOST_LOCAL_INHERITED_FD_V1':
+                raise RuntimeError('SHARED_GPU_REQUIRES_ATOMIC_LOCK')
 
 
 def load(path: Path) -> dict[str, Any]:
@@ -1049,6 +1055,11 @@ def _read_remote_job_manifest(value: str) -> tuple[Path, dict[str, Any]]:
         raise RuntimeError('INVALID_COMPLETION_RECIPIENT')
     if remote.get('controller_role') is not None and remote['controller_role'] not in {'oracle', 'selector'}:
         raise RuntimeError('INVALID_REMOTE_CONTROLLER_ROLE')
+    if remote.get('gpu_resource'):
+        if not re.fullmatch(r'GPU-[0-9a-fA-F-]{36}', remote['gpu_resource']):
+            raise RuntimeError('INVALID_GPU_RESOURCE_UUID')
+        if remote.get('gpu_lock_policy') != 'HOST_LOCAL_INHERITED_FD_V1':
+            raise RuntimeError('GPU_ATOMIC_LOCK_REQUIRED')
     return remote_path, remote
 
 

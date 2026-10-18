@@ -35,6 +35,32 @@ def job(role):
 
 
 class ConcurrentQueueTests(unittest.TestCase):
+    def test_cross_role_same_gpu_requires_atomic_worker_lock(self):
+        first, second = job('selector'), job('oracle')
+        first['gpu_resource'] = second['gpu_resource'] = 'GPU-c4eedfae-3656-bab2-43b9-b78875586923'
+        with tempfile.TemporaryDirectory() as td:
+            path, _ = self.setup(td, [], remote_jobs={first['job_id']: first})
+            with self.assertRaisesRegex(RuntimeError, 'SHARED_GPU_REQUIRES_ATOMIC_LOCK'):
+                g.protect_remote_owner(g.load(path), second)
+            second['gpu_lock_policy'] = 'HOST_LOCAL_INHERITED_FD_V1'
+            g.protect_remote_owner(g.load(path), second)
+
+    def test_new_gpu_manifest_requires_uuid_and_lock(self):
+        value = job('oracle')
+        value['gpu_resource'] = 'GPU-c4eedfae-3656-bab2-43b9-b78875586923'
+        with tempfile.TemporaryDirectory() as td:
+            path = Path(td) / 'job.json'
+            g.atomic(path, value)
+            with self.assertRaisesRegex(RuntimeError, 'GPU_ATOMIC_LOCK_REQUIRED'):
+                g._read_remote_job_manifest(str(path))
+            value['gpu_lock_policy'] = 'HOST_LOCAL_INHERITED_FD_V1'
+            g.atomic(path, value)
+            self.assertEqual(g._read_remote_job_manifest(str(path))[1], value)
+            value['gpu_resource'] = 'GPU-0/unsafe'
+            g.atomic(path, value)
+            with self.assertRaisesRegex(RuntimeError, 'INVALID_GPU_RESOURCE_UUID'):
+                g._read_remote_job_manifest(str(path))
+
     def setup(self, directory, items, **kw):
         path = Path(directory) / 'state.json'
         g.atomic(path, initial_state(disposition='CONTINUE_CONTROLLER',

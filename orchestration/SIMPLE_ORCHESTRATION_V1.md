@@ -112,6 +112,18 @@ experiment artifacts are never rewritten.
 `pending_events` is authoritative for delivery/claim ownership. `active_events`
 is derived by Agent; `active_event` is only a legacy single-item display.
 `remote_jobs` holds independent job bindings; `remote_job` is its legacy display.
+GPU launchers use `scripts/arc2_gpu_lock.py` on the actual Linux GPU host.
+One kernel lock per GPU UUID lives at `/run/lock/arc2-gpu/`, never FUSE.
+Workers inherit the lock FD, so launcher death does not unlock a live worker.
+Never unlink/age-steal a lock. The wrapper bounds worker wall time, kills its
+process group on exit/timeout, and writes a distinct cost receipt. It does not
+grant/consume authorization: the worker still verifies its own fresh lease
+and Supervisor registration before CUDA. CPU preparation can run concurrently;
+blocked GPU launchers wait in the OS without consuming their compute lease.
+New GPU manifests bind `gpu_resource` (UUID) and
+`gpu_lock_policy=HOST_LOCAL_INHERITED_FD_V1`. A waiting job may be registered
+while another role owns the device. Owner priority is an explicit predecessor
+barrier, not a claim that kernel advisory locks provide FIFO fairness.
 The latest global stage/disposition fields are not another Agent's queue.
 Normal named-Agent PAUSED/TERMINAL stage results pause that Agent only, using
 `paused_roles` and `pause_scope=agent`; an explicit global owner STOP remains a
