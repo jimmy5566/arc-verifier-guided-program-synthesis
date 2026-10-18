@@ -111,10 +111,23 @@ function Resolve-ControllerTarget([object]$Workflow) {
     $raw = & herdr agent list 2>$null
     if ($LASTEXITCODE -ne 0) { return $null }
     $agents = (($raw | Out-String | ConvertFrom-Json).result.agents)
+    # With multiple Controllers, process-host repair belongs to Director.
+    # An owner-held route or an identity mismatch must never fall back to a
+    # historical/focused pane (which may now host a different Controller).
+    if ($Workflow -and $Workflow.PSObject.Properties['agent_routes']) {
+      $routes = $Workflow.agent_routes
+      if (-not $routes.PSObject.Properties['director']) { return $null }
+      $route = $routes.director
+      if ($route.held) { return $null }
+      $matches = @($agents | Where-Object { $_.agent -eq 'codex' -and $_.name -eq $route.agent_name })
+      if ($matches.Count -ne 1 -or $matches[0].pane_id -ne $route.pane_id) { return $null }
+      if ($route.PSObject.Properties['terminal_id'] -and $route.terminal_id -and $matches[0].terminal_id -ne $route.terminal_id) { return $null }
+      return $matches[0]
+    }
     $saved = if ($Workflow) { $Workflow.controller_target } else { $null }
     $selected = $agents | Where-Object { $_.pane_id -eq $saved -and $_.agent -eq 'codex' } | Select-Object -First 1
+    if ($selected -and $selected.PSObject.Properties['name'] -and $selected.name -ne 'arc-controller') { return $null }
     if (-not $selected) { $selected = $agents | Where-Object { $_.name -eq 'arc-controller' -and $_.agent -eq 'codex' } | Select-Object -First 1 }
-    if (-not $selected) { $selected = $agents | Where-Object { $_.focused -and $_.agent -eq 'codex' } | Select-Object -First 1 }
     if ($selected) { return $selected }
   } catch {}
   return $null
@@ -125,7 +138,7 @@ function Invoke-ControllerRepairWake([object]$Workflow, [string]$Failure) {
   $target = Resolve-ControllerTarget $Workflow
   if (-not $target) { return 'CONTROLLER_TARGET_UNRESOLVED' }
   if ($target.agent_status -eq 'working') { return 'CONTROLLER_ALREADY_ACTIVE' }
-  $message = "ARC2 Governor watchdog detected $MaxConsecutiveFailures consecutive Governor start/liveness failures: $Failure. Repair the Governor process host with bounded CPU-only checks. Preserve the current workflow disposition and frozen science; do not prompt Director, launch GPU work, or alter authorizations."
+  $message = "ARC2 Governor watchdog detected $MaxConsecutiveFailures consecutive Governor start/liveness failures: $Failure. Repair the Governor process host with bounded CPU-only checks. Preserve workflow disposition and per-agent owner holds; do not schedule scientific work, launch GPU work, or alter authorizations."
   try {
     & herdr agent prompt $target.pane_id $message --timeout 30000 2>$null | Out-Null
     if ($LASTEXITCODE -eq 0) { return "CONTROLLER_WAKE_SENT:$($target.pane_id)" }

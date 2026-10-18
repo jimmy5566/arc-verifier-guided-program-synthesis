@@ -126,7 +126,7 @@ class ThinGovernorTests(unittest.TestCase):
             self.assertEqual(saved["pending_events"][0]["status"], "CLAIMED")
             self.assertEqual(saved["pending_events"][0]["resume_attempts"], 1)
 
-    def test_nameless_herdr_agents_recover_director_from_event_history(self):
+    def test_nameless_herdr_agents_use_explicit_director_binding_not_history(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             state_path = root / "ARC2_WORKFLOW_STATE.json"
@@ -145,6 +145,7 @@ class ThinGovernorTests(unittest.TestCase):
                 disposition="REVIEW_REQUIRED",
                 review=queued["payload"],
                 controller_target="controller-pane",
+                director_target="director-pane",
                 pending_events=[historical, queued],
             )
             governor.atomic(state_path, state)
