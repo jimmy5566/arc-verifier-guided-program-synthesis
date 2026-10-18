@@ -118,11 +118,30 @@ class PersistentGovernorTests(unittest.TestCase):
                 process.wait(timeout=10)
                 process.stdout.close()
                 process.stderr.close()
-                # The service now starts direct Python. Its former launcher
-                # parent may already have exited; kill the exact test-owned
-                # daemon, never a guessed parent or the live production host.
+                # If the assertion raced startup, recover only this fixture's
+                # newly published daemon PID, never the seeded pytest PID.
+                if pid is None:
+                    deadline = time.monotonic() + 5
+                    while time.monotonic() < deadline:
+                        try:
+                            candidate = int(pid_path.read_text(encoding='ascii'))
+                            if candidate != os.getpid():
+                                pid = candidate
+                                break
+                        except (OSError, ValueError):
+                            pass
+                        time.sleep(0.05)
+                # Windows taskkill can return before kernel handles close.
                 if pid is not None:
                     subprocess.run(['taskkill', '/PID', str(pid), '/T', '/F'], capture_output=True, text=True, timeout=20, check=False)
+                    deadline = time.monotonic() + 5
+                    while time.monotonic() < deadline:
+                        # The service's lock uses the runtime's fixed name.
+                        probe = governor.GovernorLock(state.parent / 'arc2_governor.lock')
+                        if probe.acquire():
+                            probe.release()
+                            break
+                        time.sleep(0.05)
 
     @unittest.skipUnless(sys.platform == 'win32', 'PowerShell process-host test is Windows-only')
     def test_watchdog_recovers_killed_isolated_daemon_without_agent_wake(self):

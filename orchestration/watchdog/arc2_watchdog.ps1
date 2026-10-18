@@ -34,9 +34,9 @@ while ($state.restart_count -le $MaxRestarts) {
         exit 0
     }
     if ($PSCmdlet.ParameterSetName -eq 'Direct') {
-        $process = Start-Process -FilePath $SupervisorFilePath -ArgumentList $SupervisorArguments -PassThru
+        $process = Start-Process -FilePath $SupervisorFilePath -ArgumentList $SupervisorArguments -WindowStyle Hidden -PassThru
     } else {
-        $process = Start-Process -FilePath 'powershell.exe' -ArgumentList @('-NoProfile','-Command', $SupervisorCommand) -PassThru
+        $process = Start-Process -FilePath 'powershell.exe' -ArgumentList @('-NoProfile','-Command', $SupervisorCommand) -WindowStyle Hidden -PassThru
     }
     $state.supervisor_pid = $process.Id
     $state.status = 'RUNNING'

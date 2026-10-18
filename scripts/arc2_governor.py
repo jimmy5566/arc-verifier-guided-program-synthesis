@@ -31,6 +31,7 @@ LIVE_KEYS = {
     "controller_target", "director_target", "pending_events", "active_event", "review",
     "remote_job", "last_transition", "pause_reason", "terminal_reason", "updated_at", "experiment_queue_path",
     "agent_routes", "controller_role",
+    "paused_roles", "pause_scope", "remote_jobs", "active_events",
 }
 
 
@@ -86,11 +87,66 @@ def compact_state(value: dict[str, Any]) -> dict[str, Any]:
         "director_target": None,
         "pending_events": [], "active_event": None, "review": None,
         "remote_job": None, "last_transition": "STATE_LOADED", "pause_reason": None,
-        "terminal_reason": None, "updated_at": now(),
+        "terminal_reason": None, "updated_at": now(), "paused_roles": {},
+        "pause_scope": "global", "remote_jobs": {},
     }
     for key, value in defaults.items():
         state.setdefault(key, value)
+    # Event statuses and the immutable remote registry are authoritative. These
+    # singular fields remain display projections for older CLI/status readers.
+    if state.get("remote_job") and not state["remote_jobs"]:
+        job = state["remote_job"]
+        job_id = job.get('job_id') or job.get('run_id')
+        if job_id:
+            state["remote_jobs"][job_id] = job
+    sync_activity(state)
     return state
+
+
+def item_role(item: dict, state: dict) -> str:
+    if item.get("recipient") == "controller" and "agent_routes" in state:
+        return item.get("route_role") or item.get("payload", {}).get("controller_role") or "unbound"
+    return item.get("recipient", "unbound")
+
+
+def occupied(state: dict, role: str, excluding: str | None = None) -> bool:
+    return any(e["event_id"] != excluding and e["status"] in {"DELIVERED", "CLAIMED"}
+               and item_role(e, state) == role for e in state["pending_events"])
+
+
+def sync_activity(state: dict) -> None:
+    claimed = [e for e in state.get("pending_events", []) if e.get("status") == "CLAIMED"]
+    state["active_events"] = {item_role(e, state): e["event_id"] for e in claimed}
+    state["active_event"] = claimed[0]["event_id"] if claimed else None
+
+
+def globally_stopped(state: dict) -> bool:
+    return state["disposition"] in {"PAUSED", "TERMINAL"} and state.get("pause_scope", "global") == "global"
+
+
+def owner_stop_snapshot(state: dict) -> dict:
+    if 'agent_routes' in state and globally_stopped(state):
+        return {k: state.get(k) for k in ('disposition', 'pause_scope', 'pause_reason', 'terminal_reason')}
+    return {}
+
+
+def remote_role(remote: dict) -> str:
+    return remote.get("controller_role") or remote.get("completion_recipient", "controller")
+
+
+def sync_remote_display(state: dict) -> None:
+    state["remote_job"] = next(iter(state["remote_jobs"].values()), None)
+
+
+def protect_remote_owner(state: dict, remote: dict, origin: dict | None = None) -> None:
+    if "agent_routes" in state:
+        if remote.get("completion_recipient", "controller") == "controller" and remote.get("controller_role") not in {"oracle", "selector"}:
+            raise RuntimeError("REMOTE_CONTROLLER_ROLE_REQUIRED")
+        if origin and origin.get("recipient") == "controller" and remote.get("controller_role") != item_role(origin, state):
+            raise RuntimeError("REMOTE_JOB_CONTROLLER_ROLE_MISMATCH")
+    for previous in state["remote_jobs"].values():
+        if remote_role(previous) == remote_role(remote) and previous != remote:
+            raise RuntimeError("ACTIVE_REMOTE_JOB_PROTECTED")
 
 
 def load(path: Path) -> dict[str, Any]:
@@ -311,26 +367,47 @@ def import_external_events(state: dict[str, Any], state_path: Path) -> bool:
             payload = value.get("payload")
             if not isinstance(payload, dict):
                 raise RuntimeError("EXTERNAL_EVENT_PAYLOAD_INVALID")
+            owner_stop = owner_stop_snapshot(state)
+            if value.get('producer') == 'owner' and value.get('resume_global') is True:
+                owner_stop = {}
             recipient = value.get("recipient") or ("director" if value["kind"] in {"REVIEW_REQUEST", "DIRECTOR_TASK"} else "controller")
             if value['kind'] == 'DIRECTOR_TASK' and recipient != 'director':
                 raise RuntimeError('DIRECTOR_TASK_RECIPIENT_MISMATCH')
             item = event(value["kind"], recipient, value.get("producer") or "supervisor", payload)
             already_known = any(entry['event_id'] == item['event_id'] for entry in state['pending_events'])
-            if not already_known and (value['kind'] == 'REMOTE_TERMINAL' or payload.get('bound_remote_job')) and state.get('remote_job'):
-                if payload.get('round_id') != (state['remote_job'].get('job_id') or state['remote_job'].get('run_id')):
-                    raise RuntimeError('TERMINAL_EVENT_ACTIVE_JOB_MISMATCH')
+            terminal = value['kind'] == 'REMOTE_TERMINAL' or payload.get('bound_remote_job')
+            if not already_known and terminal:
+                job_id = payload.get('round_id')
+                if not re.fullmatch(r'[A-Za-z0-9_-]+', str(job_id)):
+                    raise RuntimeError('REMOTE_JOB_ID_UNSAFE')
+                registered = state['remote_jobs'].get(job_id)
+                if not registered:
+                    registry = state_path.parent / 'remote_jobs' / f'{job_id}.json'
+                    if registry.is_file():
+                        registered = json.loads(registry.read_text(encoding='utf-8-sig'))
+                    elif state['remote_jobs'] or payload.get('bound_remote_job'):
+                        raise RuntimeError('TERMINAL_EVENT_ACTIVE_JOB_MISMATCH')
+                if registered:
+                    if recipient != registered.get('completion_recipient', 'controller'):
+                        raise RuntimeError('TERMINAL_EVENT_RECIPIENT_MISMATCH')
+                    if registered.get('controller_role') != payload.get('controller_role'):
+                        raise RuntimeError('TERMINAL_EVENT_CONTROLLER_ROLE_MISMATCH')
             added = enqueue(state, item)
             changed = added or changed
-            if added and value["kind"] == "REMOTE_TERMINAL" and state['disposition'] != 'PAUSED':
+            if added and terminal:
+                state['remote_jobs'].pop(payload.get('round_id'), None)
+                sync_remote_display(state)
+            if added and value["kind"] == "REMOTE_TERMINAL" and not globally_stopped(state):
                 state.update({"disposition": "CONTINUE_CONTROLLER",
                               "next_action": "INGEST_FREEZE_AND_ROUTE_REMOTE_RESULT",
-                              "remote_job": None, "terminal_reason": None})
+                              "terminal_reason": None})
             elif added and value["kind"] == "CONTROLLER_TASK":
                 state.update({"disposition": "CONTINUE_CONTROLLER",
                               "stage": payload.get("stage") or state["stage"],
                               "controller_role": payload.get("controller_role"),
                               "next_action": payload.get("next_action"),
-                              "pause_reason": None, "terminal_reason": None})
+                              "pause_reason": None, "terminal_reason": None, "pause_scope": "agent"})
+                state['paused_roles'].pop(item_role(item, state), None)
             elif added and value["kind"] == "REVIEW_REQUEST":
                 state.update({"disposition": "REVIEW_REQUIRED", "review": {
                     "brief_path": payload.get("brief_path"),
@@ -338,12 +415,14 @@ def import_external_events(state: dict[str, Any], state_path: Path) -> bool:
                     "reason": payload.get("review_reason"),
                     **({"controller_role": payload["controller_role"]} if payload.get("controller_role") else {}),
                 }})
-            elif added and value['kind'] == 'DIRECTOR_TASK' and state['disposition'] != 'PAUSED':
+            elif added and value['kind'] == 'DIRECTOR_TASK' and (not (globally_stopped(state) and state['disposition'] == 'PAUSED')
+                    or (value.get('producer') == 'owner' and value.get('resume_global') is True)):
                 state.update(disposition='REVIEW_REQUIRED', review=None,
                              stage=payload.get('stage') or state['stage'],
                              next_action='DIRECTOR_CONTINUES_BOUND_OWNER_TASK', terminal_reason=None)
-                if payload.get('bound_remote_job'):
-                    state['remote_job'] = None
+                state['paused_roles'].pop('director', None)
+            # A routine result or queued work cannot revoke a global owner STOP.
+            state.update(owner_stop)
             target = processed / f"{item['event_id']}.json"
             # Persist the queue before removing its producer's durable outbox.
             # A crash in between is a harmless idempotent import on restart.
@@ -366,6 +445,10 @@ def import_external_events(state: dict[str, Any], state_path: Path) -> bool:
 
 
 def synthesize_state_event(state: dict[str, Any]) -> bool:
+    # Named multi-agent operation enqueues successors atomically at completion.
+    # Never manufacture work from another agent's last-written display fields.
+    if 'agent_routes' in state:
+        return False
     if state["disposition"] == "CONTINUE_CONTROLLER":
         if any(item["recipient"] == "controller" and item["status"] != "COMPLETE"
                for item in state["pending_events"]):
@@ -526,8 +609,7 @@ def configure_agent_routes(state_path: Path, value: str) -> None:
     routes = json.loads(resolve_artifact(value).read_text(encoding="utf-8-sig"))["agent_routes"]
     validate_agent_routes(routes)
     state = load(state_path)
-    if state.get("active_event"):
-        active = find_event(state, state["active_event"])
+    for active in (e for e in state['pending_events'] if e['status'] in {'DELIVERED', 'CLAIMED'}):
         role = event_role(active, state)
         old = state.get("agent_routes", {}).get(role)
         if old and any(old.get(k) != routes.get(role, {}).get(k) for k in ("agent_name", "pane_id", "terminal_id", "thread_id")):
@@ -564,6 +646,7 @@ def prompt_text(item: dict[str, Any], state_path: Path) -> str:
             f"--state \"{state_path.resolve()}\" --claim-event {event_id}. Execute only this event payload: "
             f"{json.dumps(payload, sort_keys=True)}. Complete it through the same Governor CLI; never prompt Director directly. "
             "This payload is the bounded handoff. Do not read the full workflow/event history unless diagnosing a specific binding error. "
+            "Invoke the claim CLI once; it checks actual thread plus live Agent identity. A shared executor's inherited HERDR_PANE_ID mismatch alone is not a blocker; never rewrite that environment. "
             "A terminal event authorizes ingestion of existing artifacts, not a rerun or new scientific execution."
         )
     brief_path = payload.get("brief_path")
@@ -595,60 +678,68 @@ def dispatch(state: dict[str, Any], state_path: Path, timeout: int) -> str:
     candidates = [item for item in state["pending_events"] if item["status"] == "QUEUED"]
     if not candidates:
         return "IDLE"
-    queued, role, route_issue = None, None, False
+    outcomes, skipped, visited_roles = [], [], set()
     for candidate in candidates:
+        # Preserve FIFO within each agent, not a global head-of-line lock.
+        state = load(state_path)
         try:
-            candidate_role = event_role(candidate, state)
-            if route_held(candidate_role, state):
+            role = event_role(candidate, state)
+            if role in visited_roles:
+                continue
+            visited_roles.add(role)
+            if route_held(role, state) or role in state['paused_roles']:
+                skipped.append('RECIPIENT_OWNER_HOLD_EVENT_QUEUED')
+                continue
+            if globally_stopped(state) and candidate['kind'] != 'PRODUCER_ERROR':
+                skipped.append('WORKFLOW_QUIESCENT')
+                continue
+            if occupied(state, role, candidate['event_id']):
+                skipped.append('RECIPIENT_WORKING_EVENT_QUEUED')
                 continue
         except RuntimeError as exc:
             record_route_issue(state_path, candidate, str(exc))
-            route_issue = True
+            skipped.append('RECIPIENT_ROUTE_INVALID_EVENT_QUEUED')
             continue
-        queued, role = candidate, candidate_role
-        break
-    if queued is None:
-        return "RECIPIENT_ROUTE_INVALID_EVENT_QUEUED" if route_issue else "RECIPIENT_OWNER_HOLD_EVENT_QUEUED"
-    if queued.get('retry_not_before', 0) > time.time():
-        return 'CONFIRMED_NON_DELIVERY_BACKOFF'
-    if state.get('active_event'):
-        return 'RECIPIENT_WORKING_EVENT_QUEUED'
+        try:
+            target = resolve_agent(role, state)
+        except (RuntimeError, subprocess.TimeoutExpired) as exc:
+            detail = str(exc)
+            if isinstance(exc, subprocess.TimeoutExpired) or detail.startswith('HERDR_AGENT_LIST_FAILED:') or detail.endswith('_TARGET_UNRESOLVED'):
+                skipped.append('RECIPIENT_TARGET_UNAVAILABLE_EVENT_QUEUED')
+            else:
+                record_route_issue(state_path, candidate, detail)
+                skipped.append('RECIPIENT_ROUTE_INVALID_EVENT_QUEUED')
+            continue
+        if target.get('agent_status') not in {'idle', 'done'}:
+            skipped.append('RECIPIENT_WORKING_EVENT_QUEUED' if target.get('agent_status') == 'working'
+                           else 'RECIPIENT_NOT_READY_EVENT_QUEUED')
+            continue
+        outcomes.append(deliver_once(candidate, role, target, state, state_path, timeout))
+    if 'EVENT_DELIVERED' in outcomes:
+        return 'EVENT_DELIVERED'
+    return next(iter(outcomes or skipped), 'IDLE')
+
+
+def deliver_once(queued: dict, role: str, target: dict, state: dict,
+                 state_path: Path, timeout: int) -> str:
+    """One durable delivery reservation; timeout/rejection never redelivers."""
     target_key = f"{queued['recipient']}_target"
-    try:
-        target = resolve_agent(role, state)
-    except (RuntimeError, subprocess.TimeoutExpired) as exc:
-        detail = str(exc)
-        if isinstance(exc, subprocess.TimeoutExpired) or detail.startswith("HERDR_AGENT_LIST_FAILED:") or detail.endswith("_TARGET_UNRESOLVED"):
-            return "RECIPIENT_TARGET_UNAVAILABLE_EVENT_QUEUED"
-        record_route_issue(state_path, queued, detail)
-        return "RECIPIENT_ROUTE_INVALID_EVENT_QUEUED"
-    # A terminal Supervisor receipt must wake an otherwise unclaimed Controller even
-    # when Herdr still reports its pane as working. Suppressing that prompt used to
-    # strand completed remote runs until a user message arrived. A claimed event
-    # remains exclusive, and ordinary Controller tasks retain the queue-only rule.
-    wake_working_controller = (
-        queued.get("kind") == "REMOTE_TERMINAL"
-        and queued.get("recipient") == "controller"
-        and state.get("active_event") is None
-    )
-    if target.get("agent_status") == "working" and not wake_working_controller:
-        return "RECIPIENT_WORKING_EVENT_QUEUED"
-    if target.get("agent_status") not in {"idle", "done"} and not (wake_working_controller and target.get("agent_status") == "working"):
-        return "RECIPIENT_NOT_READY_EVENT_QUEUED"
     # DELIVERED remains the compatible lifecycle state; delivery_state explicitly
     # distinguishes durable intent from confirmed input. Re-read after observation
     # so another CLI transition can never be overwritten by this snapshot.
     with state_transaction(state_path):
         fresh = load(state_path)
         queued = find_event(fresh, queued['event_id'])
-        if queued['status'] != 'QUEUED' or fresh.get('active_event'):
+        if queued['status'] != 'QUEUED' or occupied(fresh, role, queued['event_id']):
             return 'EVENT_CHANGED_DURING_OBSERVATION'
-        if fresh['disposition'] in {'PAUSED', 'TERMINAL'} and queued['kind'] != 'PRODUCER_ERROR':
+        if globally_stopped(fresh) and queued['kind'] != 'PRODUCER_ERROR':
             return 'WORKFLOW_QUIESCENT'
-        if event_role(queued, fresh) != role or route_held(role, fresh):
+        if event_role(queued, fresh) != role or route_held(role, fresh) or role in fresh['paused_roles']:
             return 'RECIPIENT_OWNER_HOLD_EVENT_QUEUED'
         if fresh.get('agent_routes') != state.get('agent_routes'):
             return 'EVENT_ROUTE_CHANGED_DURING_OBSERVATION'
+        if queued.get('attempts', 0):
+            return 'EVENT_SINGLE_DELIVERY_ALREADY_ATTEMPTED'
         queued.update({"status": "DELIVERED", "delivery_state": "ATTEMPTING",
                        "attempts": int(queued.get("attempts") or 0) + 1,
                        "delivered_at": now(), "target": target.get("pane_id"),
@@ -682,9 +773,8 @@ def dispatch(state: dict[str, Any], state_path: Path, timeout: int) -> str:
             item.update(delivery_state=classification, delivery_error=error_code)
             if classification == 'CONFIRMED':
                 item['delivery_confirmed_at'] = now()
-            if classification == 'CONFIRMED_NON_DELIVERY' and item['attempts'] < 2:
-                item['status'] = 'QUEUED'
-                item['retry_not_before'] = time.time() + 60
+            # Even a confirmed pre-input rejection stays reserved. Reconcile
+            # through one incident; never spend another agent turn automatically.
             save(state_path, fresh, f'EVENT_DELIVERY_CLASSIFIED:{item["event_id"]}:{classification}')
         append_ledger(state_path, {'transition': 'HERDR_PROMPT_RESULT',
                                   'event_id': queued['event_id'], 'delivery_state': classification,
@@ -713,38 +803,14 @@ def resume_claimed_event(state_path: Path, event_id: str, timeout: int) -> str:
     item = find_event(state, event_id)
     if item.get("recipient") != "controller":
         raise RuntimeError("ONLY_CONTROLLER_CLAIM_CAN_BE_RESUMED")
-    if item.get("status") != "CLAIMED" or state.get("active_event") != event_id:
+    if item.get("status") != "CLAIMED":
         raise RuntimeError("CLAIMED_EVENT_NOT_ACTIVE")
     role = event_role(item, state)
     if route_held(role, state):
         return "RECIPIENT_OWNER_HOLD_EVENT_QUEUED"
-    target = resolve_agent(role, state)
-    pane_id = target.get("pane_id")
-    if not item.get("target") or pane_id != item.get("target"):
-        raise RuntimeError("CLAIMED_EVENT_TARGET_MISMATCH")
-    if target.get("agent_status") == "working":
-        return "CLAIMED_EVENT_ALREADY_WORKING"
-    if target.get("agent_status") not in {"idle", "done"}:
-        raise RuntimeError("CLAIMED_EVENT_TARGET_NOT_RESUMABLE")
-    if item.get("resume_attempts", 0):
-        return "CLAIMED_EVENT_RESUME_ALREADY_ATTEMPTED"
-
-    item.update({"resume_attempts": int(item.get("resume_attempts") or 0) + 1,
-                 "resumed_at": now()})
-    save(state_path, state, f"CLAIMED_EVENT_RESUME_RESERVED:{event_id}")
-    command = ["herdr", "agent", "prompt", pane_id, resume_prompt_text(item, state_path),
-               "--wait", "--until", "working", "--timeout", str(timeout * 1000)]
-    try:
-        completed = subprocess.run(command, capture_output=True, check=False, text=True,
-                                   encoding="utf-8", errors="replace", timeout=timeout + 10,
-                                   creationflags=windows_creationflags())
-    except (OSError, subprocess.TimeoutExpired) as exc:
-        append_ledger(state_path, {"transition": "HERDR_RESUME_PROMPT_RESULT", "event_id": event_id,
-                                   "outcome": "UNKNOWN_FAIL_CLOSED", "error": type(exc).__name__})
-        return "CLAIMED_EVENT_RESUME_UNKNOWN_FAIL_CLOSED"
-    append_ledger(state_path, {"transition": "HERDR_RESUME_PROMPT_RESULT", "event_id": event_id,
-                               "exit_code": completed.returncode})
-    return "CLAIMED_EVENT_RESUMED" if completed.returncode == 0 else "CLAIMED_EVENT_RESUME_UNKNOWN_FAIL_CLOSED"
+    # Owner selected strict one-shot delivery. A stalled claim is diagnostic
+    # evidence, not permission to inject its payload into the agent again.
+    return 'CLAIMED_EVENT_RESUME_DISABLED_SINGLE_DELIVERY'
 
 
 def response_directory() -> Path:
@@ -792,6 +858,7 @@ def repair_recursive_review_state(state_path: Path) -> None:
 
 
 def consume_director_response(state: dict[str, Any], state_path: Path) -> bool:
+    owner_stop = owner_stop_snapshot(state)
     item = next((entry for entry in state["pending_events"]
                  if entry["kind"] == "DIRECTOR_REVIEW" and entry["status"] in {"DELIVERED", "CLAIMED"}), None)
     if not item:
@@ -824,8 +891,13 @@ def consume_director_response(state: dict[str, Any], state_path: Path) -> bool:
         return True
     item.update({"status": "COMPLETE", "completed_at": now(), "outcome": decision,
                  "response_path": str(response_path.resolve()), "response_sha256": sha256_file(response_path)})
-    state["review"] = None
+    if (state.get('review') or {}).get('brief_sha256') == payload.get('brief_sha256'):
+        state["review"] = None
     controller_role = response.get("controller_role") or payload.get("controller_role")
+    if payload.get('controller_role') and controller_role != payload['controller_role']:
+        producer_error(state, {**item, 'producer': 'director'}, 'DIRECTOR_RESPONSE_CONTROLLER_ROLE_MISMATCH')
+        save(state_path, state, f'DIRECTOR_RESPONSE_REJECTED:{item["event_id"]}')
+        return True
     context = {"controller_role": controller_role} if controller_role else {}
     if decision == "CONTINUE_CONTROLLER":
         if not response.get("next_stage") or not response.get("next_action"):
@@ -862,6 +934,14 @@ def consume_director_response(state: dict[str, Any], state_path: Path) -> bool:
         state.update({"disposition": "PAUSED", "pause_reason": "PAUSED_BY_DIRECTOR"})
     else:
         state.update({"disposition": "TERMINAL", "terminal_reason": "TERMINAL_BY_DIRECTOR"})
+    if 'agent_routes' in state:
+        role = controller_role or 'director'
+        if decision in {'PAUSED', 'TERMINAL'}:
+            state['paused_roles'][role] = decision + '_BY_DIRECTOR'
+        else:
+            state['paused_roles'].pop(role, None)
+        state['pause_scope'] = 'agent'
+    state.update(owner_stop)
     save(state_path, state, f"DIRECTOR_RESPONSE_CONSUMED:{item['event_id']}")
     return True
 
@@ -879,8 +959,6 @@ def claim_event(state_path: Path, event_id: str) -> None:
             raise RuntimeError("EVENT_CLAIM_TARGET_MISMATCH")
         caller_pane = event_caller_pane(item, state)
     if item["status"] == "CLAIMED":
-        if state.get("active_event") != event_id:
-            raise RuntimeError("CLAIMED_EVENT_NOT_ACTIVE")
         if not caller_pane or item.get("target") != caller_pane:
             raise RuntimeError("EVENT_ALREADY_CLAIMED_BY_OTHER_PANE")
         append_ledger(state_path, {"transition": "EVENT_CLAIM_IDEMPOTENT", "event_id": event_id,
@@ -888,21 +966,22 @@ def claim_event(state_path: Path, event_id: str) -> None:
         return
     if item["status"] not in {"DELIVERED", "QUEUED"}:
         raise RuntimeError("EVENT_NOT_CLAIMABLE")
-    if state.get("active_event") not in {None, event_id}:
+    if occupied(state, item_role(item, state), event_id):
         raise RuntimeError("ANOTHER_EVENT_ALREADY_ACTIVE")
     item.update({"status": "CLAIMED", "claimed_at": now(), "delivery_state": "ACKNOWLEDGED"})
     if "agent_routes" in state:
         item["claim_thread_id"] = os.environ.get("CODEX_THREAD_ID")
         item["claim_inherited_pane"] = os.environ.get("HERDR_PANE_ID")
         item["claim_identity"] = "EXACT_THREAD_AND_LIVE_AGENT" if state["agent_routes"][role].get("thread_id") else "EXACT_PANE"
-    state["active_event"] = event_id
     save(state_path, state, f"EVENT_CLAIMED:{event_id}")
 
 
 @state_mutation
 def complete_event(state_path: Path, args: argparse.Namespace) -> None:
     state = load(state_path)
+    owner_stop = owner_stop_snapshot(state)
     item = find_event(state, args.complete_event)
+    role = item_role(item, state)
     if "agent_routes" in state:
         event_caller_pane(item, state)
     if item["status"] not in {"CLAIMED", "DELIVERED"}:
@@ -920,21 +999,34 @@ def complete_event(state_path: Path, args: argparse.Namespace) -> None:
         controller_role = item.get("payload", {}).get("controller_role")
         if controller_role:
             state["review"]["controller_role"] = controller_role
+        enqueue(state, event('DIRECTOR_REVIEW', 'director', 'controller', dict(state['review'])))
     if disposition == "WAIT_REMOTE":
         if not args.remote_job_file:
             raise RuntimeError("REMOTE_JOB_FILE_REQUIRED")
         _, remote = _read_remote_job_manifest(args.remote_job_file)
-        if state.get('remote_job') and state['remote_job'] != remote:
-            raise RuntimeError('ACTIVE_REMOTE_JOB_PROTECTED')
+        protect_remote_owner(state, remote, item)
         persist_remote_binding(state_path, remote)
-        state["remote_job"] = remote
-    else:
-        state["remote_job"] = None
-    item.update({"status": "COMPLETE", "completed_at": now(), "outcome": args.outcome or "COMPLETE"})
-    state.update({"active_event": None, "disposition": disposition,
+        state['remote_jobs'][remote['job_id']] = remote
+        sync_remote_display(state)
+    if 'agent_routes' in state:
+        if disposition in {'PAUSED', 'TERMINAL'}:
+            state['paused_roles'][role] = args.pause_reason or args.terminal_reason or disposition
+        else:
+            state['paused_roles'].pop(role, None)
+        if disposition == 'CONTINUE_CONTROLLER' and args.next_action:
+            payload = {'stage': args.stage or item['payload'].get('stage'), 'next_action': args.next_action}
+            if item['payload'].get('controller_role'):
+                payload['controller_role'] = item['payload']['controller_role']
+            enqueue(state, event('CONTROLLER_TASK', 'controller', item['recipient'], payload))
+    item.update({"status": "COMPLETE", "completed_at": now(), "outcome": args.outcome or "COMPLETE",
+                 "completion_disposition": disposition})
+    state.update({"disposition": disposition,
                   "stage": args.stage or state["stage"], "next_action": args.next_action,
                   "pause_reason": args.pause_reason if disposition == "PAUSED" else None,
                   "terminal_reason": args.terminal_reason if disposition == "TERMINAL" else None})
+    if 'agent_routes' in state:
+        state['pause_scope'] = 'agent'
+    state.update(owner_stop)
     save(state_path, state, f"EVENT_COMPLETED:{args.complete_event}")
 
 
@@ -955,6 +1047,8 @@ def _read_remote_job_manifest(value: str) -> tuple[Path, dict[str, Any]]:
         raise RuntimeError('REMOTE_JOB_CMDLINE_SHA256_INVALID')
     if remote.get('completion_recipient', 'controller') not in {'controller', 'director'}:
         raise RuntimeError('INVALID_COMPLETION_RECIPIENT')
+    if remote.get('controller_role') is not None and remote['controller_role'] not in {'oracle', 'selector'}:
+        raise RuntimeError('INVALID_REMOTE_CONTROLLER_ROLE')
     return remote_path, remote
 
 
@@ -985,6 +1079,8 @@ def replace_stale_wait_remote_job(state_path: Path, args: argparse.Namespace) ->
     if remote["job_id"] == previous.get("job_id") or remote["output_root"] == previous.get("output_root"):
         raise RuntimeError("REMOTE_JOB_REPLACEMENT_NOT_FRESH")
     persist_remote_binding(state_path, remote)
+    state['remote_jobs'].pop(previous['job_id'], None)
+    state['remote_jobs'][remote['job_id']] = remote
     state.update({"remote_job": remote,
                   "next_action": args.next_action or "SUPERVISOR_MONITORS_REPAIRED_BOUND_REMOTE_JOB",
                   "pause_reason": None, "terminal_reason": None})
@@ -1005,7 +1101,7 @@ def resume_paused_remote_job(state_path: Path, args: argparse.Namespace) -> None
         raise RuntimeError("REMOTE_JOB_ALREADY_REGISTERED")
     _, remote = _read_remote_job_manifest(args.resume_paused_remote_job)
     persist_remote_binding(state_path, remote)
-
+    state['remote_jobs'][remote['job_id']] = remote
     state.update({"disposition": "WAIT_REMOTE", "remote_job": remote,
                   "next_action": args.next_action or "SUPERVISOR_MONITORS_BOUND_REMOTE_JOB",
                   "pause_reason": None, "terminal_reason": None})
@@ -1016,13 +1112,14 @@ def resume_paused_remote_job(state_path: Path, args: argparse.Namespace) -> None
 def register_remote_job(state_path: Path, value: str) -> None:
     """Adopt an existing job for monitoring only; never launch or rearm it."""
     state = load(state_path)
+    owner_stop = owner_stop_snapshot(state)
     _, remote = _read_remote_job_manifest(value)
-    if state.get('active_event'):
+    role = remote_role(remote)
+    if occupied(state, role):
         raise RuntimeError('ACTIVE_EVENT_MUST_REGISTER_ON_COMPLETION')
-    previous = state.get('remote_job')
-    if previous and previous != remote:
-        raise RuntimeError('ACTIVE_REMOTE_JOB_PROTECTED')
-    if state.get('review'):
+    previous = state['remote_jobs'].get(remote['job_id'])
+    protect_remote_owner(state, remote)
+    if 'agent_routes' not in state and state.get('review'):
         raise RuntimeError('PENDING_REVIEW_PROTECTED')
     if remote.get('pipeline_status_path'):
         process = remote['primary_process']
@@ -1031,12 +1128,15 @@ def register_remote_job(state_path: Path, value: str) -> None:
         if remote['pipeline_status_path'] != remote['output_root'].rstrip('/') + '/PIPELINE_STATE.json':
             raise RuntimeError('PIPELINE_STATUS_MUST_BE_BOUND_TO_OUTPUT_ROOT')
     persist_remote_binding(state_path, remote)
-    if previous == remote and state['disposition'] == 'WAIT_REMOTE':
+    if previous == remote:
         return
-    state.update(remote_job=remote, disposition='WAIT_REMOTE',
+    state['remote_jobs'][remote['job_id']] = remote
+    sync_remote_display(state)
+    state.update(disposition='WAIT_REMOTE',
                  stage=remote.get('stage') or state['stage'],
                  next_action='SUPERVISOR_MONITORS_BOUND_REMOTE_JOB',
                  pause_reason=None, terminal_reason=None)
+    state.update(owner_stop)
     save(state_path, state, f'REMOTE_JOB_REGISTERED:{remote["job_id"]}')
 
 
@@ -1079,6 +1179,15 @@ def write_service_state(path: Path | None, status: str, state: dict[str, Any], d
     if detail:
         value["detail"] = detail
     value['remote_job_id'] = (state.get('remote_job') or {}).get('job_id')
+    value['remote_job_ids'] = list(state['remote_jobs'])
+    value['active_events_by_agent'] = state['active_events']
+    value['reserved_events_by_agent'] = {
+        item_role(e, state): e['event_id'] for e in state['pending_events']
+        if e['status'] in {'DELIVERED', 'CLAIMED'}}
+    value['queued_by_agent'] = {role: sum(e['status'] == 'QUEUED' and item_role(e, state) == role
+                                        for e in state['pending_events'])
+                                for role in state.get('agent_routes', {})}
+    value['delivery_policy'] = 'ONCE_PER_EVENT_PER_AGENT_FIFO_SKIP_BUSY'
     value['source_sha256'] = sha256_file(Path(__file__))
     value['held_routes'] = [role for role, route in state.get('agent_routes', {}).items() if route.get('held')]
     value['unacknowledged_events'] = [item['event_id'] for item in state['pending_events']

@@ -135,16 +135,22 @@ function Resolve-ControllerTarget([object]$Workflow) {
 
 function Invoke-ControllerRepairWake([object]$Workflow, [string]$Failure) {
   if ($DisableControllerWake) { return 'CONTROLLER_WAKE_DISABLED' }
-  $target = Resolve-ControllerTarget $Workflow
-  if (-not $target) { return 'CONTROLLER_TARGET_UNRESOLVED' }
-  if ($target.agent_status -eq 'working') { return 'CONTROLLER_ALREADY_ACTIVE' }
   $message = "ARC2 Governor watchdog detected $MaxConsecutiveFailures consecutive Governor start/liveness failures: $Failure. Repair the Governor process host with bounded CPU-only checks. Preserve workflow disposition and per-agent owner holds; do not schedule scientific work, launch GPU work, or alter authorizations."
   try {
-    & herdr agent prompt $target.pane_id $message --timeout 30000 2>$null | Out-Null
-    if ($LASTEXITCODE -eq 0) { return "CONTROLLER_WAKE_SENT:$($target.pane_id)" }
-    return "CONTROLLER_WAKE_FAILED_EXIT_$LASTEXITCODE"
+    # A host incident is durable work too, never a direct/duplicate UI prompt.
+    $named = $Workflow -and $Workflow.PSObject.Properties['agent_routes']
+    $recipient = if ($named) { 'director' } else { 'controller' }
+    $kind = if ($named) { 'DIRECTOR_TASK' } else { 'CONTROLLER_TASK' }
+    $payload = @{ stage='GOVERNOR_PROCESS_HOST_REPAIR_CPU_ONLY'; next_action=$message }
+    $hash = [System.Security.Cryptography.SHA256]::Create()
+    try { $key = ([BitConverter]::ToString($hash.ComputeHash([Text.Encoding]::UTF8.GetBytes($message)))).Replace('-','').ToLowerInvariant() } finally { $hash.Dispose() }
+    $eventPath = Join-Path $runtime "events\GOVERNOR_HOST_REPAIR_$key.json"
+    if (-not (Test-Path -LiteralPath $eventPath)) {
+      Save-Arc2Json $eventPath @{ schema_version=1; kind=$kind; recipient=$recipient; producer='watchdog'; payload=$payload }
+    }
+    return "REPAIR_EVENT_QUEUED:$recipient"
   } catch {
-    return "CONTROLLER_WAKE_FAILED:$($_.Exception.GetType().Name)"
+    return "REPAIR_EVENT_WRITE_FAILED:$($_.Exception.GetType().Name)"
   }
 }
 

@@ -18,6 +18,13 @@ Director directly. On a Governor wake, claim the stated event before work and
 complete that same event through the Governor CLI. While Controller is working,
 new events remain queued and do not create another prompt.
 
+Claim identity is checked by the Governor CLI, not by a standalone pane-env
+comparison. The shared command executor may inherit Director's HERDR_PANE_ID
+inside another visible Agent. Do not stop solely for that mismatch and never
+rewrite it. Invoke the given claim command once: Governor validates the actual
+CODEX_THREAD_ID plus the live bound Agent/name/pane/terminal. Only a rejection
+from that guard is an identity blocker. Do not claim another event or session.
+
 A scientific review is requested by completing the active event with
 `--next-disposition REVIEW_REQUIRED`, an immutable `--review-brief`, its exact
 `--review-brief-sha256`, and `--review-reason`. A detached job is handed to

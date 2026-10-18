@@ -374,6 +374,7 @@ class Supervisor:
                         "bound_remote_job": True,
                         "required_action": "DIRECTOR_CONTINUE_OWNER_TASK_ON_SUCCESS_OR_FAILURE" if recipient == 'director' else "INGEST_FREEZE_AND_IF_SCIENTIFIC_EMIT_ONE_SHA_BOUND_REVIEW_REQUEST",
                         "completion_context": transport.get('completion_context'),
+                        **({'controller_role': transport['controller_role']} if transport.get('controller_role') else {}),
                     },
                 })
             record["governor_event_path"] = str(governor_event.resolve())
@@ -1063,6 +1064,7 @@ def remote_job_manifests(remote_job_dir: Path) -> list[dict[str, Any]]:
                           "terminal_receipt": terminal_receipt,
                           "manifest_path": str(path.resolve()),
                           "completion_recipient": value.get('completion_recipient', 'controller'),
+                          **({'controller_role': value['controller_role']} if value.get('controller_role') else {}),
                           **({key: value[key] for key in ('pipeline_status_path', 'primary_process',
                                                          'source_commit', 'completion_context') if key in value}
                              if value.get('pipeline_status_path') == output_root.rstrip('/') + '/PIPELINE_STATE.json'

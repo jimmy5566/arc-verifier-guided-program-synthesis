@@ -269,9 +269,9 @@ class NamedRouteTests(unittest.TestCase):
             g.atomic(path, state)
             fake = FakeNamedHerdr()
             with mock.patch.object(g.subprocess, "run", side_effect=fake):
-                self.assertEqual(g.resume_claimed_event(path, item["event_id"], 1), "CLAIMED_EVENT_RESUMED")
-                self.assertEqual(g.resume_claimed_event(path, item["event_id"], 1), "CLAIMED_EVENT_RESUME_ALREADY_ATTEMPTED")
-            self.assertEqual(len(fake.prompts), 1)
+                self.assertEqual(g.resume_claimed_event(path, item["event_id"], 1), "CLAIMED_EVENT_RESUME_DISABLED_SINGLE_DELIVERY")
+                self.assertEqual(g.resume_claimed_event(path, item["event_id"], 1), "CLAIMED_EVENT_RESUME_DISABLED_SINGLE_DELIVERY")
+            self.assertEqual(len(fake.prompts), 0)
 
     def test_director_result_returns_to_original_selector_but_does_not_release_hold(self):
         with tempfile.TemporaryDirectory() as td:

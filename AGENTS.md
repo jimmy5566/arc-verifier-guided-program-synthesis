@@ -16,6 +16,11 @@
   immutable content-addressed events. Persisted delivery intent is distinct from acknowledgement; ambiguous delivery never grants blind redelivery. All detached jobs use one durable Supervisor registry; the router never interprets results or authorizes reruns.
   `orchestration/governor/Start-Arc2Governor.ps1` starts the service. `scripts/arc2_runner.py` and historical directive loops are
   deprecated provenance and must not run concurrently.
+- Governor uses one event table with FIFO per exact Agent. Busy/held/reserved
+  Agents are skipped; independent Agents may work concurrently. Each event has
+  one delivery attempt, including rejection/timeouts; no automatic re-prompt.
+  Local and remote launch/completion tasks use this same queue. Supervisor only
+  writes role-bound terminal events and never directly prompts an Agent.
 
 ## Engineering remediation and scientific review
 

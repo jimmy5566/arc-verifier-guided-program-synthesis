@@ -117,14 +117,12 @@ class ThinGovernorTests(unittest.TestCase):
             fake = FakeHerdr({"controller": "idle"})
             with mock.patch.object(governor.subprocess, "run", side_effect=fake):
                 result = governor.resume_claimed_event(state_path, item["event_id"], 1)
-            self.assertEqual(result, "CLAIMED_EVENT_RESUMED")
-            self.assertEqual(len(fake.prompts), 1)
-            self.assertIn("already CLAIMED", fake.prompts[0][4])
-            self.assertIn("do not claim it again", fake.prompts[0][4])
+            self.assertEqual(result, "CLAIMED_EVENT_RESUME_DISABLED_SINGLE_DELIVERY")
+            self.assertEqual(len(fake.prompts), 0)
             saved = governor.load(state_path)
             self.assertEqual(saved["active_event"], item["event_id"])
             self.assertEqual(saved["pending_events"][0]["status"], "CLAIMED")
-            self.assertEqual(saved["pending_events"][0]["resume_attempts"], 1)
+            self.assertNotIn("resume_attempts", saved["pending_events"][0])
 
     def test_nameless_herdr_agents_use_explicit_director_binding_not_history(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -196,7 +194,7 @@ class ThinGovernorTests(unittest.TestCase):
             self.assertEqual(len(fake.prompts), 1)
             self.assertEqual(state["pending_events"][0]["attempts"], 1)
 
-    def test_remote_terminal_wakes_unclaimed_working_controller_once(self):
+    def test_remote_terminal_waits_while_working_then_delivers_once(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             state_path = root / "ARC2_WORKFLOW_STATE.json"
@@ -210,6 +208,10 @@ class ThinGovernorTests(unittest.TestCase):
             })
             fake = FakeHerdr({"controller": "working"})
             with mock.patch.object(governor.subprocess, "run", side_effect=fake):
+                result, state = governor.cycle(state_path, agent_timeout_seconds=1)
+                self.assertEqual(result, 'RECIPIENT_WORKING_EVENT_QUEUED')
+                self.assertFalse(fake.prompts)
+                fake.statuses['controller'] = 'idle'
                 result, state = governor.cycle(state_path, agent_timeout_seconds=1)
                 again, state = governor.cycle(state_path, agent_timeout_seconds=1)
             self.assertEqual(result, "EVENT_DELIVERED")

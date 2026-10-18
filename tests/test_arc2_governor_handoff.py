@@ -90,7 +90,7 @@ class HandoffTests(unittest.TestCase):
             self.assertEqual(result, 'DELIVERY_ACK_REQUIRED')
             self.assertEqual(len(list((root / 'delivery_alerts').glob('*.json'))), 1)
 
-    def test_confirmed_non_delivery_has_backoff_and_two_attempt_ceiling(self):
+    def test_confirmed_non_delivery_is_single_attempt_even_after_restart(self):
         with tempfile.TemporaryDirectory() as td:
             path, _ = self.state(Path(td))
             fake = FakeHerdr({'controller': 'idle'})
@@ -102,13 +102,14 @@ class HandoffTests(unittest.TestCase):
             with mock.patch.object(g.subprocess, 'run', side_effect=run):
                 g.cycle(path, agent_timeout_seconds=1)
                 result, _ = g.cycle(path, agent_timeout_seconds=1)
-                self.assertEqual(result, 'CONFIRMED_NON_DELIVERY_BACKOFF')
+                self.assertEqual(result, 'IDLE')
                 fresh = g.load(path)
                 fresh['pending_events'][0]['retry_not_before'] = 0
                 g.atomic(path, fresh)
                 for _ in range(4):
                     g.cycle(path, agent_timeout_seconds=1)
-            self.assertEqual(len(fake.prompts), 2)
+            self.assertEqual(len(fake.prompts), 1)
+            self.assertEqual(g.load(path)['pending_events'][0]['status'], 'DELIVERED')
 
     def test_registration_is_idempotent_and_does_not_launch_or_rearm(self):
         with tempfile.TemporaryDirectory() as td:
