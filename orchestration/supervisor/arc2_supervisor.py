@@ -23,7 +23,20 @@ LOW_FREQUENCY_RECONCILIATION_SECONDS = 5
 # Bound production workers use COMPLETE after they have written their immutable
 # terminal receipt.  Keep it distinct from scientific acceptance: the
 # Controller still ingests and reviews the frozen score artifact.
-TERMINAL_STATES = {"SUCCESS", "COMPLETE", "TRAIN_FAILED", "OOM", "INFRA_FAILED", "INTERRUPTED", "FAILED_OR_PARTIAL_NO_RETRY", "UNKNOWN"}
+TERMINAL_STATES = {"SUCCESS", "COMPLETE", "TRAIN_FAILED", "OOM", "INFRA_FAILED", "INTERRUPTED", "FAILED_OR_PARTIAL_NO_RETRY", "UNKNOWN",
+                   "PREMODEL_BLOCKED", "PARTIAL_NOT_ESTABLISHED_NO_RETRY", "COMPLETE_FIRST_CELL_OFF_ON"}
+
+
+def bound_terminal_status(receipt: dict) -> str | None:
+    status = receipt.get('status')
+    if status in TERMINAL_STATES:
+        return status
+    # Explicit final receipts from a new worker version must not disappear.
+    # Preserve raw bytes/status, route once as UNKNOWN, never infer success.
+    active = {'RUNNING', 'PENDING', 'WAITING', 'WAITING_REGISTRATION', 'READY', 'STARTING', 'ACTIVE'}
+    if isinstance(status, str) and status and status not in active and receipt.get('terminal_status') == status:
+        return 'UNKNOWN'
+    return None
 ROUND_CLASS_SCIENTIFIC = "SCIENTIFIC"
 ROUND_CLASS_DUMMY = "DUMMY"
 ROUND_CLASS_SMOKE = "SMOKE"
@@ -326,8 +339,8 @@ class Supervisor:
                 receipt = json.loads(local_receipt.read_text(encoding="utf-8"))
             except (OSError, json.JSONDecodeError):
                 continue
-            status = receipt.get("status")
-            if status not in TERMINAL_STATES:
+            status = bound_terminal_status(receipt)
+            if status is None:
                 continue
             digest = canonical_hash(local_receipt)
             if digest != transport.get("receipt_sha256"):
@@ -339,6 +352,7 @@ class Supervisor:
             record.update({
                 "terminal_receipt_hash": digest,
                 "terminal_status": status,
+                "reported_terminal_status": receipt.get('status'),
                 "round_class": ROUND_CLASS_SCIENTIFIC,
                 "scientific_round": True,
                 "remote_receipt_path": str(local_receipt.resolve()),
@@ -370,6 +384,7 @@ class Supervisor:
                         "terminal_receipt": str(local_receipt.resolve()),
                         "terminal_receipt_sha256": digest,
                         "terminal_status": status,
+                        "reported_terminal_status": receipt.get('status'),
                         "round_class": ROUND_CLASS_SCIENTIFIC,
                         "bound_remote_job": True,
                         "required_action": "DIRECTOR_CONTINUE_OWNER_TASK_ON_SUCCESS_OR_FAILURE" if recipient == 'director' else "INGEST_FREEZE_AND_IF_SCIENTIFIC_EMIT_ONE_SHA_BOUND_REVIEW_REQUEST",

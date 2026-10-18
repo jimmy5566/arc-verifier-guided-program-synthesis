@@ -3,6 +3,7 @@
 import base64
 import contextlib
 import io
+import importlib.util
 import json
 import tempfile
 import unittest
@@ -10,10 +11,38 @@ from datetime import datetime, timezone
 from pathlib import Path
 from unittest.mock import patch
 
-from orchestration.supervisor import arc2_supervisor as supervisor_module
+_spec = importlib.util.spec_from_file_location('supervisor_observability_local', Path(__file__).with_name('arc2_supervisor.py'))
+supervisor_module = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(supervisor_module)
 
 
 class SupervisorObservabilityTest(unittest.TestCase):
+    def test_all_oracle_terminal_variants_route_once_to_director(self):
+        for raw, expected in [('PREMODEL_BLOCKED','PREMODEL_BLOCKED'),
+                              ('PARTIAL_NOT_ESTABLISHED_NO_RETRY','PARTIAL_NOT_ESTABLISHED_NO_RETRY'),
+                              ('COMPLETE_FIRST_CELL_OFF_ON','COMPLETE_FIRST_CELL_OFF_ON'),
+                              ('FUTURE_FINAL_SCHEMA_STATUS','UNKNOWN')]:
+            with self.subTest(raw=raw), tempfile.TemporaryDirectory() as td:
+                base=Path(td); receipt=base/'TERMINAL_RECEIPT.json'
+                receipt.write_text(json.dumps({'job_id':'ORACLE_JOB','status':raw,'terminal_status':raw}))
+                original=receipt.read_bytes()
+                record={'job_id':'ORACLE_JOB','local_receipt':str(receipt),
+                        'receipt_sha256':supervisor_module.canonical_hash(receipt),
+                        'terminal_receipt':'/workspace/oracle/TERMINAL_RECEIPT.json',
+                        'manifest_path':'/local/job.json','completion_recipient':'director','controller_role':'oracle'}
+                service=supervisor_module.Supervisor(base/'state.json',base/'notes',base/'events')
+                self.assertEqual(service.reconcile_bound_remote_jobs([record]),['ORACLE_JOB'])
+                self.assertEqual(service.reconcile_bound_remote_jobs([record]),[])
+                event=json.loads(next((base/'events').glob('REMOTE_TERMINAL_*.json')).read_text())
+                self.assertEqual(event['recipient'],'director')
+                self.assertEqual(event['payload']['terminal_status'],expected)
+                self.assertEqual(event['payload']['reported_terminal_status'],raw)
+                self.assertEqual(receipt.read_bytes(),original)
+
+    def test_active_or_unmarked_status_does_not_become_terminal(self):
+        self.assertIsNone(supervisor_module.bound_terminal_status({'status':'NEW_STATUS'}))
+        self.assertIsNone(supervisor_module.bound_terminal_status({'status':'RUNNING','terminal_status':'RUNNING'}))
+
     def _receipt(self, root: Path, round_id: str) -> None:
         path = root / f"ROUND_{round_id}" / f"ROUND_{round_id}_TERMINAL_RECEIPT.json"
         path.parent.mkdir(parents=True)
