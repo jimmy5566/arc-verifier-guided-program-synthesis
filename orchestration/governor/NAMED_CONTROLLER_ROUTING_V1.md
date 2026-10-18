@@ -16,6 +16,15 @@ The input file contains `{"agent_routes": {...}}`. Configuration never prompts
 an agent or changes the workflow disposition. A future pane/session replacement
 requires an explicit binding update, not an implicit guess.
 
+When multiple Codex frontends share one command executor, its inherited
+`HERDR_PANE_ID` may identify the executor's original pane rather than the calling
+thread. In this measured configuration, bind each route's `thread_id` after a
+read-only identity probe in that exact visible agent. Claim/completion then
+require the runtime `CODEX_THREAD_ID` AND the live name/pane/terminal binding.
+Never rewrite `HERDR_PANE_ID`, accept an arbitrary caller-supplied pane, or let
+another thread claim on behalf of a Controller. Standalone routes without a
+thread binding still require the exact inherited pane. Holds remain independent.
+
 New Controller event payloads contain `controller_role: "oracle"` or
 `controller_role: "selector"`. Review payloads carry that field so Director's
 reply returns to the originating Controller. Remote event producers likewise

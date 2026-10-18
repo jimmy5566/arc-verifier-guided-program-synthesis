@@ -422,7 +422,7 @@ def herdr_agents() -> list[dict[str, Any]]:
 def validate_agent_routes(routes: Any) -> None:
     if not isinstance(routes, dict) or not routes or set(routes) - {"director", "oracle", "selector"}:
         raise RuntimeError("AGENT_ROUTES_INVALID")
-    names, panes = set(), set()
+    names, panes, threads = set(), set(), set()
     for role, route in routes.items():
         if not isinstance(route, dict) or not re.fullmatch(r"[a-z][a-z0-9_-]{0,31}", str(route.get("agent_name", ""))):
             raise RuntimeError("AGENT_ROUTE_NAME_INVALID")
@@ -430,10 +430,17 @@ def validate_agent_routes(routes: Any) -> None:
             raise RuntimeError("AGENT_ROUTE_PANE_REQUIRED")
         if not isinstance(route.get("held"), bool):
             raise RuntimeError("AGENT_ROUTE_HOLD_REQUIRED")
+        thread = route.get("thread_id")
+        if thread is not None and not re.fullmatch(r"[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}", str(thread)):
+            raise RuntimeError("AGENT_ROUTE_THREAD_INVALID")
+        if thread and thread in threads:
+            raise RuntimeError("AGENT_ROUTE_THREAD_NOT_UNIQUE")
         if route["agent_name"] in names or route["pane_id"] in panes:
             raise RuntimeError("AGENT_ROUTES_NOT_UNIQUE")
         names.add(route["agent_name"])
         panes.add(route["pane_id"])
+        if thread:
+            threads.add(thread)
 
 
 def event_role(item: dict[str, Any], state: dict[str, Any]) -> str:
@@ -457,7 +464,7 @@ def route_held(role: str, state: dict[str, Any]) -> bool:
     return routes[role]["held"]
 
 
-def resolve_agent(role: str, state: dict[str, Any]) -> dict[str, Any]:
+def resolve_agent(role: str, state: dict[str, Any], *, identity_only: bool = False) -> dict[str, Any]:
     """Exact live identity only: no historical-pane or focused-pane fallback."""
     routes = state.get("agent_routes")
     if routes is not None:
@@ -465,7 +472,7 @@ def resolve_agent(role: str, state: dict[str, Any]) -> dict[str, Any]:
         if role not in routes:
             raise RuntimeError("AGENT_ROUTE_BINDING_REQUIRED")
         route = routes[role]
-        if route["held"]:
+        if route["held"] and not identity_only:
             raise RuntimeError("RECIPIENT_OWNER_HELD")
         matches = [a for a in herdr_agents() if a.get("agent") == "codex"
                    and a.get("name") == route["agent_name"]]
@@ -489,6 +496,30 @@ def resolve_agent(role: str, state: dict[str, Any]) -> dict[str, Any]:
     return matches[0]
 
 
+def event_caller_pane(item: dict[str, Any], state: dict[str, Any]) -> str:
+    """Validate a caller without trusting a shared executor's inherited pane.
+
+    A thread binding is installed only after observing that thread in the exact
+    visible agent. It never changes environment variables or permits another
+    thread/pane/session to claim work. Older standalone callers remain pane-bound.
+    """
+    role = event_role(item, state)
+    binding = state["agent_routes"][role]
+    if (item.get("target") != binding["pane_id"]
+            or item.get("target_agent") != binding["agent_name"]):
+        raise RuntimeError("EVENT_CLAIM_TARGET_MISMATCH")
+    if binding.get("thread_id"):
+        if os.environ.get("CODEX_THREAD_ID") != binding["thread_id"]:
+            raise RuntimeError("EVENT_CALLER_THREAD_MISMATCH")
+        live = resolve_agent(role, state, identity_only=True)
+        if (live.get("pane_id") != item["target"]
+                or (binding.get("terminal_id") and item.get("target_terminal_id") != binding["terminal_id"])):
+            raise RuntimeError("EVENT_CALLER_LIVE_IDENTITY_MISMATCH")
+    elif os.environ.get("HERDR_PANE_ID") != item.get("target"):
+        raise RuntimeError("EVENT_CLAIM_TARGET_MISMATCH")
+    return binding["pane_id"]
+
+
 @state_mutation
 def configure_agent_routes(state_path: Path, value: str) -> None:
     """Operator-only binding/hold edit; never activates or prompts any task."""
@@ -499,7 +530,7 @@ def configure_agent_routes(state_path: Path, value: str) -> None:
         active = find_event(state, state["active_event"])
         role = event_role(active, state)
         old = state.get("agent_routes", {}).get(role)
-        if old and any(old.get(k) != routes.get(role, {}).get(k) for k in ("agent_name", "pane_id", "terminal_id")):
+        if old and any(old.get(k) != routes.get(role, {}).get(k) for k in ("agent_name", "pane_id", "terminal_id", "thread_id")):
             raise RuntimeError("ACTIVE_EVENT_ROUTE_REBIND_FORBIDDEN")
     previous_bytes = state_path.read_bytes()
     backup = state_path.parent / "state_backups" / f"{state_path.stem}.before_named_routes.{hashlib.sha256(previous_bytes).hexdigest()[:16]}.json"
@@ -839,20 +870,17 @@ def consume_director_response(state: dict[str, Any], state_path: Path) -> bool:
 def claim_event(state_path: Path, event_id: str) -> None:
     state = load(state_path)
     item = find_event(state, event_id)
+    caller_pane = os.environ.get("HERDR_PANE_ID")
     if "agent_routes" in state:
         role = event_role(item, state)
         if route_held(role, state):
             raise RuntimeError("RECIPIENT_OWNER_HELD")
-        binding = state["agent_routes"][role]
-        if (item.get("status") not in {"DELIVERED", "CLAIMED"}
-                or os.environ.get("HERDR_PANE_ID") != item.get("target")
-                or item.get("target") != binding["pane_id"]
-                or item.get("target_agent") != binding["agent_name"]):
+        if item.get("status") not in {"DELIVERED", "CLAIMED"}:
             raise RuntimeError("EVENT_CLAIM_TARGET_MISMATCH")
+        caller_pane = event_caller_pane(item, state)
     if item["status"] == "CLAIMED":
         if state.get("active_event") != event_id:
             raise RuntimeError("CLAIMED_EVENT_NOT_ACTIVE")
-        caller_pane = os.environ.get("HERDR_PANE_ID")
         if not caller_pane or item.get("target") != caller_pane:
             raise RuntimeError("EVENT_ALREADY_CLAIMED_BY_OTHER_PANE")
         append_ledger(state_path, {"transition": "EVENT_CLAIM_IDEMPOTENT", "event_id": event_id,
@@ -863,6 +891,10 @@ def claim_event(state_path: Path, event_id: str) -> None:
     if state.get("active_event") not in {None, event_id}:
         raise RuntimeError("ANOTHER_EVENT_ALREADY_ACTIVE")
     item.update({"status": "CLAIMED", "claimed_at": now(), "delivery_state": "ACKNOWLEDGED"})
+    if "agent_routes" in state:
+        item["claim_thread_id"] = os.environ.get("CODEX_THREAD_ID")
+        item["claim_inherited_pane"] = os.environ.get("HERDR_PANE_ID")
+        item["claim_identity"] = "EXACT_THREAD_AND_LIVE_AGENT" if state["agent_routes"][role].get("thread_id") else "EXACT_PANE"
     state["active_event"] = event_id
     save(state_path, state, f"EVENT_CLAIMED:{event_id}")
 
@@ -871,8 +903,8 @@ def claim_event(state_path: Path, event_id: str) -> None:
 def complete_event(state_path: Path, args: argparse.Namespace) -> None:
     state = load(state_path)
     item = find_event(state, args.complete_event)
-    if "agent_routes" in state and os.environ.get("HERDR_PANE_ID") != item.get("target"):
-        raise RuntimeError("EVENT_COMPLETION_TARGET_MISMATCH")
+    if "agent_routes" in state:
+        event_caller_pane(item, state)
     if item["status"] not in {"CLAIMED", "DELIVERED"}:
         raise RuntimeError("EVENT_NOT_COMPLETABLE")
     disposition = args.next_disposition or state["disposition"]

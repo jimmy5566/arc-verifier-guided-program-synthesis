@@ -10,7 +10,7 @@ import unittest
 from pathlib import Path
 from unittest import mock
 
-from test_arc2_governor_thin_router import governor as g, initial_state
+from test_arc2_governor_thin_router import governor as g, initial_state, args_for_completion
 
 
 def routes(selector_held=True):
@@ -194,6 +194,71 @@ class NamedRouteTests(unittest.TestCase):
                 self.assertEqual(g.resume_claimed_event(path, item["event_id"], 1),
                                  "RECIPIENT_OWNER_HOLD_EVENT_QUEUED")
             run.assert_not_called()
+
+    def thread_state(self, root):
+        path, item = self.setup_state(root, role="selector")
+        state = g.load(path)
+        route = state["agent_routes"]["selector"]
+        route.update(held=False, thread_id="11111111-2222-3333-4444-555555555555")
+        g.atomic(path, state)
+        fake = FakeNamedHerdr()
+        with mock.patch.object(g.subprocess, "run", side_effect=fake):
+            g.cycle(path, agent_timeout_seconds=1)
+        return path, item, fake, route["thread_id"]
+
+    def test_shared_executor_stale_pane_accepts_only_bound_thread_and_live_agent(self):
+        with tempfile.TemporaryDirectory() as td:
+            path, item, fake, thread = self.thread_state(td)
+            with mock.patch.dict(os.environ, {"HERDR_PANE_ID": "director-pane", "CODEX_THREAD_ID": thread}), \
+                    mock.patch.object(g.subprocess, "run", side_effect=fake):
+                g.claim_event(path, item["event_id"])
+                g.claim_event(path, item["event_id"])
+            saved = g.load(path)["pending_events"][0]
+            self.assertEqual(saved["status"], "CLAIMED")
+            self.assertEqual(saved["target"], "selector-pane")
+            self.assertEqual(saved["claim_identity"], "EXACT_THREAD_AND_LIVE_AGENT")
+            self.assertEqual(saved["claim_inherited_pane"], "director-pane")
+            self.assertEqual(saved["attempts"], 1)
+
+    def test_right_pane_with_wrong_thread_cannot_claim_or_complete(self):
+        with tempfile.TemporaryDirectory() as td:
+            path, item, fake, thread = self.thread_state(td)
+            with mock.patch.dict(os.environ, {"HERDR_PANE_ID": "selector-pane", "CODEX_THREAD_ID": "wrong-thread"}):
+                with self.assertRaisesRegex(RuntimeError, "EVENT_CALLER_THREAD_MISMATCH"):
+                    g.claim_event(path, item["event_id"])
+                with self.assertRaisesRegex(RuntimeError, "EVENT_CALLER_THREAD_MISMATCH"):
+                    g.complete_event(path, args_for_completion(item["event_id"], "PAUSED"))
+            self.assertEqual(g.load(path)["pending_events"][0]["status"], "DELIVERED")
+
+    def test_bound_thread_cannot_claim_replaced_live_session(self):
+        with tempfile.TemporaryDirectory() as td:
+            path, item, fake, thread = self.thread_state(td)
+            fake.agents[2]["terminal_id"] = "replacement-session"
+            with mock.patch.dict(os.environ, {"HERDR_PANE_ID": "director-pane", "CODEX_THREAD_ID": thread}), \
+                    mock.patch.object(g.subprocess, "run", side_effect=fake):
+                with self.assertRaisesRegex(RuntimeError, "AGENT_ROUTE_TERMINAL_MISMATCH"):
+                    g.claim_event(path, item["event_id"])
+            self.assertEqual(g.load(path)["pending_events"][0]["status"], "DELIVERED")
+
+    def test_thread_bound_completion_works_without_changing_shared_environment(self):
+        with tempfile.TemporaryDirectory() as td:
+            path, item, fake, thread = self.thread_state(td)
+            with mock.patch.dict(os.environ, {"HERDR_PANE_ID": "director-pane", "CODEX_THREAD_ID": thread}), \
+                    mock.patch.object(g.subprocess, "run", side_effect=fake):
+                g.claim_event(path, item["event_id"])
+                g.complete_event(path, args_for_completion(item["event_id"], "PAUSED"))
+                self.assertEqual(os.environ["HERDR_PANE_ID"], "director-pane")
+            self.assertEqual(g.load(path)["pending_events"][0]["status"], "COMPLETE")
+
+    def test_thread_binding_missing_or_duplicate_identity_fails_closed(self):
+        cfg = routes()
+        cfg["oracle"]["thread_id"] = "11111111-2222-3333-4444-555555555555"
+        cfg["selector"]["thread_id"] = cfg["oracle"]["thread_id"]
+        with self.assertRaisesRegex(RuntimeError, "AGENT_ROUTE_THREAD_NOT_UNIQUE"):
+            g.validate_agent_routes(cfg)
+        cfg["selector"]["thread_id"] = "not-a-thread-id"
+        with self.assertRaisesRegex(RuntimeError, "AGENT_ROUTE_THREAD_INVALID"):
+            g.validate_agent_routes(cfg)
 
     def test_repeat_explicit_resume_does_not_reprompt(self):
         with tempfile.TemporaryDirectory() as td:
