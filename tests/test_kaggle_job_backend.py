@@ -45,3 +45,17 @@ def test_governor_validator_and_supervisor_ingest_idempotent_route(tmp_path):
     receipt=tmp_path/'terminal.json';receipt.write_text(json.dumps({'status':'COMPLETE'}));transport={**manifests[0],'local_receipt':str(receipt),'receipt_sha256':hashlib.sha256(receipt.read_bytes()).hexdigest()}
     monitor=s.Supervisor(tmp_path/'state.json',tmp_path/'notifications',tmp_path/'events');assert monitor.reconcile_bound_remote_jobs([transport])==[v['job_id']];assert monitor.reconcile_bound_remote_jobs([transport])==[]
     event=json.loads(next((tmp_path/'events').glob('*.json')).read_text());assert event['payload']['controller_role']=='selector' and event['recipient']=='controller'
+
+def test_prelaunch_registration_preserves_claim_and_checks_live_identity(tmp_path,monkeypatch):
+    spec=importlib.util.spec_from_file_location('governor_prelaunch_test',ROOT/'scripts/arc2_governor.py');g=importlib.util.module_from_spec(spec);spec.loader.exec_module(g)
+    v=manifest();p=tmp_path/'job.json';p.write_text(json.dumps(v))
+    item={'event_id':'same','status':'CLAIMED','recipient':'controller','payload':{'controller_role':'selector'}}
+    state={'disposition':'CONTINUE_CONTROLLER','pending_events':[item],'agent_routes':{'selector':{}},'remote_jobs':{},'active_event':'same'}
+    monkeypatch.setattr(g,'load',lambda _:state);monkeypatch.setattr(g,'save',lambda *args:None)
+    called=[];monkeypatch.setattr(g,'event_caller_pane',lambda *args:called.append(True))
+    g.register_remote_job.__wrapped__(tmp_path/'state.json',str(p))
+    assert called==[True] and item['status']=='CLAIMED' and state['active_event']=='same' and state['disposition']=='CONTINUE_CONTROLLER'
+    assert (tmp_path/'remote_jobs'/ (v['job_id']+'.json')).is_file()
+    def reject(*args):raise RuntimeError('REAL_IDENTITY_MISMATCH')
+    monkeypatch.setattr(g,'event_caller_pane',reject)
+    with pytest.raises(RuntimeError,match='REAL_IDENTITY_MISMATCH'):g.register_remote_job.__wrapped__(tmp_path/'state.json',str(p))

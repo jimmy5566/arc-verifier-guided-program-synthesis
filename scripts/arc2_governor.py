@@ -1173,7 +1173,19 @@ def register_remote_job(state_path: Path, value: str) -> None:
     _, remote = _read_remote_job_manifest(value)
     role = remote_role(remote)
     if occupied(state, role):
-        raise RuntimeError('ACTIVE_EVENT_MUST_REGISTER_ON_COMPLETION')
+        if remote.get('backend') != 'kaggle' or 'agent_routes' not in state:
+            raise RuntimeError('ACTIVE_EVENT_MUST_REGISTER_ON_COMPLETION')
+        active = [e for e in state['pending_events'] if item_role(e, state) == role and e['status'] in {'CLAIMED', 'DELIVERED'}]
+        if len(active) != 1 or active[0]['status'] != 'CLAIMED':
+            raise RuntimeError('KAGGLE_PRELAUNCH_REQUIRES_CLAIMED_EVENT')
+        event_caller_pane(active[0], state)
+        protect_remote_owner(state, remote, active[0])
+        persist_remote_binding(state_path, remote)
+        state['remote_jobs'][remote['job_id']] = remote
+        sync_remote_display(state)
+        state.update(owner_stop)
+        save(state_path, state, f'KAGGLE_PRELAUNCH_MONITOR_REGISTERED:{remote["job_id"]}')
+        return
     previous = state['remote_jobs'].get(remote['job_id'])
     protect_remote_owner(state, remote)
     if 'agent_routes' not in state and state.get('review'):
