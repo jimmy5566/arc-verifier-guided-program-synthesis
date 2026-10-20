@@ -61,6 +61,23 @@ for the producer; they never create an unbounded review loop.
 
 ## Remote completion
 
+Key-node status reports are distinct from scientific approvals. Controller may
+attach one immutable `--stage-report PATH --stage-report-sha256 SHA` to normal
+completion for a verified MILESTONE, EXPERIMENT_RESULT or genuine BLOCKED state.
+The router enqueues one informational Director task in the same transaction;
+Controller continues without waiting. A Director `--ack-stage-report EVENT_ID`
+completes only that notice and preserves other jobs/stages/holds. Ordinary retries
+stay local and results already requesting scientific review are not double-reported.
+
+Kaggle jobs use typed kernel/version/source/nonce bindings rather than fake SSH
+PIDs. Cached, bound worker terminal receipts are checked before download. Missing
+supplementary artifacts are listed for exact recovery; callback transport alone
+never certifies scientific completeness. Named-receipt fetching stops when the
+requested files arrive, without scanning installed-package output pages. A
+platform-terminal job without a verifiable worker receipt routes UNKNOWN promptly;
+it does not silently wait until an hour-long deadline. The existing Supervisor
+does metadata reconciliation, Governor delivers once, and neither reruns kernels.
+
 Supervisor writes terminal events to
 `.arc2-local/orchestration/events/`. Governor notices the event and wakes an
 idle Controller once. Controller ingests and freezes the receipt/result. A

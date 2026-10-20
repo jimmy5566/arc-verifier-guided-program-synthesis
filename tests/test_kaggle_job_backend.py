@@ -25,13 +25,13 @@ def test_real_CLI_enum_status_and_bound_output(tmp_path):
     v=manifest()
     def runner(cmd,**kw):
         if 'status' in cmd:return SimpleNamespace(returncode=0,stdout='job has status "KernelWorkerStatus.COMPLETE"')
-        if cmd[0]==k.PYTHON:return SimpleNamespace(returncode=0,stdout=json.dumps(identity(v)))
-        out=pathlib.Path(cmd[cmd.index('-p')+1]);(out/'TERMINAL_RECEIPT.json').write_text(json.dumps(worker(v)));return SimpleNamespace(returncode=0,stdout='')
+        if '-c' in cmd:return SimpleNamespace(returncode=0,stdout=json.dumps(identity(v)))
+        out=pathlib.Path(cmd[cmd.index('--output')+1]);(out/'TERMINAL_RECEIPT.json').write_text(json.dumps(worker(v)));return SimpleNamespace(returncode=0,stdout='')
     r=k.reconcile(v,tmp_path,runner);assert r['status']=='COMPLETE' and r['kernel_version']==1 and r['scientific_acceptance']=='NOT_INFERRED_FROM_PROCESS_RECEIPT'
 def test_missing_output_is_not_success_and_deadline_is_UNKNOWN(tmp_path):
     v=manifest()
-    def runner(cmd,**kw):return SimpleNamespace(returncode=0,stdout='job has status "KernelWorkerStatus.COMPLETE"' if 'status' in cmd else json.dumps(identity(v)) if cmd[0]==k.PYTHON else '')
-    assert k.reconcile(v,tmp_path,runner) is None
+    def runner(cmd,**kw):return SimpleNamespace(returncode=0,stdout='job has status "KernelWorkerStatus.COMPLETE"' if 'status' in cmd else json.dumps(identity(v)) if '-c' in cmd else '')
+    assert k.reconcile(v,tmp_path,runner)['status']=='UNKNOWN'
     assert k.reconcile(v,tmp_path,runner,datetime.now(timezone.utc)+timedelta(days=1))['status']=='UNKNOWN'
 def test_API_error_no_false_completion_then_UNKNOWN(tmp_path):
     v=manifest();run=lambda *a,**kw:SimpleNamespace(returncode=1,stdout='')
@@ -83,3 +83,77 @@ def test_claimed_verified_kaggle_terminal_retires_only_stale_live_binding(tmp_pa
     state['remote_jobs']={old['job_id']:old};w.write_text(json.dumps({**worker(old),'status':'COMPLETE'}))
     with pytest.raises(RuntimeError,match='SHA256_MISMATCH'):g.retire_claimed_kaggle_terminal(state,item)
     assert old['job_id'] in state['remote_jobs']
+
+
+def test_existing_bound_terminal_skips_download_despite_missing_supplement(tmp_path):
+    v=manifest();out=tmp_path/'kernel_output';out.mkdir()
+    w={**worker(v),'artifacts':{'PREFLIGHT_DEPENDENCY_LOG.txt':{'sha256':'e'*64,'bytes':8}}}
+    (out/'TERMINAL_RECEIPT.json').write_text(json.dumps(w))
+    calls=[]
+    def runner(cmd,**kw):
+        calls.append(cmd)
+        if 'status' in cmd:return SimpleNamespace(returncode=0,stdout='has status "KernelWorkerStatus.COMPLETE"')
+        if '-c' in cmd:return SimpleNamespace(returncode=0,stdout=json.dumps(identity(v)))
+        raise AssertionError('A_VALID_CACHED_TERMINAL_MUST_NOT_REDOWNLOAD')
+    result=k.reconcile(v,tmp_path,runner)
+    assert result['status']=='COMPLETE' and len(calls)==2
+    assert result['artifact_recovery']['missing']==['PREFLIGHT_DEPENDENCY_LOG.txt']
+    assert result['scientific_acceptance']=='NOT_INFERRED_FROM_PROCESS_RECEIPT'
+
+
+def test_download_timeout_after_receipt_written_still_routes(tmp_path):
+    import subprocess
+    v=manifest()
+    def runner(cmd,**kw):
+        if 'status' in cmd:return SimpleNamespace(returncode=0,stdout='has status "COMPLETE"')
+        if '-c' in cmd:return SimpleNamespace(returncode=0,stdout=json.dumps(identity(v)))
+        out=pathlib.Path(cmd[cmd.index('--output')+1]);(out/'TERMINAL_RECEIPT.json').write_text(json.dumps(worker(v)))
+        raise subprocess.TimeoutExpired('receipt-fetch',kw['timeout'])
+    assert k.reconcile(v,tmp_path,runner)['status']=='COMPLETE'
+
+
+def test_bad_cached_nonce_never_refetched_or_accepted(tmp_path):
+    v=manifest();out=tmp_path/'kernel_output';out.mkdir();(out/'TERMINAL_RECEIPT.json').write_text(json.dumps({**worker(v),'nonce':'f'*32}))
+    def runner(cmd,**kw):
+        if 'status' in cmd:return SimpleNamespace(returncode=0,stdout='has status "COMPLETE"')
+        assert '-c' in cmd
+        return SimpleNamespace(returncode=0,stdout=json.dumps(identity(v)))
+    r=k.reconcile(v,tmp_path,runner);assert r['status']=='UNKNOWN' and r['reason'].startswith('AssertionError')
+    assert (tmp_path/'OBSERVATION_ERROR.json').is_file()
+
+
+def test_cached_corrupt_artifact_is_not_scientific_success(tmp_path):
+    v=manifest();out=tmp_path/'kernel_output';out.mkdir();(out/'PREFLIGHT.json').write_text('{}')
+    w={**worker(v),'artifacts':{'PREFLIGHT.json':{'sha256':'e'*64,'bytes':2}}};(out/'TERMINAL_RECEIPT.json').write_text(json.dumps(w))
+    def runner(cmd,**kw):return SimpleNamespace(returncode=0,stdout='has status "COMPLETE"' if 'status' in cmd else json.dumps(identity(v)))
+    r=k.reconcile(v,tmp_path,runner)
+    assert r['artifact_recovery']['hash_mismatch']==['PREFLIGHT.json']
+    assert r['scientific_acceptance']=='NOT_INFERRED_FROM_PROCESS_RECEIPT'
+
+
+def test_named_fetch_stops_before_dependency_pages(tmp_path):
+    import kaggle_receipt_fetch as fetch
+    v=manifest();name='arc2_paired48_'+v['nonce']+'/TERMINAL_RECEIPT.json';calls=[]
+    class Client:
+        def __enter__(self):return SimpleNamespace(kernels=SimpleNamespace(kernels_api_client=self))
+        def __exit__(self,*args):pass
+        def list_kernel_session_output(self,req):
+            calls.append(req)
+            assert len(calls)==1
+            return SimpleNamespace(files=[SimpleNamespace(file_name=name,url='not-logged')],next_page_token='many-dependencies')
+    class API:
+        def build_kaggle_client(self):return Client()
+        def _set_paging(self,r,size,token):r.page_size=size;r.page_token=token
+    class Response:
+        def __enter__(self):return self
+        def __exit__(self,*args):pass
+        def raise_for_status(self):pass
+        def iter_content(self,size):yield json.dumps(worker(v)).encode()
+    result=fetch.fetch_named(API(),v['kernel_ref'],v['nonce'],tmp_path,['TERMINAL_RECEIPT.json'],SimpleNamespace,lambda *a,**kw:Response())
+    assert result['pages']==1 and result['missing']==[] and len(calls)==1
+
+
+def test_named_fetch_rejects_path_escape(tmp_path):
+    import kaggle_receipt_fetch as fetch
+    v=manifest()
+    with pytest.raises(AssertionError):fetch.fetch_named(None,v['kernel_ref'],v['nonce'],tmp_path,['../secret.json'],None,None)

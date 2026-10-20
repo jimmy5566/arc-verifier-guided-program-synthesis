@@ -57,6 +57,48 @@ def verify_prelaunch_alias(previous,current):
     live=subprocess.run(identity_command(current),capture_output=True,text=True,timeout=60)
     assert live.returncode==0 and json.loads(live.stdout.strip().splitlines()[-1])==expected,'LIVE_ALIAS_IDENTITY_MISMATCH'
 
+
+def download_command(v, output, names=('TERMINAL_RECEIPT.json',)):
+    command = [PYTHON, str(pathlib.Path(__file__).with_name('kaggle_receipt_fetch.py')),
+               '--kernel-ref', v.get('platform_kernel_ref', v['kernel_ref']),
+               '--nonce', v['nonce'], '--output', str(output)]
+    for name in names:
+        command.extend(['--name', name])
+    return command
+
+
+def cached_worker(v, output, identity):
+    matches = list(output.rglob('TERMINAL_RECEIPT.json'))
+    if not matches:
+        return None
+    assert len(matches) == 1, 'AMBIGUOUS_WORKER_TERMINAL'
+    raw = matches[0].read_bytes()
+    worker = json.loads(raw)
+    bound_terminal(v, worker, identity)
+    # Completion transport is not scientific acceptance. Missing supplementary
+    # artifacts are handed to Controller, not a reason to redownload all outputs.
+    evidence = {'verified': [], 'missing': [], 'hash_mismatch': []}
+    for name, entry in worker.get('artifacts', {}).items():
+        rel = pathlib.PurePosixPath(name)
+        assert not rel.is_absolute() and '..' not in rel.parts and '\\' not in name, 'UNSAFE_ARTIFACT_PATH'
+        path = matches[0].parent.joinpath(*rel.parts).resolve()
+        assert path.is_relative_to(matches[0].parent.resolve()), 'UNSAFE_ARTIFACT_PATH'
+        if not path.is_file():
+            evidence['missing'].append(name)
+        elif hashlib.sha256(path.read_bytes()).hexdigest() != entry['sha256'] or path.stat().st_size != entry['bytes']:
+            evidence['hash_mismatch'].append(name)
+        else:
+            evidence['verified'].append(name)
+    return {'job_id': v['job_id'], 'status': worker['status'], 'terminal_status': worker['status'],
+            'receipt_origin': 'LOCAL_SUPERVISOR_KAGGLE_OBSERVATION_V1',
+            'execution_source_commit': v['source_commit'], 'kernel_ref': v['kernel_ref'],
+            'kernel_version': v['kernel_version'], 'nonce': v['nonce'],
+            'worker_terminal_sha256': hashlib.sha256(raw).hexdigest(),
+            'worker_terminal_local': str(matches[0].resolve()), 'platform_identity': identity,
+            'artifact_recovery': evidence,
+            'scientific_acceptance': 'NOT_INFERRED_FROM_PROCESS_RECEIPT',
+            'automatic_rerun_authorized': False}
+
 def reconcile(v,cache,runner=subprocess.run,now=None):
     """Return one terminal observation or None; called only by existing Supervisor."""
     validate(v);cache=pathlib.Path(cache);cache.mkdir(parents=True,exist_ok=True);now=now or datetime.now(timezone.utc)
@@ -72,17 +114,36 @@ def reconcile(v,cache,runner=subprocess.run,now=None):
             p=runner(identity_command(v),capture_output=True,text=True,timeout=60)
             if p.returncode:raise RuntimeError('KAGGLE_IDENTITY_UNAVAILABLE')
             identity=json.loads(p.stdout.strip().splitlines()[-1]);out=cache/'kernel_output';out.mkdir(exist_ok=True)
-            p=runner([CLI,'kernels','output',platform_ref+'/1','-p',str(out),'--file-pattern',r'((TERMINAL_RECEIPT|PREFLIGHT|SOURCE_MANIFEST|DEVICE_RECEIPT|RAW_FREEZE|COST|ERROR).*\.json|PREFLIGHT_LOG\.txt)$','-q'],capture_output=True,text=True,timeout=90)
-            if p.returncode:raise RuntimeError('KAGGLE_OUTPUT_UNAVAILABLE')
-            matches=list(out.rglob('TERMINAL_RECEIPT.json'))
-            if len(matches)!=1:raise RuntimeError('MISSING_OR_AMBIGUOUS_WORKER_TERMINAL')
-            raw=matches[0].read_bytes();worker=json.loads(raw);bound_terminal(v,worker,identity)
-            receipt={'job_id':v['job_id'],'status':worker['status'],'terminal_status':worker['status'],'receipt_origin':'LOCAL_SUPERVISOR_KAGGLE_OBSERVATION_V1','execution_source_commit':v['source_commit'],'kernel_ref':v['kernel_ref'],'kernel_version':v['kernel_version'],'nonce':v['nonce'],'worker_terminal_sha256':hashlib.sha256(raw).hexdigest(),'worker_terminal_local':str(matches[0].resolve()),'platform_identity':identity,'reported_platform_status':reported,'scientific_acceptance':'NOT_INFERRED_FROM_PROCESS_RECEIPT','automatic_rerun_authorized':False}
+            receipt = cached_worker(v, out, identity)
+            if receipt is None:
+                # Direct Python child has bounded lifetime; no Windows CLI
+                # launcher/orphan and no recursive kernels-output pagination.
+                try:
+                    p=runner(download_command(v,out),capture_output=True,text=True,timeout=60)
+                except subprocess.TimeoutExpired:
+                    # A receipt may have arrived just before download timeout.
+                    receipt = cached_worker(v,out,identity)
+                    if receipt is None:
+                        raise RuntimeError('KAGGLE_NAMED_RECEIPT_FETCH_TIMEOUT')
+                else:
+                    receipt = cached_worker(v,out,identity)
+                    if receipt is None:
+                        raise RuntimeError('KAGGLE_OUTPUT_UNAVAILABLE' if p.returncode else 'MISSING_WORKER_TERMINAL')
+            if receipt is not None:
+                receipt['reported_platform_status'] = reported
         elif reported not in {'QUEUED','RUNNING','PENDING','INITIALIZING'}:
             reason='UNRECOGNIZED_PLATFORM_STATUS'
     except (Exception,) as error:
         reason=type(error).__name__+':'+('IDENTITY_OR_BOUND_TERMINAL_REJECTED' if isinstance(error,AssertionError) else 'PLATFORM_OR_OUTPUT_UNAVAILABLE')
-    if receipt is None and (now>=datetime.fromisoformat(v['deadline_utc']) or (reported in {'ERROR','CANCELLED','CANCELED','FAILED'}) or (reason and reason.startswith('AssertionError'))):
+        # Keep a small observable error without serializing exceptions/URLs or
+        # treating cached old-job transports as a successful current-job check.
+        observation = {'observed_at': now.isoformat(), 'job_id': v['job_id'],
+                       'reported_platform_status': reported, 'reason': reason,
+                       'error_type': type(error).__name__}
+        temp = cache / 'OBSERVATION_ERROR.json.tmp'
+        temp.write_text(json.dumps(observation,sort_keys=True)+'\n',encoding='utf8')
+        temp.replace(cache / 'OBSERVATION_ERROR.json')
+    if receipt is None and (now>=datetime.fromisoformat(v['deadline_utc']) or (reported in {'COMPLETE','ERROR','CANCELLED','CANCELED','FAILED'}) or (reason and reason.startswith('AssertionError'))):
         receipt={'job_id':v['job_id'],'status':'UNKNOWN','terminal_status':'UNKNOWN','receipt_origin':'LOCAL_SUPERVISOR_KAGGLE_OBSERVATION_V1','execution_source_commit':v['source_commit'],'kernel_ref':v['kernel_ref'],'kernel_version':v['kernel_version'],'nonce':v['nonce'],'reported_platform_status':reported,'reason':reason or 'DEADLINE_WITHOUT_VERIFIED_TERMINAL','scientific_acceptance':'NOT_INFERRED','automatic_rerun_authorized':False}
     if receipt is not None:receipt['observed_at']=now.isoformat()
     return receipt

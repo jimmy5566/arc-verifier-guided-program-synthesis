@@ -48,6 +48,42 @@ py -3 scripts/arc2_governor.py --state STATE --claim-event EVENT_ID
 py -3 scripts/arc2_governor.py --state STATE --complete-event EVENT_ID --next-disposition ...
 ```
 
+## Key-node reporting (status, not approval)
+
+At a verified milestone (for example actual runtime preflight PASS and first
+scientific launch), a completed experiment, or a genuine external/resource
+blocker, report once to Director while continuing authorized work. This is
+mandatory key-node visibility, not a new scientific review or launch gate.
+Do not wake Director for every ordinary failed attempt, test or repair.
+If a scientific review already carries the result, do not send a duplicate report.
+
+Write one small immutable private JSON with `schema_version=1`,
+`source_event_id` (the SAME claimed Controller event), `controller_role`,
+`experiment_id`, `stage`, `report_kind=MILESTONE|EXPERIMENT_RESULT|BLOCKED`,
+`status`, `summary` (facts/limitations, at most4000 characters), and evidence
+paths/hashes plus numerical metrics when available. Preserve/push the intended
+small evidence; never include secrets or protected raw targets.
+Complete the same event with its normal disposition and additionally:
+
+```text
+--stage-report REPORT.json --stage-report-sha256 EXACT_SHA256
+```
+
+Governor atomically enqueues one informational Director event, independently of
+Controller continuation/WAIT_REMOTE. Busy Director stays queued; never re-prompt.
+Director uses `--ack-stage-report EVENT_ID`, which changes no Controller stage,
+remote-job binding, budget, scientific acceptance, or successor. Do not wait for
+that acknowledgement to continue and do not manufacture a review brief.
+
+Kaggle terminal metadata is consumed from an identity-verified local cache before
+any network download. Supervisor fetches only named receipts, not entire installed
+dependency trees. Supplementary missing/hash-mismatched artifacts are explicit
+`artifact_recovery` items for Controller: fetch only missing declared files with
+`orchestration/supervisor/kaggle_receipt_fetch.py`, then verify byte counts/hashes
+before relying on them. Do not rerun a completed kernel to recover its receipts.
+Install future ephemeral dependency trees outside `/kaggle/working` so they do not
+inflate retained outputs; do not mutate or relaunch already-frozen runs.
+
 Do not edit the compact live state directly. Detailed progress belongs in
 committed artifacts and the append-only event ledger. Routine engineering
 repairs remain inside one Controller event; do not create a Director review for

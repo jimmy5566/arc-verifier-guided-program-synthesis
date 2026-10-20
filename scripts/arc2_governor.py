@@ -704,6 +704,17 @@ def configure_agent_routes(state_path: Path, value: str) -> None:
 def prompt_text(item: dict[str, Any], state_path: Path) -> str:
     payload = item["payload"]
     event_id = item["event_id"]
+    if item['kind'] == 'DIRECTOR_TASK' and payload.get('status_report_only') is True:
+        return (
+            f'ARC2 Controller stage report {event_id}, STATUS ONLY, not an approval request. '
+            f'Claim once: py -3 {PROJECT_ROOT / "scripts/arc2_governor.py"} --state "{state_path.resolve()}" --claim-event {event_id}. '
+            f'Read {payload["stage_report"]} and verify SHA256={payload["stage_report_sha256"]}. '
+            'Summarize the verified milestone/result/blocker to the owner without inferring scientific acceptance. '
+            'Controller continues independently; do not launch, rearm, review, modify scientific assets or prompt Controller. '
+            f'Acknowledge without changing its job/queue: py -3 {PROJECT_ROOT / "scripts/arc2_governor.py"} '
+            f'--state "{state_path.resolve()}" --ack-stage-report {event_id}. '
+            'Do not use --complete-event or create a response/review loop for this informational report.'
+        )
     if item['kind'] == 'DIRECTOR_TASK' or (item['kind'] == 'PRODUCER_ERROR' and item['recipient'] == 'director'):
         return (
             f'ARC2 Governor Director continuation event {event_id}. Owner assigned this work directly to Director. '
@@ -723,7 +734,10 @@ def prompt_text(item: dict[str, Any], state_path: Path) -> str:
             f"{json.dumps(payload, sort_keys=True)}. Complete it through the same Governor CLI; never prompt Director directly. "
             "This payload is the bounded handoff. Do not read the full workflow/event history unless diagnosing a specific binding error. "
             "Invoke the claim CLI once; it checks actual thread plus live Agent identity. A shared executor's inherited HERDR_PANE_ID mismatch alone is not a blocker; never rewrite that environment. "
-            "A terminal event authorizes ingestion of existing artifacts, not a rerun or new scientific execution."
+            "A terminal event authorizes ingestion of existing artifacts, not a rerun or new scientific execution. "
+            "After a verified key milestone, experiment result or genuine blocker, send one immutable stage report using "
+            "--stage-report PATH --stage-report-sha256 SHA on SAME-event completion. Follow ARC_CONTROLLER_SYSTEM.md schema; "
+            "this is nonblocking status, not a review. Do not report every retry or duplicate an existing scientific review."
         )
     brief_path = payload.get("brief_path")
     brief_sha = payload.get("brief_sha256")
@@ -1052,11 +1066,63 @@ def claim_event(state_path: Path, event_id: str) -> None:
     save(state_path, state, f"EVENT_CLAIMED:{event_id}")
 
 
+def controller_stage_report(state: dict, item: dict, path: str, declared_sha: str) -> dict:
+    """Controller classifies a key milestone; router only validates/routes it."""
+    report_path, digest = validate_bound_artifact(path, declared_sha)
+    report = json.loads(report_path.read_text(encoding='utf-8-sig'))
+    if item.get('recipient') != 'controller' or report.get('source_event_id') != item['event_id']:
+        raise RuntimeError('STAGE_REPORT_SOURCE_EVENT_MISMATCH')
+    if report.get('report_kind') not in {'MILESTONE', 'EXPERIMENT_RESULT', 'BLOCKED'}:
+        raise RuntimeError('STAGE_REPORT_KIND_INVALID')
+    if report.get('controller_role') != item.get('payload', {}).get('controller_role'):
+        raise RuntimeError('STAGE_REPORT_ROLE_MISMATCH')
+    if any(not isinstance(report.get(k), str) or not report[k].strip()
+           for k in ('experiment_id', 'stage', 'status', 'summary')):
+        raise RuntimeError('STAGE_REPORT_FIELDS_REQUIRED')
+    if report.get('schema_version') != 1 or len(report['summary']) > 4000:
+        raise RuntimeError('STAGE_REPORT_SCHEMA_INVALID')
+    payload = {'status_report_only': True, 'source_event_id': item['event_id'],
+               'controller_role': report['controller_role'], 'experiment_id': report['experiment_id'],
+               'stage': report['stage'], 'report_kind': report['report_kind'],
+               'stage_report': str(report_path.resolve()), 'stage_report_sha256': digest}
+    for old in state['pending_events']:
+        previous = old.get('payload', {})
+        if (previous.get('status_report_only') is True and
+            all(previous.get(k) == payload[k] for k in ('source_event_id', 'stage', 'report_kind'))):
+            if previous.get('stage_report_sha256') != digest:
+                raise RuntimeError('STAGE_REPORT_IDENTITY_CONFLICT')
+            return old
+    return event('DIRECTOR_TASK', 'director', 'controller', payload)
+
+
+@state_mutation
+def acknowledge_stage_report(state_path: Path, event_id: str) -> None:
+    state = load(state_path)
+    item = find_event(state, event_id)
+    if item.get('kind') != 'DIRECTOR_TASK' or item.get('payload', {}).get('status_report_only') is not True:
+        raise RuntimeError('NOT_A_DIRECTOR_STAGE_REPORT')
+    if 'agent_routes' in state:
+        event_caller_pane(item, state)
+    elif os.environ.get('HERDR_PANE_ID') != item.get('target'):
+        raise RuntimeError('EVENT_CLAIM_TARGET_MISMATCH')
+    if item['status'] == 'COMPLETE':
+        return  # Idempotent; no successor, state reset or new notification.
+    if item['status'] not in {'CLAIMED', 'DELIVERED'}:
+        raise RuntimeError('STAGE_REPORT_NOT_ACKNOWLEDGEABLE')
+    payload = item['payload']
+    validate_bound_artifact(payload['stage_report'], payload['stage_report_sha256'])
+    item.update(status='COMPLETE', completed_at=now(), outcome='DIRECTOR_STATUS_ACKNOWLEDGED')
+    # Deliberately preserve global disposition, stage, remote jobs and other role holds.
+    save(state_path, state, f'STAGE_REPORT_ACKNOWLEDGED:{event_id}')
+
+
 @state_mutation
 def complete_event(state_path: Path, args: argparse.Namespace) -> None:
     state = load(state_path)
     owner_stop = owner_stop_snapshot(state)
     item = find_event(state, args.complete_event)
+    if item.get('payload', {}).get('status_report_only') is True:
+        raise RuntimeError('USE_ACK_STAGE_REPORT_WITHOUT_CHANGING_CONTROLLER_STATE')
     role = item_role(item, state)
     if "agent_routes" in state:
         event_caller_pane(item, state)
@@ -1065,6 +1131,14 @@ def complete_event(state_path: Path, args: argparse.Namespace) -> None:
     disposition = args.next_disposition or state["disposition"]
     if disposition not in DISPOSITIONS:
         raise RuntimeError("INVALID_COMPLETION_DISPOSITION")
+    stage_report = None
+    report_path, report_sha = getattr(args, 'stage_report', None), getattr(args, 'stage_report_sha256', None)
+    if report_path or report_sha:
+        if not report_path or not report_sha:
+            raise RuntimeError('STAGE_REPORT_BINDING_REQUIRED')
+        if disposition == 'REVIEW_REQUIRED':
+            raise RuntimeError('REPORT_AND_SCIENTIFIC_REVIEW_MUST_NOT_DUPLICATE')
+        stage_report = controller_stage_report(state, item, report_path, report_sha)
     if disposition == "REVIEW_REQUIRED":
         if not args.review_brief or not args.review_brief_sha256 or not args.review_reason:
             raise RuntimeError("REVIEW_BINDING_REQUIRED")
@@ -1098,6 +1172,9 @@ def complete_event(state_path: Path, args: argparse.Namespace) -> None:
             if item['payload'].get('controller_role'):
                 payload['controller_role'] = item['payload']['controller_role']
             enqueue(state, event('CONTROLLER_TASK', 'controller', item['recipient'], payload))
+    if stage_report is not None:
+        enqueue(state, stage_report)
+        item['director_stage_report_event_id'] = stage_report['event_id']
     item.update({"status": "COMPLETE", "completed_at": now(), "outcome": args.outcome or "COMPLETE",
                  "completion_disposition": disposition})
     state.update({"disposition": disposition,
@@ -1342,6 +1419,7 @@ def main() -> int:
     parser.add_argument("--claim-event")
     parser.add_argument("--resume-claimed-event")
     parser.add_argument("--complete-event")
+    parser.add_argument('--ack-stage-report', help='Acknowledge informational Director report without changing Controller work')
     parser.add_argument("--resume-paused-remote-job")
     parser.add_argument('--register-remote-job', help='Monitor an existing immutable job; does not launch it')
     parser.add_argument('--bind-experiment-queue', help='Bind owner queue; TERMINAL requires all required items COMPLETE')
@@ -1355,6 +1433,8 @@ def main() -> int:
     parser.add_argument("--review-brief")
     parser.add_argument("--review-brief-sha256")
     parser.add_argument("--review-reason")
+    parser.add_argument('--stage-report', help='Immutable nonblocking key-milestone/result/blocker JSON for Director')
+    parser.add_argument('--stage-report-sha256')
     parser.add_argument("--remote-job-file")
     parser.add_argument("--pause-reason")
     parser.add_argument("--terminal-reason")
@@ -1367,7 +1447,7 @@ def main() -> int:
     parser.add_argument("--service-state", type=Path)
     args = parser.parse_args()
     modes = sum(bool(value) for value in (args.migrate_legacy, args.repair_recursive_reviews, args.claim_event,
-                                          args.resume_claimed_event, args.complete_event,
+                                          args.resume_claimed_event, args.complete_event, args.ack_stage_report,
                                           args.resume_paused_remote_job, args.replace_stale_wait_remote_job,
                                           args.register_remote_job, args.bind_experiment_queue, args.configure_agent_routes))
     if modes > 1:
@@ -1386,6 +1466,9 @@ def main() -> int:
         return 0
     if args.complete_event:
         complete_event(args.state, args)
+        return 0
+    if args.ack_stage_report:
+        acknowledge_stage_report(args.state, args.ack_stage_report)
         return 0
     if args.resume_paused_remote_job:
         resume_paused_remote_job(args.state, args)
