@@ -1080,6 +1080,11 @@ def complete_event(state_path: Path, args: argparse.Namespace) -> None:
 def _read_remote_job_manifest(value: str) -> tuple[Path, dict[str, Any]]:
     remote_path = resolve_artifact(value)
     remote = json.loads(remote_path.read_text(encoding="utf-8-sig"))
+    if remote.get('backend') == 'kaggle':
+        sys.path.insert(0, str(PROJECT_ROOT / 'orchestration' / 'supervisor'))
+        from kaggle_jobs import validate
+        validate(remote)
+        return remote_path, remote
     required = ("job_id", "ssh_target", "output_root", "terminal_receipt", "primary_process")
     if any(not remote.get(key) for key in required):
         raise RuntimeError("REMOTE_JOB_MANIFEST_INCOMPLETE")

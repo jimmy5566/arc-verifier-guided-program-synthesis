@@ -1062,11 +1062,16 @@ def remote_job_manifests(remote_job_dir: Path) -> list[dict[str, Any]]:
             # JSON writer may include a UTF-8 BOM.  It is transport metadata,
             # so accept that encoding without weakening JSON validation.
             value = json.loads(path.read_text(encoding="utf-8-sig"))
+            if value.get('backend') == 'kaggle':
+                from kaggle_jobs import validate
+                validate(value)
+                manifests.append({**value, 'manifest_path': str(path.resolve())})
+                continue
             job_id = str(value["job_id"])
             target = str(value["ssh_target"])
             output_root = str(value["output_root"])
             terminal_receipt = str(value["terminal_receipt"])
-        except (KeyError, TypeError, ValueError, json.JSONDecodeError):
+        except (KeyError, TypeError, ValueError, AssertionError, json.JSONDecodeError):
             continue
         # Never permit a manifest to make the metadata transport read an
         # arbitrary remote file.  A receipt must be an immediate descendant of
@@ -1166,6 +1171,14 @@ def fetch_remote_job_receipts(remote_job_dir: Path, cache_root: Path,
                 fetched.append({**manifest, "local_receipt": str(destination.resolve()),
                                 "receipt_sha256": hashlib.sha256(content).hexdigest()})
                 continue
+        if manifest.get('backend') == 'kaggle':
+            from kaggle_jobs import reconcile
+            receipt = reconcile(manifest, destination.parent)
+            if receipt is not None:
+                atomic_json(destination, receipt)
+                fetched.append({**manifest, 'local_receipt': str(destination.resolve()),
+                                'receipt_sha256': canonical_hash(destination)})
+            continue
         if manifest.get('pipeline_status_path'):
             output = remote_shell(manifest['ssh_target'], pipeline_observation_script(manifest), identity_file)
             for observed in structured_json_records(output):
