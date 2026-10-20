@@ -1179,6 +1179,17 @@ def register_remote_job(state_path: Path, value: str) -> None:
         if len(active) != 1 or active[0]['status'] != 'CLAIMED':
             raise RuntimeError('KAGGLE_PRELAUNCH_REQUIRES_CLAIMED_EVENT')
         event_caller_pane(active[0], state)
+        previous = state['remote_jobs'].get(remote['job_id'])
+        if previous and previous != remote:
+            from kaggle_jobs import verify_prelaunch_alias
+            verify_prelaunch_alias(previous, remote)
+            # Preserve the original registry bytes; only a proved platform alias
+            # can replace this binding during the same claimed prelaunch event.
+            registry = state_path.parent / 'remote_jobs' / f'{remote["job_id"]}.json'
+            archived = registry.parent / 'prelaunch_alias_history' / f'{remote["job_id"]}_{sha256_file(registry)}.json'
+            atomic(archived, previous)
+            atomic(registry, remote)
+            state['remote_jobs'][remote['job_id']] = remote
         protect_remote_owner(state, remote, active[0])
         persist_remote_binding(state_path, remote)
         state['remote_jobs'][remote['job_id']] = remote

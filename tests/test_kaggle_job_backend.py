@@ -59,3 +59,15 @@ def test_prelaunch_registration_preserves_claim_and_checks_live_identity(tmp_pat
     def reject(*args):raise RuntimeError('REAL_IDENTITY_MISMATCH')
     monkeypatch.setattr(g,'event_caller_pane',reject)
     with pytest.raises(RuntimeError,match='REAL_IDENTITY_MISMATCH'):g.register_remote_job.__wrapped__(tmp_path/'state.json',str(p))
+
+def test_platform_slug_alias_requires_unchanged_bytes_and_live_proof(tmp_path,monkeypatch):
+    old=manifest();new={**old,'platform_kernel_ref':'jimmy5566/arc2-paired48-platform-title'}
+    ident={**identity(old),'kernel_ref':new['platform_kernel_ref']}
+    proof={'requested_kernel_ref':old['kernel_ref'],'nonce':old['nonce'],'job_id':old['job_id'],'platform_identity':ident}
+    p=tmp_path/'proof.json';p.write_text(json.dumps(proof));new['platform_alias_receipt']={'path':str(p),'sha256':hashlib.sha256(p.read_bytes()).hexdigest()}
+    monkeypatch.setattr(k.subprocess,'run',lambda *a,**kw:SimpleNamespace(returncode=0,stdout=json.dumps(ident)))
+    k.verify_prelaunch_alias(old,new);assert k.bound_terminal(new,worker(old),ident)['status']=='COMPLETE'
+    for key,value in [('nonce','f'*32),('source_commit','e'*40),('kernel_code_sha256','f'*64)]:
+        with pytest.raises(AssertionError):k.verify_prelaunch_alias(old,{**new,key:value})
+    monkeypatch.setattr(k.subprocess,'run',lambda *a,**kw:SimpleNamespace(returncode=0,stdout=json.dumps({**ident,'kernel_version':2})))
+    with pytest.raises(AssertionError):k.verify_prelaunch_alias(old,new)

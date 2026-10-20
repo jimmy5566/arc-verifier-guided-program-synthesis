@@ -19,6 +19,9 @@ def validate(v):
     assert v['output_root']=='/kaggle/working/arc2_paired48_'+v['nonce']
     assert v['terminal_receipt']==v['output_root']+'/TERMINAL_RECEIPT.json'
     assert datetime.fromisoformat(v['deadline_utc']).tzinfo is not None
+    if v.get('platform_kernel_ref'):
+        assert re.fullmatch(r'jimmy5566/arc2-paired48-[a-z0-9-]+',v['platform_kernel_ref'])
+        assert re.fullmatch(r'[0-9a-f]{64}',v['platform_alias_receipt']['sha256'])
     return v
 
 def identity_command(v):
@@ -29,23 +32,38 @@ from kagglesdk.kernels.types.kernels_api_service import ApiGetKernelRequest
 a=KaggleApi();a.authenticate();r=ApiGetKernelRequest();r.user_name='jimmy5566';r.kernel_slug=SLUG
 with a.build_kaggle_client() as c:q=c.kernels.kernels_api_client.get_kernel(r)
 print(json.dumps({'kernel_ref':q.metadata.ref,'kernel_version':q.metadata.current_version_number,'is_private':q.metadata.is_private,'code_sha256':hashlib.sha256(q.blob.source.encode()).hexdigest()}))
-""".replace('SLUG',repr(v['kernel_ref'].split('/')[1]))
+""".replace('SLUG',repr(v.get('platform_kernel_ref',v['kernel_ref']).split('/')[1]))
     return [PYTHON,'-c',code]
 
 def bound_terminal(v,worker,identity):
-    assert identity['kernel_ref']==v['kernel_ref'] and identity['kernel_version']==v['kernel_version'] and identity['is_private'] is True,'PLATFORM_VERSION_OR_PRIVACY_MISMATCH'
+    assert identity['kernel_ref']==v.get('platform_kernel_ref',v['kernel_ref']) and identity['kernel_version']==v['kernel_version'] and identity['is_private'] is True,'PLATFORM_VERSION_OR_PRIVACY_MISMATCH'
     assert identity['code_sha256']==v['kernel_code_sha256'],'PLATFORM_CODE_MISMATCH'
     for k in ['job_id','kernel_ref','kernel_version','nonce','source_commit','source_manifest_sha256']:
         assert worker[k]==v[k],'WORKER_IDENTITY_MISMATCH:'+k
     assert worker['status'] in ['COMPLETE','INFRA_FAILED','CONTROLLED_STOP','FAILED_OR_PARTIAL_NO_RETRY','UNKNOWN']
     return worker
 
+def verify_prelaunch_alias(previous,current):
+    """Only canonical platform naming may change; uploaded code/run remain exact."""
+    extra={'platform_kernel_ref','platform_alias_receipt'}
+    assert not previous.keys() & extra,'ALIAS_ALREADY_BOUND'
+    assert {k:v for k,v in current.items() if k not in extra}==previous,'NON_ALIAS_BINDING_CHANGE'
+    proof=current['platform_alias_receipt'];raw=pathlib.Path(proof['path']).read_bytes()
+    assert hashlib.sha256(raw).hexdigest()==proof['sha256']
+    observed=json.loads(raw)
+    assert observed['requested_kernel_ref']==previous['kernel_ref'] and observed['nonce']==previous['nonce'] and observed['job_id']==previous['job_id']
+    expected={'kernel_ref':current['platform_kernel_ref'],'kernel_version':1,'is_private':True,'code_sha256':previous['kernel_code_sha256']}
+    assert observed['platform_identity']==expected
+    live=subprocess.run(identity_command(current),capture_output=True,text=True,timeout=60)
+    assert live.returncode==0 and json.loads(live.stdout.strip().splitlines()[-1])==expected,'LIVE_ALIAS_IDENTITY_MISMATCH'
+
 def reconcile(v,cache,runner=subprocess.run,now=None):
     """Return one terminal observation or None; called only by existing Supervisor."""
     validate(v);cache=pathlib.Path(cache);cache.mkdir(parents=True,exist_ok=True);now=now or datetime.now(timezone.utc)
     receipt=None;reason=None;reported=None;identity=None
     try:
-        status=runner([CLI,'kernels','status',v['kernel_ref']+'/1'],capture_output=True,text=True,timeout=45)
+        platform_ref=v.get('platform_kernel_ref',v['kernel_ref'])
+        status=runner([CLI,'kernels','status',platform_ref+'/1'],capture_output=True,text=True,timeout=45)
         if status.returncode:raise RuntimeError('KAGGLE_STATUS_UNAVAILABLE')
         match=re.search(r'\bstatus\s+[\"\']?(?:KernelWorkerStatus\.)?([A-Za-z_]+)',status.stdout,re.I)
         if not match:raise RuntimeError('KAGGLE_STATUS_UNPARSEABLE')
@@ -54,7 +72,7 @@ def reconcile(v,cache,runner=subprocess.run,now=None):
             p=runner(identity_command(v),capture_output=True,text=True,timeout=60)
             if p.returncode:raise RuntimeError('KAGGLE_IDENTITY_UNAVAILABLE')
             identity=json.loads(p.stdout.strip().splitlines()[-1]);out=cache/'kernel_output';out.mkdir(exist_ok=True)
-            p=runner([CLI,'kernels','output',v['kernel_ref']+'/1','-p',str(out),'--file-pattern',r'(TERMINAL_RECEIPT|PREFLIGHT|SOURCE_MANIFEST|DEVICE_RECEIPT|RAW_FREEZE|COST|ERROR).*\.json$','-q'],capture_output=True,text=True,timeout=90)
+            p=runner([CLI,'kernels','output',platform_ref+'/1','-p',str(out),'--file-pattern',r'((TERMINAL_RECEIPT|PREFLIGHT|SOURCE_MANIFEST|DEVICE_RECEIPT|RAW_FREEZE|COST|ERROR).*\.json|PREFLIGHT_LOG\.txt)$','-q'],capture_output=True,text=True,timeout=90)
             if p.returncode:raise RuntimeError('KAGGLE_OUTPUT_UNAVAILABLE')
             matches=list(out.rglob('TERMINAL_RECEIPT.json'))
             if len(matches)!=1:raise RuntimeError('MISSING_OR_AMBIGUOUS_WORKER_TERMINAL')
