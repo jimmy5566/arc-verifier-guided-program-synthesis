@@ -16,6 +16,13 @@ def test_manifest_has_no_fake_transport_and_restricts_private_research():
     v=manifest();assert k.validate(v)==v
     for field,value in [('ssh_target','fake'),('primary_process',{'pid':1}),('kernel_ref','jimmy5566/arc2-fixed-4-4-d1-release'),('is_private',False),('kernel_version',2)]:
         with pytest.raises(AssertionError):k.validate({**v,field:value})
+
+def test_controlled_stop_keeps_exact_status_in_same_role_callback(tmp_path):
+    v=manifest();p=tmp_path/'terminal.json';p.write_text(json.dumps({'status':'CONTROLLED_STOP','terminal_status':'CONTROLLED_STOP'}))
+    monitor=s.Supervisor(tmp_path/'state.json',tmp_path/'notifications',tmp_path/'events')
+    assert monitor.reconcile_bound_remote_jobs([{**v,'manifest_path':str(tmp_path/'job.json'),'local_receipt':str(p),'receipt_sha256':hashlib.sha256(p.read_bytes()).hexdigest()}])==[v['job_id']]
+    e=json.loads(next((tmp_path/'events').glob('*.json')).read_bytes())
+    assert e['payload']['terminal_status']=='CONTROLLED_STOP' and e['payload']['controller_role']=='selector'
 def test_platform_and_worker_identity_conflicts_fail_closed():
     v=manifest();assert k.bound_terminal(v,worker(v),identity(v))['status']=='COMPLETE'
     for field,value in [('kernel_version',2),('is_private',False),('code_sha256','f'*64)]:

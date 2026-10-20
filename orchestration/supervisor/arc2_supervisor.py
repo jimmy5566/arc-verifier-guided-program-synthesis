@@ -23,7 +23,7 @@ LOW_FREQUENCY_RECONCILIATION_SECONDS = 5
 # Bound production workers use COMPLETE after they have written their immutable
 # terminal receipt.  Keep it distinct from scientific acceptance: the
 # Controller still ingests and reviews the frozen score artifact.
-TERMINAL_STATES = {"SUCCESS", "COMPLETE", "TRAIN_FAILED", "OOM", "INFRA_FAILED", "INTERRUPTED", "FAILED_OR_PARTIAL_NO_RETRY", "UNKNOWN",
+TERMINAL_STATES = {"SUCCESS", "COMPLETE", "CONTROLLED_STOP", "TRAIN_FAILED", "OOM", "INFRA_FAILED", "INTERRUPTED", "FAILED_OR_PARTIAL_NO_RETRY", "UNKNOWN",
                    "PREMODEL_BLOCKED", "PARTIAL_NOT_ESTABLISHED_NO_RETRY", "COMPLETE_FIRST_CELL_OFF_ON"}
 
 
