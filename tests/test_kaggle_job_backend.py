@@ -99,6 +99,55 @@ def test_actual_notebook_identity_code_allows_only_JSON_serialization(monkeypatc
     changed={**notebook,'cells':[{'source':'print(124)\n','cell_type':'code'}]}
     assert hashlib.sha256(json.dumps(changed,sort_keys=True).encode()).hexdigest()!=expected
 
+def recovery_fixture(tmp_path):
+    v=notebook_manifest();prior=tmp_path/'UNKNOWN.json';prior.write_text(json.dumps({'status':'UNKNOWN','job_id':v['job_id'],'execution_source_commit':v['source_commit']}))
+    oldsha=hashlib.sha256(prior.read_bytes()).hexdigest();event={'event_id':'1'*64,'status':'CLAIMED','payload':{'round_id':v['job_id'],'bound_remote_job':True,'terminal_status':'UNKNOWN','terminal_receipt':str(prior),'terminal_receipt_sha256':oldsha}}
+    i=tmp_path/'identity.json';i.write_text(json.dumps({**identity(v),'kernel_version':5,'kernel_id':133930602}))
+    p=tmp_path/'status.json';p.write_text(json.dumps({'status':'KernelWorkerStatus.RUNNING'}))
+    proof={'source_event_id':event['event_id'],'no_new_execution':True,'prior_unknown_sha256':oldsha,**{x:v[x] for x in ['job_id','nonce','source_commit','kernel_version']},'identity':{'path':str(i),'sha256':hashlib.sha256(i.read_bytes()).hexdigest()},'status':{'path':str(p),'sha256':hashlib.sha256(p.read_bytes()).hexdigest()}}
+    return v,event,proof
+
+def test_monitor_recovery_is_same_claimed_UNKNOWN_job_only(tmp_path):
+    v,e,p=recovery_fixture(tmp_path);assert k.validate_monitor_recovery(v,p,e)['job_id']==v['job_id']
+    for key,value in [('no_new_execution',False),('nonce','f'*32),('source_event_id','2'*64),('kernel_version',6)]:
+        with pytest.raises(AssertionError):k.validate_monitor_recovery(v,{**p,key:value},e)
+    with pytest.raises(AssertionError):k.validate_monitor_recovery(v,p,{**e,'status':'COMPLETE'})
+    pathlib.Path(p['identity']['path']).write_text('{}')
+    with pytest.raises(AssertionError):k.validate_monitor_recovery(v,p,e)
+
+def test_existing_notebook_opaque_ERROR_without_worker_is_not_terminal(tmp_path):
+    v=notebook_manifest()
+    def runner(cmd,**kw):return SimpleNamespace(returncode=0,stdout='job has status "ERROR"' if 'status' in cmd else json.dumps({**identity(v),'kernel_version':5,'kernel_id':133930602}) if '-c' in cmd else '')
+    assert k.reconcile(v,tmp_path,runner) is None
+    assert k.reconcile(v,tmp_path,runner,datetime.now(timezone.utc)+timedelta(days=1))['status']=='UNKNOWN'
+
+def test_monitor_resume_preserves_UNKNOWN_and_emits_one_new_terminal(tmp_path,monkeypatch):
+    v,e,p=recovery_fixture(tmp_path);registry=tmp_path/'registry';registry.mkdir();(registry/'job.json').write_text(json.dumps(v))
+    proof=tmp_path/'proof.json';proof.write_text(json.dumps(p));control=k.validate_monitor_recovery(v,p,e);control.update(proof_path=str(proof),proof_sha256=hashlib.sha256(proof.read_bytes()).hexdigest(),prior_unknown_path=e['payload']['terminal_receipt'])
+    (registry/'monitor_recovery').mkdir();(registry/'monitor_recovery'/(v['job_id']+'.json')).write_text(json.dumps(control))
+    cache=tmp_path/'cache';old=cache/'remote_jobs'/v['job_id']/'TERMINAL_RECEIPT.json';old.parent.mkdir(parents=True);old.write_bytes(pathlib.Path(e['payload']['terminal_receipt']).read_bytes())
+    monitor=s.Supervisor(tmp_path/'state.json',tmp_path/'notifications',tmp_path/'events');monitor.state['rounds'][v['job_id']]={'terminal_receipt_hash':e['payload']['terminal_receipt_sha256'],'terminal_status':'UNKNOWN','controller_notification_sent':True}
+    monkeypatch.setattr(k,'reconcile',lambda *a:None)
+    assert s.fetch_remote_job_receipts(registry,cache)==[]
+    monkeypatch.setattr(k,'reconcile',lambda *a:{**worker(v),'receipt_origin':'LOCAL_SUPERVISOR_KAGGLE_OBSERVATION_V1'})
+    records=s.fetch_remote_job_receipts(registry,cache);assert len(records)==1
+    assert monitor.reconcile_bound_remote_jobs(records)==[v['job_id']]
+    assert monitor.reconcile_bound_remote_jobs(records)==[]
+    assert hashlib.sha256(old.read_bytes()).hexdigest()==e['payload']['terminal_receipt_sha256']
+    assert len(list((tmp_path/'events').glob('*.json')))==1
+    assert monitor.state['rounds'][v['job_id']]['observation_history'][0]['terminal_status']=='UNKNOWN'
+
+def test_governor_same_event_WAIT_REMOTE_recovery_no_new_task(tmp_path):
+    from test_arc2_governor_thin_router import governor as g,initial_state,args_for_completion
+    v,e,p=recovery_fixture(tmp_path);e.update(kind='REMOTE_TERMINAL',recipient='controller',producer='supervisor')
+    state=tmp_path/'workflow.json';g.atomic(state,initial_state(pending_events=[e],remote_jobs={v['job_id']:v},remote_job=v))
+    job=tmp_path/'job.json';job.write_text(json.dumps(v));proof=tmp_path/'proof.json';proof.write_text(json.dumps(p))
+    args=args_for_completion(e['event_id'],'WAIT_REMOTE',remote_job_file=str(job),remote_monitor_recovery=str(proof),remote_monitor_recovery_sha256=hashlib.sha256(proof.read_bytes()).hexdigest())
+    g.complete_event(state,args);saved=g.load(state)
+    assert saved['pending_events'][0]['status']=='COMPLETE' and len(saved['pending_events'])==1
+    assert saved['remote_jobs'][v['job_id']]==v
+    assert (tmp_path/'remote_jobs/monitor_recovery'/(v['job_id']+'.json')).exists()
+
 def test_notebook_same_role_callback_exact_version(tmp_path):
     v=notebook_manifest()
     def runner(cmd,**kw):

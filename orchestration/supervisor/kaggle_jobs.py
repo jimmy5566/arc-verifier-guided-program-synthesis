@@ -75,6 +75,42 @@ def verify_prelaunch_alias(previous,current):
     live=subprocess.run(identity_command(current),capture_output=True,text=True,timeout=60)
     assert live.returncode==0 and json.loads(live.stdout.strip().splitlines()[-1])==expected,'LIVE_ALIAS_IDENTITY_MISMATCH'
 
+def validate_monitor_recovery(v, proof, item):
+    """Resume observation only, after an UNKNOWN callback contradicted by RUNNING."""
+    validate(v)
+    assert v['kernel_ref']=='jimmy5566/arc2-l4x4-runtime-template'
+    payload=item['payload']
+    assert item['status']=='CLAIMED' and payload['bound_remote_job'] is True
+    assert payload['round_id']==v['job_id'] and payload['terminal_status']=='UNKNOWN'
+    assert proof['source_event_id']==item['event_id'] and proof['no_new_execution'] is True
+    assert proof['prior_unknown_sha256']==payload['terminal_receipt_sha256']
+    prior=pathlib.Path(payload['terminal_receipt']).read_bytes()
+    assert hashlib.sha256(prior).hexdigest()==proof['prior_unknown_sha256']
+    old=json.loads(prior)
+    assert old['status']=='UNKNOWN' and old['job_id']==v['job_id'] and not old.get('worker_terminal_local')
+    assert old['execution_source_commit']==v['source_commit']
+    for key in ['job_id','nonce','source_commit','kernel_version']:assert proof[key]==v[key]
+    observed={}
+    for kind in ['identity','status']:
+        bound=proof[kind];raw=pathlib.Path(bound['path']).read_bytes()
+        assert hashlib.sha256(raw).hexdigest()==bound['sha256']
+        observed[kind]=json.loads(raw)
+    i=observed['identity']
+    assert i['kernel_ref']==v['kernel_ref'] and i['kernel_id']==v['kernel_id'] and i['kernel_version']==v['kernel_version'] and i['is_private'] is True
+    assert i['code_sha256']==v['kernel_code_sha256']
+    assert observed['status']['status']=='KernelWorkerStatus.RUNNING'
+    return {'job_id':v['job_id'],'nonce':v['nonce'],'source_event_id':item['event_id'],'prior_unknown_sha256':proof['prior_unknown_sha256'],'manifest_identity_sha256':hashlib.sha256(json.dumps(v,sort_keys=True).encode()).hexdigest()}
+
+def monitor_recovery(manifest, registry):
+    path=pathlib.Path(registry)/'monitor_recovery'/(manifest['job_id']+'.json')
+    if not path.exists():return None
+    control=json.loads(path.read_bytes());remote={k:x for k,x in manifest.items() if k!='manifest_path'}
+    assert control['manifest_identity_sha256']==hashlib.sha256(json.dumps(remote,sort_keys=True).encode()).hexdigest()
+    raw=pathlib.Path(control['proof_path']).read_bytes();assert hashlib.sha256(raw).hexdigest()==control['proof_sha256']
+    proof=json.loads(raw)
+    validate_monitor_recovery(remote,proof,{'event_id':control['source_event_id'],'status':'CLAIMED','payload':{'bound_remote_job':True,'round_id':remote['job_id'],'terminal_status':'UNKNOWN','terminal_receipt':control['prior_unknown_path'],'terminal_receipt_sha256':control['prior_unknown_sha256']}})
+    return control
+
 
 def download_command(v, output, names=('TERMINAL_RECEIPT.json',)):
     command = [PYTHON, str(pathlib.Path(__file__).with_name('kaggle_receipt_fetch.py')),
@@ -161,7 +197,11 @@ def reconcile(v,cache,runner=subprocess.run,now=None):
         temp = cache / 'OBSERVATION_ERROR.json.tmp'
         temp.write_text(json.dumps(observation,sort_keys=True)+'\n',encoding='utf8')
         temp.replace(cache / 'OBSERVATION_ERROR.json')
-    if receipt is None and (now>=datetime.fromisoformat(v['deadline_utc']) or (reported in {'COMPLETE','ERROR','CANCELLED','CANCELED','FAILED'}) or (reason and reason.startswith('AssertionError'))):
+    # Existing-notebook latest-session status may still describe its previous
+    # run while the newly pushed version queues. Without its nonce-bound worker
+    # terminal, retain an observation error until the bound deadline.
+    unverified_existing_notebook=(v.get('kernel_id')==133930602 and identity is not None and identity.get('kernel_version')==v['kernel_version'] and identity.get('code_sha256')==v['kernel_code_sha256'] and not (reason or '').startswith('AssertionError'))
+    if receipt is None and (now>=datetime.fromisoformat(v['deadline_utc']) or ((reported in {'COMPLETE','ERROR','CANCELLED','CANCELED','FAILED'}) and not unverified_existing_notebook) or (reason and reason.startswith('AssertionError'))):
         receipt={'job_id':v['job_id'],'status':'UNKNOWN','terminal_status':'UNKNOWN','receipt_origin':'LOCAL_SUPERVISOR_KAGGLE_OBSERVATION_V1','execution_source_commit':v['source_commit'],'kernel_ref':v['kernel_ref'],'kernel_version':v['kernel_version'],'nonce':v['nonce'],'reported_platform_status':reported,'reason':reason or 'DEADLINE_WITHOUT_VERIFIED_TERMINAL','scientific_acceptance':'NOT_INFERRED','automatic_rerun_authorized':False}
     if receipt is not None:receipt['observed_at']=now.isoformat()
     return receipt

@@ -1154,7 +1154,18 @@ def complete_event(state_path: Path, args: argparse.Namespace) -> None:
         if not args.remote_job_file:
             raise RuntimeError("REMOTE_JOB_FILE_REQUIRED")
         _, remote = _read_remote_job_manifest(args.remote_job_file)
-        retire_claimed_kaggle_terminal(state, item)
+        recovery_path=getattr(args,'remote_monitor_recovery',None)
+        if recovery_path:
+            proof_path,proof_sha=validate_bound_artifact(recovery_path,args.remote_monitor_recovery_sha256)
+            from kaggle_jobs import validate_monitor_recovery
+            control=validate_monitor_recovery(remote,json.loads(proof_path.read_bytes()),item)
+            control.update(proof_path=str(proof_path),proof_sha256=proof_sha,prior_unknown_path=item['payload']['terminal_receipt'])
+            destination=state_path.parent/'remote_jobs'/'monitor_recovery'/(remote['job_id']+'.json')
+            if destination.exists() and json.loads(destination.read_bytes())!=control:raise RuntimeError('IMMUTABLE_MONITOR_RECOVERY_CONFLICT')
+            atomic(destination,control)
+            item['monitor_only_recovery']=control
+        else:
+            retire_claimed_kaggle_terminal(state, item)
         retired = retire_completed_role_jobs(state, remote)
         protect_remote_owner(state, remote, item)
         persist_remote_binding(state_path, remote)
@@ -1436,6 +1447,8 @@ def main() -> int:
     parser.add_argument('--stage-report', help='Immutable nonblocking key-milestone/result/blocker JSON for Director')
     parser.add_argument('--stage-report-sha256')
     parser.add_argument("--remote-job-file")
+    parser.add_argument('--remote-monitor-recovery',help='SHA-bound same-job UNKNOWN-to-RUNNING observation recovery; never executes a job')
+    parser.add_argument('--remote-monitor-recovery-sha256')
     parser.add_argument("--pause-reason")
     parser.add_argument("--terminal-reason")
     parser.add_argument("--agent-timeout-seconds", type=int, default=20)

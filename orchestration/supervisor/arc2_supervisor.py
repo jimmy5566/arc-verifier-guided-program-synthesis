@@ -346,6 +346,10 @@ class Supervisor:
             if digest != transport.get("receipt_sha256"):
                 continue
             record = self.state["rounds"].setdefault(job_id, {})
+            recovery=transport.get('monitor_recovery')
+            if recovery and record.get('terminal_receipt_hash')==recovery['prior_unknown_sha256'] and record.get('terminal_status')=='UNKNOWN' and record.get('monitor_recovery_event_id')!=recovery['source_event_id']:
+                record.setdefault('observation_history',[]).append({k:record.get(k) for k in ['terminal_receipt_hash','terminal_status','remote_receipt_path','governor_event_path','controller_notification_sent']})
+                record.update(terminal_receipt_hash=None,controller_notification_sent=False,monitor_recovery_event_id=recovery['source_event_id'])
             if record.get("terminal_receipt_hash") not in (None, digest):
                 record["receipt_identity_conflict"] = True
                 continue
@@ -1158,6 +1162,12 @@ def fetch_remote_job_receipts(remote_job_dir: Path, cache_root: Path,
     for manifest in remote_job_manifests(remote_job_dir):
         terminal_receipt = manifest["terminal_receipt"]
         destination = cache_root / "remote_jobs" / manifest["job_id"] / "TERMINAL_RECEIPT.json"
+        if manifest.get('backend')=='kaggle':
+            from kaggle_jobs import monitor_recovery
+            recovery=monitor_recovery(manifest,remote_job_dir)
+            if recovery:
+                manifest={**manifest,'monitor_recovery':recovery}
+                destination=destination.parent/('recovery_'+recovery['source_event_id'][:12])/'TERMINAL_RECEIPT.json'
         # A terminal receipt is immutable.  Once its byte-validated local copy
         # exists, retain it for reconciliation and avoid serially reconnecting
         # to old completed jobs before checking the currently bound job.
