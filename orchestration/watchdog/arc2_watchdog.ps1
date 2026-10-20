@@ -5,6 +5,7 @@ param(
     [Parameter(Mandatory = $true)][string]$StatePath,
     [string]$ExperimentTerminalStatePath = '',
     [int]$MaxRestarts = 3,
+    [int]$StableSeconds = 60,
     [int]$PollSeconds = 2
 )
 $ErrorActionPreference = 'Stop'
@@ -26,13 +27,14 @@ function Test-ExperimentTerminal {
     } catch { return $false }
 }
 
-$state = @{ schema_version = 1; restart_count = 0; status = 'STARTING'; supervisor_pid = $null; persistent_failure = $false }
+$state = @{ schema_version = 1; restart_count = 0; total_restart_count = 0; status = 'STARTING'; supervisor_pid = $null; persistent_failure = $false }
 while ($state.restart_count -le $MaxRestarts) {
     if (Test-ExperimentTerminal) {
         $state.status = 'EXPERIMENT_TERMINAL'
         Save-WatchdogState $state
         exit 0
     }
+    $lifetime = [System.Diagnostics.Stopwatch]::StartNew()
     if ($PSCmdlet.ParameterSetName -eq 'Direct') {
         $process = Start-Process -FilePath $SupervisorFilePath -ArgumentList $SupervisorArguments -WindowStyle Hidden -PassThru
     } else {
@@ -42,6 +44,8 @@ while ($state.restart_count -le $MaxRestarts) {
     $state.status = 'RUNNING'
     Save-WatchdogState $state
     $process.WaitForExit()
+    $lifetime.Stop()
+    $state.last_run_seconds = $lifetime.Elapsed.TotalSeconds
     $state.last_exit_code = $process.ExitCode
     if (Test-ExperimentTerminal) {
         $state.status = 'EXPERIMENT_TERMINAL'
@@ -53,7 +57,11 @@ while ($state.restart_count -le $MaxRestarts) {
         Save-WatchdogState $state
         exit 0
     }
-    $state.restart_count += 1
+    # Stable service reloads are not consecutive startup failures. Keep their
+    # lifetime count separately, while preserving the bounded crash-loop stop.
+    $state.total_restart_count += 1
+    if ($state.last_run_seconds -ge $StableSeconds) { $state.restart_count = 0 }
+    else { $state.restart_count += 1 }
     if ($state.restart_count -gt $MaxRestarts) { break }
     $state.status = 'RESTARTING'
     Save-WatchdogState $state
