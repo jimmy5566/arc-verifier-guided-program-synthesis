@@ -193,6 +193,38 @@ def retire_completed_role_jobs(state: dict, remote: dict) -> list[dict]:
     return retired
 
 
+def retire_claimed_kaggle_terminal(state: dict, item: dict) -> None:
+    """Retire only the exact verified terminal being ingested in this event.
+
+    A fast completion can be imported before its launch event finishes its
+    WAIT_REMOTE handoff. Preserve the registry; reconcile that stale live view.
+    """
+    payload = item.get('payload', {})
+    old = state['remote_jobs'].get(payload.get('round_id'))
+    if not old or old.get('backend') != 'kaggle':
+        return
+    if (item.get('status') != 'CLAIMED' or not payload.get('bound_remote_job') or
+            item_role(item, state) != remote_role(old)):
+        raise RuntimeError('KAGGLE_TERMINAL_OWNER_NOT_CLAIMED')
+    path, digest = validate_bound_artifact(payload['terminal_receipt'], payload['terminal_receipt_sha256'])
+    receipt = json.loads(path.read_text(encoding='utf-8-sig'))
+    if (receipt.get('receipt_origin') != 'LOCAL_SUPERVISOR_KAGGLE_OBSERVATION_V1' or
+            receipt.get('job_id') != old['job_id'] or
+            receipt.get('execution_source_commit') != old['source_commit'] or
+            receipt.get('status') != payload.get('terminal_status') or
+            receipt.get('status') not in {'COMPLETE', 'INFRA_FAILED', 'CONTROLLED_STOP', 'FAILED_OR_PARTIAL_NO_RETRY'}):
+        raise RuntimeError('KAGGLE_TERMINAL_NOT_VERIFIED')
+    worker_path, _ = validate_bound_artifact(receipt['worker_terminal_local'], receipt['worker_terminal_sha256'])
+    sys.path.insert(0, str(PROJECT_ROOT / 'orchestration' / 'supervisor'))
+    from kaggle_jobs import bound_terminal
+    worker = bound_terminal(old, json.loads(worker_path.read_bytes()), receipt['platform_identity'])
+    if worker['status'] != receipt['status']:
+        raise RuntimeError('KAGGLE_TERMINAL_STATUS_MISMATCH')
+    state['remote_jobs'].pop(old['job_id'])
+    sync_remote_display(state)
+    item['verified_terminal_binding_retired'] = {'job_id': old['job_id'], 'terminal_receipt_sha256': digest}
+
+
 def load(path: Path) -> dict[str, Any]:
     value = json.loads(path.read_text(encoding="utf-8-sig"))
     if value.get("schema_version") != 3:
@@ -1048,6 +1080,7 @@ def complete_event(state_path: Path, args: argparse.Namespace) -> None:
         if not args.remote_job_file:
             raise RuntimeError("REMOTE_JOB_FILE_REQUIRED")
         _, remote = _read_remote_job_manifest(args.remote_job_file)
+        retire_claimed_kaggle_terminal(state, item)
         retired = retire_completed_role_jobs(state, remote)
         protect_remote_owner(state, remote, item)
         persist_remote_binding(state_path, remote)
@@ -1179,6 +1212,7 @@ def register_remote_job(state_path: Path, value: str) -> None:
         if len(active) != 1 or active[0]['status'] != 'CLAIMED':
             raise RuntimeError('KAGGLE_PRELAUNCH_REQUIRES_CLAIMED_EVENT')
         event_caller_pane(active[0], state)
+        retire_claimed_kaggle_terminal(state, active[0])
         previous = state['remote_jobs'].get(remote['job_id'])
         if previous and previous != remote:
             from kaggle_jobs import verify_prelaunch_alias

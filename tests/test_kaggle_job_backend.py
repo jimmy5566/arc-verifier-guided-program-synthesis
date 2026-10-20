@@ -71,3 +71,15 @@ def test_platform_slug_alias_requires_unchanged_bytes_and_live_proof(tmp_path,mo
         with pytest.raises(AssertionError):k.verify_prelaunch_alias(old,{**new,key:value})
     monkeypatch.setattr(k.subprocess,'run',lambda *a,**kw:SimpleNamespace(returncode=0,stdout=json.dumps({**ident,'kernel_version':2})))
     with pytest.raises(AssertionError):k.verify_prelaunch_alias(old,new)
+
+def test_claimed_verified_kaggle_terminal_retires_only_stale_live_binding(tmp_path):
+    spec=importlib.util.spec_from_file_location('governor_retire_test',ROOT/'scripts/arc2_governor.py');g=importlib.util.module_from_spec(spec);spec.loader.exec_module(g)
+    old=manifest();w=tmp_path/'worker.json';w.write_text(json.dumps({**worker(old),'status':'INFRA_FAILED'}))
+    receipt={'job_id':old['job_id'],'execution_source_commit':old['source_commit'],'status':'INFRA_FAILED','receipt_origin':'LOCAL_SUPERVISOR_KAGGLE_OBSERVATION_V1','worker_terminal_local':str(w),'worker_terminal_sha256':hashlib.sha256(w.read_bytes()).hexdigest(),'platform_identity':identity(old)}
+    p=tmp_path/'receipt.json';p.write_text(json.dumps(receipt))
+    item={'status':'CLAIMED','recipient':'controller','payload':{'controller_role':'selector','round_id':old['job_id'],'bound_remote_job':True,'terminal_status':'INFRA_FAILED','terminal_receipt':str(p),'terminal_receipt_sha256':hashlib.sha256(p.read_bytes()).hexdigest()}}
+    state={'agent_routes':{'selector':{}},'remote_jobs':{old['job_id']:old},'remote_job':old}
+    g.retire_claimed_kaggle_terminal(state,item);assert state['remote_jobs']=={} and state['remote_job'] is None and item['verified_terminal_binding_retired']['job_id']==old['job_id']
+    state['remote_jobs']={old['job_id']:old};w.write_text(json.dumps({**worker(old),'status':'COMPLETE'}))
+    with pytest.raises(RuntimeError,match='SHA256_MISMATCH'):g.retire_claimed_kaggle_terminal(state,item)
+    assert old['job_id'] in state['remote_jobs']
