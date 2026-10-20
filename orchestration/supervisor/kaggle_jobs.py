@@ -40,7 +40,14 @@ from kagglesdk.kernels.types.kernels_api_service import ApiGetKernelRequest
 a=KaggleApi();a.authenticate();r=ApiGetKernelRequest();r.user_name='jimmy5566';r.kernel_slug=SLUG
 with a.build_kaggle_client() as c:q=c.kernels.kernels_api_client.get_kernel(r)
 payload={'kernel_ref':q.metadata.ref,'kernel_version':q.metadata.current_version_number,'is_private':q.metadata.is_private,'code_sha256':hashlib.sha256(q.blob.source.encode()).hexdigest()}
-if BOUND_ID is not None:payload['kernel_id']=int(q.metadata.id)
+bound_id=BOUND_ID
+if bound_id is not None:
+ payload['kernel_id']=int(q.metadata.id)
+ payload['raw_platform_source_sha256']=payload['code_sha256']
+ # The API reformats notebook JSON. Restore the exact uploaded CLI JSON
+ # serialization; all cell strings, outputs, metadata and format stay bound.
+ notebook=json.loads(q.blob.source)
+ payload['code_sha256']=hashlib.sha256(json.dumps(notebook,sort_keys=True).encode()).hexdigest()
 print(json.dumps(payload))
 """.replace('SLUG',repr(v.get('platform_kernel_ref',v['kernel_ref']).split('/')[1])).replace('BOUND_ID',repr(v.get('kernel_id')))
     return [PYTHON,'-c',code]

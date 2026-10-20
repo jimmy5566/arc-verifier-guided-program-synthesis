@@ -86,6 +86,19 @@ def test_notebook_stale_newer_or_wrong_id_never_uses_cached_output(tmp_path):
     for bad in [{**i,'kernel_version':4},{**i,'kernel_version':6},{**i,'kernel_id':123}]:
         with pytest.raises(AssertionError):k.bound_terminal(v,worker(v),bad)
 
+def test_actual_notebook_identity_code_allows_only_JSON_serialization(monkeypatch,capsys):
+    from contextlib import contextmanager
+    from kaggle.api import kaggle_api_extended
+    v=notebook_manifest();notebook={'nbformat':4,'cells':[{'source':'print(123)\n','cell_type':'code'}],'metadata':{}}
+    @contextmanager
+    def client():yield SimpleNamespace(kernels=SimpleNamespace(kernels_api_client=SimpleNamespace(get_kernel=lambda req:SimpleNamespace(metadata=SimpleNamespace(ref=v['kernel_ref'],current_version_number=5,is_private=True,id=133930602),blob=SimpleNamespace(source=json.dumps(notebook,indent=2))))))
+    monkeypatch.setattr(kaggle_api_extended,'KaggleApi',lambda:SimpleNamespace(authenticate=lambda:None,build_kaggle_client=client))
+    exec(k.identity_command(v)[2],{})
+    actual=json.loads(capsys.readouterr().out);expected=hashlib.sha256(json.dumps(notebook,sort_keys=True).encode()).hexdigest()
+    assert actual['code_sha256']==expected and actual['raw_platform_source_sha256']!=expected
+    changed={**notebook,'cells':[{'source':'print(124)\n','cell_type':'code'}]}
+    assert hashlib.sha256(json.dumps(changed,sort_keys=True).encode()).hexdigest()!=expected
+
 def test_notebook_same_role_callback_exact_version(tmp_path):
     v=notebook_manifest()
     def runner(cmd,**kw):
