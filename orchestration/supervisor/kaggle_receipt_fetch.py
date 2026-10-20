@@ -14,7 +14,8 @@ import tempfile
 
 def fetch_named(api, kernel_ref, nonce, output, names, request_type, get,
                 max_pages=8, max_file_bytes=16 * 1024 * 1024):
-    assert re.fullmatch(r'jimmy5566/arc2-paired48-[a-z0-9-]+', kernel_ref)
+    assert (re.fullmatch(r'jimmy5566/arc2-paired48-[a-z0-9-]+', kernel_ref) or
+            kernel_ref=='jimmy5566/arc2-l4x4-runtime-template')
     assert re.fullmatch(r'[0-9a-f]{32}', nonce)
     owner, slug = kernel_ref.split('/')
     output = Path(output).resolve()

@@ -72,6 +72,31 @@ def test_platform_slug_alias_requires_unchanged_bytes_and_live_proof(tmp_path,mo
     monkeypatch.setattr(k.subprocess,'run',lambda *a,**kw:SimpleNamespace(returncode=0,stdout=json.dumps({**ident,'kernel_version':2})))
     with pytest.raises(AssertionError):k.verify_prelaunch_alias(old,new)
 
+def notebook_manifest():
+    return {**manifest(),'kernel_ref':'jimmy5566/arc2-l4x4-runtime-template','kernel_id':133930602,'kernel_type':'notebook','prior_kernel_version':4,'kernel_version':5,'prior_kernel_code_sha256':'95a0642d616f01f18e7b57875373cfcdce7d3317bdd89482cd30038673d51a30','unique_one_push_slug':False,'single_version_push':True,'owner_amendment_sha256':'3375fe13721877fb755248d513b536047348000f580b458698afad60548042a8'}
+
+def test_exact_owner_notebook_version_extension_is_narrow():
+    v=notebook_manifest();k.validate(v)
+    for key,value in [('kernel_id',1),('kernel_ref','jimmy5566/arc2-fixed-4-4-d1-release'),('kernel_version',4),('kernel_version',1),('is_private',False),('owner_amendment_sha256','0'*64)]:
+        with pytest.raises(AssertionError):k.validate({**v,key:value})
+    with pytest.raises(AssertionError):k.validate({**manifest(),'kernel_version':5})
+
+def test_notebook_stale_newer_or_wrong_id_never_uses_cached_output(tmp_path):
+    v=notebook_manifest();i={**identity(v),'kernel_version':5,'kernel_id':133930602};k.bound_terminal(v,worker(v),i)
+    for bad in [{**i,'kernel_version':4},{**i,'kernel_version':6},{**i,'kernel_id':123}]:
+        with pytest.raises(AssertionError):k.bound_terminal(v,worker(v),bad)
+
+def test_notebook_same_role_callback_exact_version(tmp_path):
+    v=notebook_manifest()
+    def runner(cmd,**kw):
+        if 'status' in cmd:return SimpleNamespace(returncode=0,stdout='job has status "KernelWorkerStatus.COMPLETE"')
+        return SimpleNamespace(returncode=0,stdout=json.dumps({**identity(v),'kernel_version':5,'kernel_id':133930602}))
+    out=tmp_path/'kernel_output';out.mkdir();(out/'TERMINAL_RECEIPT.json').write_text(json.dumps(worker(v)))
+    r=k.reconcile(v,tmp_path,runner);assert r['status']=='COMPLETE' and r['kernel_version']==5
+    p=tmp_path/'observed.json';p.write_text(json.dumps(r));monitor=s.Supervisor(tmp_path/'state.json',tmp_path/'notifications',tmp_path/'events')
+    assert monitor.reconcile_bound_remote_jobs([{**v,'manifest_path':str(tmp_path/'manifest.json'),'local_receipt':str(p),'receipt_sha256':hashlib.sha256(p.read_bytes()).hexdigest()}])==[v['job_id']]
+    e=json.loads(next((tmp_path/'events').glob('*.json')).read_bytes());assert e['payload']['controller_role']=='selector'
+
 def test_claimed_verified_kaggle_terminal_retires_only_stale_live_binding(tmp_path):
     spec=importlib.util.spec_from_file_location('governor_retire_test',ROOT/'scripts/arc2_governor.py');g=importlib.util.module_from_spec(spec);spec.loader.exec_module(g)
     old=manifest();w=tmp_path/'worker.json';w.write_text(json.dumps({**worker(old),'status':'INFRA_FAILED'}))

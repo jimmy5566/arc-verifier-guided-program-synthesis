@@ -10,8 +10,16 @@ def validate(v):
     assert v.get('backend')=='kaggle','KAGGLE_BACKEND_REQUIRED'
     assert not ({'ssh_target','primary_process'}&v.keys()),'NO_FAKE_SSH_OR_PID'
     assert re.fullmatch(r'[A-Za-z0-9_-]+',v['job_id'])
-    assert re.fullmatch(r'jimmy5566/arc2-paired48-[a-z0-9-]+',v['kernel_ref']),'RESEARCH_SLUG_ONLY'
-    assert v['kernel_version']==1 and v['unique_one_push_slug'] is True
+    if v['kernel_ref']=='jimmy5566/arc2-l4x4-runtime-template':
+        assert v['kernel_id']==133930602 and v['kernel_type']=='notebook'
+        assert v['owner_amendment_sha256']=='3375fe13721877fb755248d513b536047348000f580b458698afad60548042a8'
+        assert type(v['prior_kernel_version']) is int and v['prior_kernel_version']==4
+        assert v['kernel_version']==v['prior_kernel_version']+1
+        assert v['unique_one_push_slug'] is False and v['single_version_push'] is True
+        assert v['prior_kernel_code_sha256']=='95a0642d616f01f18e7b57875373cfcdce7d3317bdd89482cd30038673d51a30'
+    else:
+        assert re.fullmatch(r'jimmy5566/arc2-paired48-[a-z0-9-]+',v['kernel_ref']),'RESEARCH_SLUG_ONLY'
+        assert v['kernel_version']==1 and v['unique_one_push_slug'] is True
     assert v['controller_role']=='selector' and v.get('completion_recipient')=='controller'
     assert v['is_private'] is True and v['kaggle_cli']==CLI
     assert re.fullmatch(r'[0-9a-f]{32}',v['nonce']) and re.fullmatch(r'[0-9a-f]{40}',v['source_commit'])
@@ -31,13 +39,16 @@ from kaggle.api.kaggle_api_extended import KaggleApi
 from kagglesdk.kernels.types.kernels_api_service import ApiGetKernelRequest
 a=KaggleApi();a.authenticate();r=ApiGetKernelRequest();r.user_name='jimmy5566';r.kernel_slug=SLUG
 with a.build_kaggle_client() as c:q=c.kernels.kernels_api_client.get_kernel(r)
-print(json.dumps({'kernel_ref':q.metadata.ref,'kernel_version':q.metadata.current_version_number,'is_private':q.metadata.is_private,'code_sha256':hashlib.sha256(q.blob.source.encode()).hexdigest()}))
-""".replace('SLUG',repr(v.get('platform_kernel_ref',v['kernel_ref']).split('/')[1]))
+payload={'kernel_ref':q.metadata.ref,'kernel_version':q.metadata.current_version_number,'is_private':q.metadata.is_private,'code_sha256':hashlib.sha256(q.blob.source.encode()).hexdigest()}
+if BOUND_ID is not None:payload['kernel_id']=int(q.metadata.id)
+print(json.dumps(payload))
+""".replace('SLUG',repr(v.get('platform_kernel_ref',v['kernel_ref']).split('/')[1])).replace('BOUND_ID',repr(v.get('kernel_id')))
     return [PYTHON,'-c',code]
 
 def bound_terminal(v,worker,identity):
     assert identity['kernel_ref']==v.get('platform_kernel_ref',v['kernel_ref']) and identity['kernel_version']==v['kernel_version'] and identity['is_private'] is True,'PLATFORM_VERSION_OR_PRIVACY_MISMATCH'
     assert identity['code_sha256']==v['kernel_code_sha256'],'PLATFORM_CODE_MISMATCH'
+    if v.get('kernel_id'):assert identity['kernel_id']==v['kernel_id'],'PLATFORM_NOTEBOOK_ID_MISMATCH'
     for k in ['job_id','kernel_ref','kernel_version','nonce','source_commit','source_manifest_sha256']:
         assert worker[k]==v[k],'WORKER_IDENTITY_MISMATCH:'+k
     assert worker['status'] in ['COMPLETE','INFRA_FAILED','CONTROLLED_STOP','FAILED_OR_PARTIAL_NO_RETRY','UNKNOWN']
