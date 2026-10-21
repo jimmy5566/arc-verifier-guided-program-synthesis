@@ -38,6 +38,11 @@ def validate(v):
     assert v['output_root']=='/kaggle/working/arc2_paired48_'+v['nonce']
     assert v['terminal_receipt']==v['output_root']+'/TERMINAL_RECEIPT.json'
     assert datetime.fromisoformat(v['deadline_utc']).tzinfo is not None
+    if v.get('execution_policy'):
+        assert v['execution_policy']=='CHECKPOINTED_PROGRESS_UNTIL_HARD_CAP_V1'
+        assert v['owner_execution_policy_sha256']=='02bf3f2e7fa562ced8bbae82d2eb33f2b0989c207650f75430d9a285fc0c4eac'
+        assert v['completion_context']['execution_policy']==v['execution_policy']
+        assert v['completion_context']['owner_execution_policy_sha256']==v['owner_execution_policy_sha256']
     if v.get('platform_kernel_ref'):
         assert re.fullmatch(r'jimmy5566/arc2-paired48-[a-z0-9-]+',v['platform_kernel_ref'])
         assert re.fullmatch(r'[0-9a-f]{64}',v['platform_alias_receipt']['sha256'])
@@ -71,6 +76,8 @@ def bound_terminal(v,worker,identity):
         assert worker[k]==v[k],'WORKER_IDENTITY_MISMATCH:'+k
     if v.get('allocation_id'):
         for k in ['allocation_id','owner_time_reset_sha256']:assert worker[k]==v[k],'WORKER_ALLOCATION_MISMATCH:'+k
+    if v.get('execution_policy'):
+        for k in ['execution_policy','owner_execution_policy_sha256']:assert worker[k]==v[k],'WORKER_EXECUTION_POLICY_MISMATCH:'+k
     assert worker['status'] in ['COMPLETE','INFRA_FAILED','CONTROLLED_STOP','FAILED_OR_PARTIAL_NO_RETRY','UNKNOWN']
     return worker
 

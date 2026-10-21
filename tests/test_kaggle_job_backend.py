@@ -272,3 +272,12 @@ def test_owner_reset_callback_binds_allocation_and_live_successor():
         with pytest.raises(AssertionError):k.validate({**v,key:value})
     i={**identity(v),'kernel_version':10,'kernel_id':133930602};w={**worker(v),'allocation_id':v['allocation_id'],'owner_time_reset_sha256':v['owner_time_reset_sha256']};k.bound_terminal(v,w,i)
     with pytest.raises(AssertionError):k.bound_terminal(v,{**w,'allocation_id':'WRONG'},i)
+
+
+def test_checkpointed_progress_callback_policy_is_exact():
+    v={**notebook_manifest(),'prior_kernel_version':6,'kernel_version':7,'prior_kernel_code_sha256':'a'*64,'allocation_id':'PAIRED48_OWNER_EXPLICIT_RESET_V1','owner_time_reset_sha256':'1fd2ed429029e91fc24970bf28d7e1d5dc1a68b2ec3681b964327a75893389a3','allocation_cap_device_seconds':7200,'allocation_remaining_device_seconds':4794.056,'execution_policy':'CHECKPOINTED_PROGRESS_UNTIL_HARD_CAP_V1','owner_execution_policy_sha256':'02bf3f2e7fa562ced8bbae82d2eb33f2b0989c207650f75430d9a285fc0c4eac'}
+    v['completion_context']={key:v[key] for key in ['allocation_id','execution_policy','owner_execution_policy_sha256']};v['completion_context']['allocation_ledger_path']='allocation.json'
+    k.validate(v)
+    with pytest.raises(AssertionError):k.validate({**v,'owner_execution_policy_sha256':'0'*64})
+    w={**worker(v),**{key:v[key] for key in ['allocation_id','owner_time_reset_sha256','execution_policy','owner_execution_policy_sha256']}};i={**identity(v),'kernel_version':7,'kernel_id':133930602};k.bound_terminal(v,w,i)
+    with pytest.raises(AssertionError):k.bound_terminal(v,{**w,'execution_policy':'OLD_POLICY'},i)
