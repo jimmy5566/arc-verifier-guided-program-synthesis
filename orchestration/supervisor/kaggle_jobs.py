@@ -13,7 +13,21 @@ def validate(v):
     if v['kernel_ref']=='jimmy5566/arc2-l4x4-runtime-template':
         assert v['kernel_id']==133930602 and v['kernel_type']=='notebook'
         assert type(v['prior_kernel_version']) is int
-        if v.get('allocation_id'):
+        if v.get('startup_only'):
+            assert v['startup_only'] is True and v['execution_purpose']=='PASSIVE_INITIALIZATION_ONLY_V1'
+            assert v['startup_authority_sha256']=='c8785e6536643a782ea08b0fd1868740371bda5005231a4e8f4728da3b7b5ba4'
+            assert not v.get('allocation_id') and not v.get('execution_policy')
+            assert v['prior_kernel_version']>=7 and v['kernel_version']==v['prior_kernel_version']+1
+            assert re.fullmatch(r'[0-9a-f]{64}',v['prior_kernel_code_sha256'])
+            assert v['engineering_cap_device_seconds']==1800 and v['allocated_device_count']==4
+            assert v['platform_session_timeout_seconds']==450 and v['parent_python_wall_cap_seconds']==300
+            assert v['initialization_wall_cap_seconds']==240 and v['cleanup_reserve_wall_seconds']==30
+            assert v['fit_calls_authorized']==v['generation_calls_authorized']==0
+            assert v['completion_context']['phase']==v['execution_purpose']
+            assert v['completion_context']['startup_authority_sha256']==v['startup_authority_sha256']
+            assert v['completion_context']['engineering_reservation_device_seconds']==1800
+            assert v['engineering_ledger_path'] and v['completion_context']['engineering_ledger_path']
+        elif v.get('allocation_id'):
             assert v['allocation_id']=='PAIRED48_OWNER_EXPLICIT_RESET_V1'
             assert v['owner_time_reset_sha256']=='1fd2ed429029e91fc24970bf28d7e1d5dc1a68b2ec3681b964327a75893389a3'
             assert v['prior_kernel_version']>=5 and v['kernel_version']==v['prior_kernel_version']+1
@@ -78,6 +92,10 @@ def bound_terminal(v,worker,identity):
         for k in ['allocation_id','owner_time_reset_sha256']:assert worker[k]==v[k],'WORKER_ALLOCATION_MISMATCH:'+k
     if v.get('execution_policy'):
         for k in ['execution_policy','owner_execution_policy_sha256']:assert worker[k]==v[k],'WORKER_EXECUTION_POLICY_MISMATCH:'+k
+    if v.get('startup_only'):
+        for k in ['execution_purpose','startup_authority_sha256']:assert worker[k]==v[k],'WORKER_STARTUP_PHASE_MISMATCH:'+k
+        assert worker['engineering_cap_device_seconds']==1800
+        assert worker['fit_calls_authorized']==worker['generation_calls_authorized']==0
     assert worker['status'] in ['COMPLETE','INFRA_FAILED','CONTROLLED_STOP','FAILED_OR_PARTIAL_NO_RETRY','UNKNOWN']
     return worker
 
