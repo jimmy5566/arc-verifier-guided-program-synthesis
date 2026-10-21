@@ -262,3 +262,12 @@ def test_named_fetch_rejects_path_escape(tmp_path):
     import kaggle_receipt_fetch as fetch
     v=manifest()
     with pytest.raises(AssertionError):fetch.fetch_named(None,v['kernel_ref'],v['nonce'],tmp_path,['../secret.json'],None,None)
+
+
+def test_owner_reset_callback_binds_allocation_and_live_successor():
+    v={**notebook_manifest(),'prior_kernel_version':9,'kernel_version':10,'prior_kernel_code_sha256':'a'*64,'allocation_id':'PAIRED48_OWNER_EXPLICIT_RESET_V1','owner_time_reset_sha256':'1fd2ed429029e91fc24970bf28d7e1d5dc1a68b2ec3681b964327a75893389a3','allocation_cap_device_seconds':7200,'allocation_remaining_device_seconds':7200,'completion_context':{'allocation_id':'PAIRED48_OWNER_EXPLICIT_RESET_V1','allocation_ledger_path':'allocation.json'}}
+    k.validate(v)
+    for key,value in [('allocation_id','UNKNOWN'),('owner_time_reset_sha256','0'*64),('allocation_cap_device_seconds',7201),('kernel_version',11)]:
+        with pytest.raises(AssertionError):k.validate({**v,key:value})
+    i={**identity(v),'kernel_version':10,'kernel_id':133930602};w={**worker(v),'allocation_id':v['allocation_id'],'owner_time_reset_sha256':v['owner_time_reset_sha256']};k.bound_terminal(v,w,i)
+    with pytest.raises(AssertionError):k.bound_terminal(v,{**w,'allocation_id':'WRONG'},i)

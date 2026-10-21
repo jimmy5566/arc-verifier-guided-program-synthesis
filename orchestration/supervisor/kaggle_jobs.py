@@ -13,7 +13,14 @@ def validate(v):
     if v['kernel_ref']=='jimmy5566/arc2-l4x4-runtime-template':
         assert v['kernel_id']==133930602 and v['kernel_type']=='notebook'
         assert type(v['prior_kernel_version']) is int
-        if (v['prior_kernel_version'],v['kernel_version'])==(4,5):
+        if v.get('allocation_id'):
+            assert v['allocation_id']=='PAIRED48_OWNER_EXPLICIT_RESET_V1'
+            assert v['owner_time_reset_sha256']=='1fd2ed429029e91fc24970bf28d7e1d5dc1a68b2ec3681b964327a75893389a3'
+            assert v['prior_kernel_version']>=5 and v['kernel_version']==v['prior_kernel_version']+1
+            assert re.fullmatch(r'[0-9a-f]{64}',v['prior_kernel_code_sha256'])
+            assert v['allocation_cap_device_seconds']==7200 and 0<v['allocation_remaining_device_seconds']<=7200
+            assert v['completion_context']['allocation_id']==v['allocation_id'] and v['completion_context']['allocation_ledger_path']
+        elif (v['prior_kernel_version'],v['kernel_version'])==(4,5):
             assert v['owner_amendment_sha256']=='3375fe13721877fb755248d513b536047348000f580b458698afad60548042a8'
             assert v['prior_kernel_code_sha256']=='95a0642d616f01f18e7b57875373cfcdce7d3317bdd89482cd30038673d51a30'
         else:
@@ -62,6 +69,8 @@ def bound_terminal(v,worker,identity):
     if v.get('kernel_id'):assert identity['kernel_id']==v['kernel_id'],'PLATFORM_NOTEBOOK_ID_MISMATCH'
     for k in ['job_id','kernel_ref','kernel_version','nonce','source_commit','source_manifest_sha256']:
         assert worker[k]==v[k],'WORKER_IDENTITY_MISMATCH:'+k
+    if v.get('allocation_id'):
+        for k in ['allocation_id','owner_time_reset_sha256']:assert worker[k]==v[k],'WORKER_ALLOCATION_MISMATCH:'+k
     assert worker['status'] in ['COMPLETE','INFRA_FAILED','CONTROLLED_STOP','FAILED_OR_PARTIAL_NO_RETRY','UNKNOWN']
     return worker
 
