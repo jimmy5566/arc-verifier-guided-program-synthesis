@@ -12,11 +12,15 @@ def validate(v):
     assert re.fullmatch(r'[A-Za-z0-9_-]+',v['job_id'])
     if v['kernel_ref']=='jimmy5566/arc2-l4x4-runtime-template':
         assert v['kernel_id']==133930602 and v['kernel_type']=='notebook'
-        assert v['owner_amendment_sha256']=='3375fe13721877fb755248d513b536047348000f580b458698afad60548042a8'
-        assert type(v['prior_kernel_version']) is int and v['prior_kernel_version']==4
-        assert v['kernel_version']==v['prior_kernel_version']+1
+        assert type(v['prior_kernel_version']) is int
+        if (v['prior_kernel_version'],v['kernel_version'])==(4,5):
+            assert v['owner_amendment_sha256']=='3375fe13721877fb755248d513b536047348000f580b458698afad60548042a8'
+            assert v['prior_kernel_code_sha256']=='95a0642d616f01f18e7b57875373cfcdce7d3317bdd89482cd30038673d51a30'
+        else:
+            assert (v['prior_kernel_version'],v['kernel_version'])==(5,6)
+            assert v['owner_directive_sha256']=='0a34754f556145f1d433519887fab63302fdd0ce85cc9f076ea2d8960c6beeda'
+            assert v['prior_kernel_code_sha256']=='06dbaa6042626417b85b1caa0c8c5f71b53e654232fb2c5fc43b4e1d1b96747d'
         assert v['unique_one_push_slug'] is False and v['single_version_push'] is True
-        assert v['prior_kernel_code_sha256']=='95a0642d616f01f18e7b57875373cfcdce7d3317bdd89482cd30038673d51a30'
     else:
         assert re.fullmatch(r'jimmy5566/arc2-paired48-[a-z0-9-]+',v['kernel_ref']),'RESEARCH_SLUG_ONLY'
         assert v['kernel_version']==1 and v['unique_one_push_slug'] is True

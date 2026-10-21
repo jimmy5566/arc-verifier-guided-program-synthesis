@@ -166,6 +166,17 @@ def test_notebook_same_role_callback_exact_version(tmp_path):
     assert monitor.reconcile_bound_remote_jobs([{**v,'manifest_path':str(tmp_path/'manifest.json'),'local_receipt':str(p),'receipt_sha256':hashlib.sha256(p.read_bytes()).hexdigest()}])==[v['job_id']]
     e=json.loads(next((tmp_path/'events').glob('*.json')).read_bytes());assert e['payload']['controller_role']=='selector'
 
+def test_four_worker_notebook_successor_is_exact_owner_version6_only(tmp_path):
+    v={**notebook_manifest(),'prior_kernel_version':5,'kernel_version':6,'prior_kernel_code_sha256':'06dbaa6042626417b85b1caa0c8c5f71b53e654232fb2c5fc43b4e1d1b96747d','owner_directive_sha256':'0a34754f556145f1d433519887fab63302fdd0ce85cc9f076ea2d8960c6beeda'};v.pop('owner_amendment_sha256')
+    k.validate(v)
+    for key,value in [('kernel_version',7),('owner_directive_sha256','0'*64),('prior_kernel_code_sha256','0'*64)]:
+        with pytest.raises(AssertionError):k.validate({**v,key:value})
+    i={**identity(v),'kernel_version':6,'kernel_id':133930602};k.bound_terminal(v,worker(v),i)
+    w=tmp_path/'worker.json';w.write_text(json.dumps(worker(v)))
+    monitor=s.Supervisor(tmp_path/'state.json',tmp_path/'notifications',tmp_path/'events')
+    assert monitor.reconcile_bound_remote_jobs([{**v,'manifest_path':str(tmp_path/'manifest.json'),'local_receipt':str(w),'receipt_sha256':hashlib.sha256(w.read_bytes()).hexdigest()}])==[v['job_id']]
+    event=json.loads(next((tmp_path/'events').glob('*.json')).read_bytes());assert event['payload']['controller_role']=='selector'
+
 def test_claimed_verified_kaggle_terminal_retires_only_stale_live_binding(tmp_path):
     spec=importlib.util.spec_from_file_location('governor_retire_test',ROOT/'scripts/arc2_governor.py');g=importlib.util.module_from_spec(spec);spec.loader.exec_module(g)
     old=manifest();w=tmp_path/'worker.json';w.write_text(json.dumps({**worker(old),'status':'INFRA_FAILED'}))
