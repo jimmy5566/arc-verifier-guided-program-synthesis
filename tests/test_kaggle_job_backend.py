@@ -297,3 +297,19 @@ def test_startup_only_phase_callback_exact_authority_caps_and_role(tmp_path):
     assert monitor.reconcile_bound_remote_jobs([{**v,'manifest_path':'manifest.json','local_receipt':str(path),'receipt_sha256':hashlib.sha256(path.read_bytes()).hexdigest()}])==[v['job_id']]
     e=json.loads(next((tmp_path/'events').glob('*.json')).read_bytes())
     assert e['payload']['controller_role']=='selector' and e['payload']['completion_context']==v['completion_context']
+
+
+def test_standing_early_entry_callback_cannot_reuse_old_authority_or_contract(tmp_path):
+    policy='9a5af87d81fe672769b87e154e1e00e983166bf32531563877b77c8daf3e2ef7'
+    v={**notebook_manifest(),'prior_kernel_version':8,'kernel_version':9,'prior_kernel_code_sha256':'a'*64,'startup_only':True,'execution_purpose':'PASSIVE_EARLIEST_ENTRY_INITIALIZATION_ONLY_V2','startup_authority_sha256':policy,'standing_policy_sha256':policy,'entry_telemetry_contract':'WORKER_ENTRY_PRE_VALIDATION_V1','engineering_cap_device_seconds':1800,'allocated_device_count':4,'platform_session_timeout_seconds':450,'parent_python_wall_cap_seconds':300,'initialization_wall_cap_seconds':240,'cleanup_reserve_wall_seconds':30,'fit_calls_authorized':0,'generation_calls_authorized':0,'engineering_ledger_path':'new_engineering.json'}
+    v['completion_context']={'phase':v['execution_purpose'],'startup_authority_sha256':policy,'standing_policy_sha256':policy,'standing_policy_path':'POLICY.json','entry_telemetry_contract':v['entry_telemetry_contract'],'engineering_ledger_path':'new_engineering.json','engineering_reservation_device_seconds':1800}
+    k.validate(v)
+    for key,value in [('standing_policy_sha256','0'*64),('entry_telemetry_contract','AFTER_IMPORTS'),('execution_purpose','PASSIVE_INITIALIZATION_ONLY_V1'),('startup_authority_sha256','c8785e6536643a782ea08b0fd1868740371bda5005231a4e8f4728da3b7b5ba4'),('generation_calls_authorized',1)]:
+        with pytest.raises(AssertionError):k.validate({**v,key:value})
+    w={**worker(v),**{key:v[key] for key in ['execution_purpose','startup_authority_sha256','standing_policy_sha256','entry_telemetry_contract','fit_calls_authorized','generation_calls_authorized','engineering_cap_device_seconds']}}
+    i={**identity(v),'kernel_version':9,'kernel_id':133930602};k.bound_terminal(v,w,i)
+    with pytest.raises(AssertionError):k.bound_terminal(v,{**w,'entry_telemetry_contract':'AFTER_IMPORTS'},i)
+    p=tmp_path/'observed.json';p.write_text(json.dumps(w));monitor=s.Supervisor(tmp_path/'state.json',tmp_path/'notifications',tmp_path/'events')
+    assert monitor.reconcile_bound_remote_jobs([{**v,'manifest_path':'manifest.json','local_receipt':str(p),'receipt_sha256':hashlib.sha256(p.read_bytes()).hexdigest()}])==[v['job_id']]
+    e=json.loads(next((tmp_path/'events').glob('*.json')).read_bytes())
+    assert e['payload']['completion_context']['standing_policy_sha256']==policy and e['payload']['controller_role']=='selector'

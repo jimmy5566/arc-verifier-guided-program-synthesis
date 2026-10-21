@@ -14,8 +14,18 @@ def validate(v):
         assert v['kernel_id']==133930602 and v['kernel_type']=='notebook'
         assert type(v['prior_kernel_version']) is int
         if v.get('startup_only'):
-            assert v['startup_only'] is True and v['execution_purpose']=='PASSIVE_INITIALIZATION_ONLY_V1'
-            assert v['startup_authority_sha256']=='c8785e6536643a782ea08b0fd1868740371bda5005231a4e8f4728da3b7b5ba4'
+            assert v['startup_only'] is True
+            if v['startup_authority_sha256']=='9a5af87d81fe672769b87e154e1e00e983166bf32531563877b77c8daf3e2ef7':
+                assert v['execution_purpose']=='PASSIVE_EARLIEST_ENTRY_INITIALIZATION_ONLY_V2'
+                assert v['standing_policy_sha256']==v['startup_authority_sha256']
+                assert v['entry_telemetry_contract']=='WORKER_ENTRY_PRE_VALIDATION_V1'
+                assert v['completion_context']['standing_policy_sha256']==v['standing_policy_sha256']
+                assert v['completion_context']['entry_telemetry_contract']==v['entry_telemetry_contract']
+                assert v['completion_context']['standing_policy_path']
+            else:
+                assert v['execution_purpose']=='PASSIVE_INITIALIZATION_ONLY_V1'
+                assert v['startup_authority_sha256']=='c8785e6536643a782ea08b0fd1868740371bda5005231a4e8f4728da3b7b5ba4'
+                assert not v.get('standing_policy_sha256')
             assert not v.get('allocation_id') and not v.get('execution_policy')
             assert v['prior_kernel_version']>=7 and v['kernel_version']==v['prior_kernel_version']+1
             assert re.fullmatch(r'[0-9a-f]{64}',v['prior_kernel_code_sha256'])
@@ -96,6 +106,8 @@ def bound_terminal(v,worker,identity):
         for k in ['execution_purpose','startup_authority_sha256']:assert worker[k]==v[k],'WORKER_STARTUP_PHASE_MISMATCH:'+k
         assert worker['engineering_cap_device_seconds']==1800
         assert worker['fit_calls_authorized']==worker['generation_calls_authorized']==0
+        if v.get('standing_policy_sha256'):
+            for k in ['standing_policy_sha256','entry_telemetry_contract']:assert worker[k]==v[k],'WORKER_STANDING_AUTHORITY_MISMATCH:'+k
     assert worker['status'] in ['COMPLETE','INFRA_FAILED','CONTROLLED_STOP','FAILED_OR_PARTIAL_NO_RETRY','UNKNOWN']
     return worker
 
