@@ -236,9 +236,10 @@ def test_cached_corrupt_artifact_is_not_scientific_success(tmp_path):
     assert r['scientific_acceptance']=='NOT_INFERRED_FROM_PROCESS_RECEIPT'
 
 
-def test_named_fetch_stops_before_dependency_pages(tmp_path):
+@pytest.mark.parametrize('receipt_name',['TERMINAL_RECEIPT.json','LOCK0.json.reservation'])
+def test_named_fetch_stops_before_dependency_pages(tmp_path,receipt_name):
     import kaggle_receipt_fetch as fetch
-    v=manifest();name='arc2_paired48_'+v['nonce']+'/TERMINAL_RECEIPT.json';calls=[]
+    v=manifest();name='arc2_paired48_'+v['nonce']+'/'+receipt_name;calls=[]
     class Client:
         def __enter__(self):return SimpleNamespace(kernels=SimpleNamespace(kernels_api_client=self))
         def __exit__(self,*args):pass
@@ -254,7 +255,7 @@ def test_named_fetch_stops_before_dependency_pages(tmp_path):
         def __exit__(self,*args):pass
         def raise_for_status(self):pass
         def iter_content(self,size):yield json.dumps(worker(v)).encode()
-    result=fetch.fetch_named(API(),v['kernel_ref'],v['nonce'],tmp_path,['TERMINAL_RECEIPT.json'],SimpleNamespace,lambda *a,**kw:Response())
+    result=fetch.fetch_named(API(),v['kernel_ref'],v['nonce'],tmp_path,[receipt_name],SimpleNamespace,lambda *a,**kw:Response())
     assert result['pages']==1 and result['missing']==[] and len(calls)==1
 
 

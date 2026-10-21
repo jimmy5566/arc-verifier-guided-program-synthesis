@@ -24,7 +24,7 @@ def fetch_named(api, kernel_ref, nonce, output, names, request_type, get,
     for name in names:
         p = PurePosixPath(name)
         assert p.name == name and not p.is_absolute() and name not in {'.', '..'}
-        assert name.endswith(('.json', '.txt', '.jsonl'))
+        assert name.endswith(('.json', '.txt', '.jsonl', '.json.reservation'))
     wanted = {f'arc2_paired48_{nonce}/{name}' for name in names}
     downloaded, token, seen = [], '', set()
     pages = 0
@@ -59,7 +59,7 @@ def fetch_named(api, kernel_ref, nonce, output, names, request_type, get,
                                 if size > max_file_bytes:
                                     raise ValueError('RECEIPT_SIZE_LIMIT')
                                 f.write(block)
-                        if name.endswith('.json'):
+                        if name.endswith(('.json', '.json.reservation')):
                             json.loads(temporary.read_bytes())
                         os.replace(temporary, target)
                         temporary = None
