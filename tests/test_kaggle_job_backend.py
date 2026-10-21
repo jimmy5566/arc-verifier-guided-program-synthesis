@@ -313,3 +313,19 @@ def test_standing_early_entry_callback_cannot_reuse_old_authority_or_contract(tm
     assert monitor.reconcile_bound_remote_jobs([{**v,'manifest_path':'manifest.json','local_receipt':str(p),'receipt_sha256':hashlib.sha256(p.read_bytes()).hexdigest()}])==[v['job_id']]
     e=json.loads(next((tmp_path/'events').glob('*.json')).read_bytes())
     assert e['payload']['completion_context']['standing_policy_sha256']==policy and e['payload']['controller_role']=='selector'
+
+
+def test_standing_missing42_callback_retains_known_balance_and_scope(tmp_path):
+    v={**notebook_manifest(),'prior_kernel_version':9,'kernel_version':10,'prior_kernel_code_sha256':'a'*64,'allocation_id':'PAIRED48_OWNER_EXPLICIT_RESET_V1','owner_time_reset_sha256':'1fd2ed429029e91fc24970bf28d7e1d5dc1a68b2ec3681b964327a75893389a3','allocation_cap_device_seconds':7200,'allocation_remaining_device_seconds':4794.056,'execution_policy':'CHECKPOINTED_PROGRESS_UNTIL_HARD_CAP_V1','owner_execution_policy_sha256':'02bf3f2e7fa562ced8bbae82d2eb33f2b0989c207650f75430d9a285fc0c4eac','standing_policy_sha256':'9a5af87d81fe672769b87e154e1e00e983166bf32531563877b77c8daf3e2ef7','entry_telemetry_contract':'WORKER_ENTRY_PRE_VALIDATION_V1','standing_scope':'MISSING42_SCIENTIFIC_CONTINUATION_V1','prior_startup_readiness_sha256':'c'*64}
+    fields=['allocation_id','execution_policy','owner_execution_policy_sha256','standing_policy_sha256','entry_telemetry_contract','standing_scope','prior_startup_readiness_sha256']
+    v['completion_context']={k:v[k] for k in fields};v['completion_context']['allocation_ledger_path']='scientific_ledger.json'
+    k.validate(v)
+    for field,value in [('allocation_remaining_device_seconds',7200),('standing_scope','RESET_BUDGET'),('standing_policy_sha256','0'*64)]:
+        with pytest.raises(AssertionError):k.validate({**v,field:value})
+    w={**worker(v),**{field:v[field] for field in ['allocation_id','owner_time_reset_sha256','execution_policy','owner_execution_policy_sha256','standing_policy_sha256','entry_telemetry_contract','standing_scope']}}
+    i={**identity(v),'kernel_version':10,'kernel_id':133930602};k.bound_terminal(v,w,i)
+    with pytest.raises(AssertionError):k.bound_terminal(v,{**w,'standing_scope':'WRONG'},i)
+    p=tmp_path/'worker.json';p.write_text(json.dumps(w));monitor=s.Supervisor(tmp_path/'state.json',tmp_path/'notifications',tmp_path/'events')
+    assert monitor.reconcile_bound_remote_jobs([{**v,'manifest_path':'manifest.json','local_receipt':str(p),'receipt_sha256':hashlib.sha256(p.read_bytes()).hexdigest()}])==[v['job_id']]
+    event=json.loads(next((tmp_path/'events').glob('*.json')).read_bytes())
+    assert event['payload']['controller_role']=='selector' and event['payload']['completion_context']['standing_scope']==v['standing_scope']
