@@ -329,3 +329,23 @@ def test_standing_missing42_callback_retains_known_balance_and_scope(tmp_path):
     assert monitor.reconcile_bound_remote_jobs([{**v,'manifest_path':'manifest.json','local_receipt':str(p),'receipt_sha256':hashlib.sha256(p.read_bytes()).hexdigest()}])==[v['job_id']]
     event=json.loads(next((tmp_path/'events').glob('*.json')).read_bytes())
     assert event['payload']['controller_role']=='selector' and event['payload']['completion_context']['standing_scope']==v['standing_scope']
+
+
+def test_notebook_wall_policy_callback_preserves_payload_recovery_and_no_old_balance(tmp_path):
+    policy='130f06795eb8b763f77a169aa7c443b8771aaebab685f93f3af34517d31fbac9'
+    v={**notebook_manifest(),'prior_kernel_version':10,'kernel_version':11,'prior_kernel_code_sha256':'a'*64,
+       'notebook_policy_sha256':policy,'platform_session_timeout_seconds':7200,'parent_python_wall_cap_seconds':6900,
+       'initialization_wall_cap_seconds':600,'cleanup_reserve_wall_seconds':180,'allocated_device_count':4,
+       'cumulative_budget_enforced':False,'completion_context':{'notebook_policy_sha256':policy,'durable_payload_byte_verification_required':True}}
+    k.validate(v)
+    for field,value in [('notebook_policy_sha256','0'*64),('platform_session_timeout_seconds',7201),
+                        ('allocation_id','OLD_BUDGET'),('cumulative_budget_enforced',True),('completion_recipient','director')]:
+        with pytest.raises(AssertionError):k.validate({**v,field:value})
+    w={**worker(v),'notebook_policy_sha256':policy,'checkpoint_payloads':{'worker0/durable/task/state.pt':{'sha256':'f'*64,'bytes':123}}}
+    i={**identity(v),'kernel_version':11,'kernel_id':133930602}
+    k.bound_terminal(v,w,i)
+    with pytest.raises(AssertionError):k.bound_terminal(v,{**w,'notebook_policy_sha256':'0'*64},i)
+    p=tmp_path/'worker.json';p.write_text(json.dumps(w));monitor=s.Supervisor(tmp_path/'state.json',tmp_path/'notifications',tmp_path/'events')
+    assert monitor.reconcile_bound_remote_jobs([{**v,'manifest_path':'manifest.json','local_receipt':str(p),'receipt_sha256':hashlib.sha256(p.read_bytes()).hexdigest()}])==[v['job_id']]
+    e=json.loads(next((tmp_path/'events').glob('*.json')).read_bytes())
+    assert e['payload']['controller_role']=='selector' and e['payload']['completion_context']['durable_payload_byte_verification_required']

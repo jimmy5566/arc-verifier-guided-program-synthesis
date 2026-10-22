@@ -13,7 +13,17 @@ def validate(v):
     if v['kernel_ref']=='jimmy5566/arc2-l4x4-runtime-template':
         assert v['kernel_id']==133930602 and v['kernel_type']=='notebook'
         assert type(v['prior_kernel_version']) is int
-        if v.get('startup_only'):
+        if v.get('notebook_policy_sha256'):
+            assert v['notebook_policy_sha256']=='130f06795eb8b763f77a169aa7c443b8771aaebab685f93f3af34517d31fbac9'
+            assert not any(v.get(k) for k in ['allocation_id','standing_policy_sha256','execution_policy','startup_only'])
+            assert v['prior_kernel_version']>=10 and v['kernel_version']==v['prior_kernel_version']+1
+            assert re.fullmatch(r'[0-9a-f]{64}',v['prior_kernel_code_sha256'])
+            assert v['platform_session_timeout_seconds']==7200 and v['parent_python_wall_cap_seconds']==6900
+            assert v['initialization_wall_cap_seconds']==600 and v['cleanup_reserve_wall_seconds']==180
+            assert v['allocated_device_count']==4 and v['cumulative_budget_enforced'] is False
+            assert v['completion_context']['notebook_policy_sha256']==v['notebook_policy_sha256']
+            assert v['completion_context']['durable_payload_byte_verification_required'] is True
+        elif v.get('startup_only'):
             assert v['startup_only'] is True
             if v['startup_authority_sha256']=='9a5af87d81fe672769b87e154e1e00e983166bf32531563877b77c8daf3e2ef7':
                 assert v['execution_purpose']=='PASSIVE_EARLIEST_ENTRY_INITIALIZATION_ONLY_V2'
@@ -110,6 +120,8 @@ def bound_terminal(v,worker,identity):
     if v.get('kernel_id'):assert identity['kernel_id']==v['kernel_id'],'PLATFORM_NOTEBOOK_ID_MISMATCH'
     for k in ['job_id','kernel_ref','kernel_version','nonce','source_commit','source_manifest_sha256']:
         assert worker[k]==v[k],'WORKER_IDENTITY_MISMATCH:'+k
+    if v.get('notebook_policy_sha256'):
+        assert worker['notebook_policy_sha256']==v['notebook_policy_sha256'],'WORKER_NOTEBOOK_POLICY_MISMATCH'
     if v.get('allocation_id'):
         for k in ['allocation_id','owner_time_reset_sha256']:assert worker[k]==v[k],'WORKER_ALLOCATION_MISMATCH:'+k
     if v.get('execution_policy'):
