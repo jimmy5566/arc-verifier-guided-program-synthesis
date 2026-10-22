@@ -23,6 +23,10 @@ def validate(v):
             assert v['allocated_device_count']==4 and v['cumulative_budget_enforced'] is False
             assert v['completion_context']['notebook_policy_sha256']==v['notebook_policy_sha256']
             assert v['completion_context']['durable_payload_byte_verification_required'] is True
+            if v.get('launch_registration_utc'):
+                registered=datetime.fromisoformat(v['launch_registration_utc'])
+                visible=datetime.fromisoformat(v['launch_visibility_deadline_utc'])
+                assert registered.tzinfo is not None and 0<(visible-registered).total_seconds()<=180
         elif v.get('startup_only'):
             assert v['startup_only'] is True
             if v['startup_authority_sha256']=='9a5af87d81fe672769b87e154e1e00e983166bf32531563877b77c8daf3e2ef7':
@@ -244,6 +248,13 @@ def reconcile(v,cache,runner=subprocess.run,now=None):
             p=runner(identity_command(v),capture_output=True,text=True,timeout=60)
             if p.returncode:raise RuntimeError('KAGGLE_IDENTITY_UNAVAILABLE')
             identity=json.loads(p.stdout.strip().splitlines()[-1]);out=cache/'kernel_output';out.mkdir(exist_ok=True)
+            if (v.get('notebook_policy_sha256') and v.get('launch_visibility_deadline_utc')
+                    and identity.get('kernel_id')==v['kernel_id'] and identity.get('kernel_version')==v['prior_kernel_version']
+                    and identity.get('code_sha256')==v['prior_kernel_code_sha256'] and identity.get('is_private') is True
+                    and now<datetime.fromisoformat(v['launch_visibility_deadline_utc'])):
+                # Registration must precede push. During that bounded window
+                # the previous terminal version is expected, never this result.
+                return None
             receipt = cached_worker(v, out, identity)
             if receipt is None:
                 # Direct Python child has bounded lifetime; no Windows CLI

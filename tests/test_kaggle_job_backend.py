@@ -349,3 +349,21 @@ def test_notebook_wall_policy_callback_preserves_payload_recovery_and_no_old_bal
     assert monitor.reconcile_bound_remote_jobs([{**v,'manifest_path':'manifest.json','local_receipt':str(p),'receipt_sha256':hashlib.sha256(p.read_bytes()).hexdigest()}])==[v['job_id']]
     e=json.loads(next((tmp_path/'events').glob('*.json')).read_bytes())
     assert e['payload']['controller_role']=='selector' and e['payload']['completion_context']['durable_payload_byte_verification_required']
+
+
+def test_v3_registration_before_push_old_terminal_is_bounded_not_false_UNKNOWN(tmp_path):
+    now=datetime.now(timezone.utc);policy='130f06795eb8b763f77a169aa7c443b8771aaebab685f93f3af34517d31fbac9'
+    v={**notebook_manifest(),'prior_kernel_version':10,'kernel_version':11,'prior_kernel_code_sha256':'a'*64,
+       'notebook_policy_sha256':policy,'platform_session_timeout_seconds':7200,'parent_python_wall_cap_seconds':6900,
+       'initialization_wall_cap_seconds':600,'cleanup_reserve_wall_seconds':180,'allocated_device_count':4,
+       'cumulative_budget_enforced':False,'completion_context':{'notebook_policy_sha256':policy,'durable_payload_byte_verification_required':True},
+       'launch_registration_utc':now.isoformat(),'launch_visibility_deadline_utc':(now+timedelta(seconds=180)).isoformat()}
+    old={'kernel_ref':v['kernel_ref'],'kernel_id':v['kernel_id'],'kernel_version':10,'code_sha256':'a'*64,'is_private':True}
+    def runner(cmd,**kw):
+        assert '--names' not in cmd
+        return SimpleNamespace(returncode=0,stdout='job has status "KernelWorkerStatus.COMPLETE"' if 'status' in cmd else json.dumps(old))
+    assert k.reconcile(v,tmp_path,runner,now) is None
+    def later(cmd,**kw):
+        if 'status' in cmd or '-c' in cmd:return runner(cmd,**kw)
+        return SimpleNamespace(returncode=1,stdout='')
+    assert k.reconcile(v,tmp_path,later,now+timedelta(seconds=181))['status']=='UNKNOWN'
