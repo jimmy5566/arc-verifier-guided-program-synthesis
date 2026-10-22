@@ -69,6 +69,9 @@ def validate(v):
     else:
         assert re.fullmatch(r'jimmy5566/arc2-paired48-[a-z0-9-]+',v['kernel_ref']),'RESEARCH_SLUG_ONLY'
         assert v['kernel_version']==1 and v['unique_one_push_slug'] is True
+        if v.get('kernel_type'):
+            assert v['kernel_type']=='notebook'
+            assert v['source_hash_contract']=='NOTEBOOK_JSON_SORT_KEYS_V1'
     assert v['controller_role']=='selector' and v.get('completion_recipient')=='controller'
     assert v['is_private'] is True and v['kaggle_cli']==CLI
     assert re.fullmatch(r'[0-9a-f]{32}',v['nonce']) and re.fullmatch(r'[0-9a-f]{40}',v['source_commit'])
@@ -109,13 +112,14 @@ payload={'kernel_ref':q.metadata.ref,'kernel_version':q.metadata.current_version
 bound_id=BOUND_ID
 if bound_id is not None:
  payload['kernel_id']=int(q.metadata.id)
+if bound_id is not None or NOTEBOOK:
  payload['raw_platform_source_sha256']=payload['code_sha256']
  # The API reformats notebook JSON. Restore the exact uploaded CLI JSON
  # serialization; all cell strings, outputs, metadata and format stay bound.
  notebook=json.loads(q.blob.source)
  payload['code_sha256']=hashlib.sha256(json.dumps(notebook,sort_keys=True).encode()).hexdigest()
 print(json.dumps(payload))
-""".replace('SLUG',repr(v.get('platform_kernel_ref',v['kernel_ref']).split('/')[1])).replace('BOUND_ID',repr(v.get('kernel_id')))
+""".replace('SLUG',repr(v.get('platform_kernel_ref',v['kernel_ref']).split('/')[1])).replace('BOUND_ID',repr(v.get('kernel_id'))).replace('NOTEBOOK',repr(v.get('kernel_type')=='notebook'))
     return [PYTHON,'-c',code]
 
 def bound_terminal(v,worker,identity):

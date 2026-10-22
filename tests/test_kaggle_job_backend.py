@@ -106,6 +106,26 @@ def test_actual_notebook_identity_code_allows_only_JSON_serialization(monkeypatc
     changed={**notebook,'cells':[{'source':'print(124)\n','cell_type':'code'}]}
     assert hashlib.sha256(json.dumps(changed,sort_keys=True).encode()).hexdigest()!=expected
 
+def test_unique_CPU_notebook_canonical_hash_without_numeric_id(monkeypatch,capsys):
+    from contextlib import contextmanager
+    from kaggle.api import kaggle_api_extended
+    v={**manifest(),'kernel_type':'notebook','source_hash_contract':'NOTEBOOK_JSON_SORT_KEYS_V1'}
+    k.validate(v)
+    notebook={'nbformat':4,'cells':[{'source':'print(123)\n','cell_type':'code'}],'metadata':{}}
+    @contextmanager
+    def client():yield SimpleNamespace(kernels=SimpleNamespace(kernels_api_client=SimpleNamespace(get_kernel=lambda req:SimpleNamespace(metadata=SimpleNamespace(ref=v['kernel_ref'],current_version_number=1,is_private=True,id=140148036),blob=SimpleNamespace(source=json.dumps(notebook,indent=2))))))
+    monkeypatch.setattr(kaggle_api_extended,'KaggleApi',lambda:SimpleNamespace(authenticate=lambda:None,build_kaggle_client=client))
+    exec(k.identity_command(v)[2],{})
+    actual=json.loads(capsys.readouterr().out)
+    assert actual['code_sha256']==hashlib.sha256(json.dumps(notebook,sort_keys=True).encode()).hexdigest()
+    assert 'kernel_id' not in actual
+    k.bound_terminal({**v,'kernel_code_sha256':actual['code_sha256']},worker(v),actual)
+    with pytest.raises(AssertionError):k.validate({**v,'source_hash_contract':'RAW_STRING'})
+    # Existing script bindings retain their original raw-string hash contract.
+    exec(k.identity_command(manifest())[2],{})
+    raw=json.loads(capsys.readouterr().out)
+    assert raw['code_sha256']==hashlib.sha256(json.dumps(notebook,indent=2).encode()).hexdigest()
+
 def recovery_fixture(tmp_path):
     v=notebook_manifest();prior=tmp_path/'UNKNOWN.json';prior.write_text(json.dumps({'status':'UNKNOWN','job_id':v['job_id'],'execution_source_commit':v['source_commit']}))
     oldsha=hashlib.sha256(prior.read_bytes()).hexdigest();event={'event_id':'1'*64,'status':'CLAIMED','payload':{'round_id':v['job_id'],'bound_remote_job':True,'terminal_status':'UNKNOWN','terminal_receipt':str(prior),'terminal_receipt_sha256':oldsha}}
